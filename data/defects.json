@@ -1,0 +1,249 @@
+[
+  {
+    "id": "DEF-001",
+    "externalCode": "GF-BUG-001",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/9",
+    "testCaseId": "CP-CSH-003",
+    "module": "cash",
+    "title": "Fallo de bloqueo pesimista SELECT FOR UPDATE sobre tabla append-only payment bajo rol app_user",
+    "severity": "Alta",
+    "severityCode": "P2",
+    "priority": "Alta",
+    "status": "Cerrado",
+    "reopened": false,
+    "description": "Al procesar un cobro de orden bajo el rol PostgreSQL no privilegiado app_user (ADR-0002 / ADR-0006), la consulta ejecutaba SELECT ... FOR UPDATE sobre la tabla append-only payment. Dado que PostgreSQL exige privilegio UPDATE para adquirir bloqueos de fila FOR UPDATE y dicho privilegio está revocado por política de inmutabilidad financiera, la transacción abortaba con error SQL 42501 (permission denied for table payment).",
+    "stepsToReproduce": [
+      "Conectar la suite de integración con el rol PostgreSQL app_user (rolbypassrls = false, sin privilegios UPDATE/DELETE sobre tablas append-only).",
+      "Abrir una sesión de caja en CAJA-PRINCIPAL y una orden DINE_IN activa con saldo pendiente de $80.000.",
+      "Emitir POST /api/v1/orders/:orderId/payments con monto válido ($50.000 CASH) y cabecera Idempotency-Key."
+    ],
+    "expectedResult": "El cobro debe adquirir bloqueo pesimista únicamente sobre el agregado raíz mutable restaurant_order, insertar el registro inmutable en payment y retornar HTTP 201 Created.",
+    "actualResult": "En la validación previa a la corrección, PostgreSQL rechazaba la sentencia FOR UPDATE sobre payment con error 42501 (permission denied for table payment). Corregido y verificado en el commit be9089e manteniendo el bloqueo FOR UPDATE exclusivamente sobre restaurant_order.",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-001-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:34:00-05:00",
+        "description": "Verificación de regresión de DEF-001 en apps/api/test/cash-payments.int-spec.ts bajo rol app_user."
+      },
+      {
+        "id": "EVID-DEF-001-2",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:34:00-05:00",
+        "description": "Evidencia documentada en docs/testing/EVIDENCIAS-PRUEBAS-MANUALES.md (DEF-01) y verificada en commit be9089e."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "reportedAt": "2026-11-15T18:20:00-05:00",
+    "assignedTo": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "resolvedAt": "2026-11-15T22:10:00-05:00"
+  },
+  {
+    "id": "DEF-002",
+    "externalCode": "GF-BUG-002",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/10",
+    "testCaseId": "CP-REP-003",
+    "module": "reports",
+    "title": "Desajuste de proyección de campos firstName/lastName y cashierId en exportación CSV de reportes",
+    "severity": "Media",
+    "severityCode": "P3",
+    "priority": "Media",
+    "status": "Cerrado",
+    "reopened": false,
+    "description": "En ReportsExportService, la consulta de exportación CSV intentaba proyectar un campo compuesto inexistente en el modelo User de Prisma en lugar de firstName + lastName y referenciaba un alias distinto para cashierId en Payment, provocando error al generar el stream CSV de ventas.",
+    "stepsToReproduce": [
+      "Autenticarse como usuario con rol ADMIN o GERENTE en un tenant con órdenes cobradas.",
+      "Invocar GET /api/v1/reports/sales/export.csv con un rango de fechas válido (from y to).",
+      "Inspeccionar la proyección de columnas del cajero en el stream CSV generado."
+    ],
+    "expectedResult": "El servicio debe concatenar User.firstName y User.lastName y vincular Payment.cashierId correctamente, emitiendo el archivo CSV con BOM UTF-8 (\\uFEFF) y mitigación de CSV Formula Injection.",
+    "actualResult": "Fallaba la proyección Prisma antes de la corrección. Resuelto y validado en commit be9089e en ReportsExportService y reports-export.int-spec.ts.",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-002-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:34:00-05:00",
+        "description": "Verificación de regresión de DEF-002 en apps/api/test/reports-export.int-spec.ts sobre commit be9089e."
+      },
+      {
+        "id": "EVID-DEF-002-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de src/modules/reports/domain/reports-export.helper.spec.ts."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "reportedAt": "2026-11-15T20:15:00-05:00",
+    "assignedTo": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "resolvedAt": "2026-11-15T23:05:00-05:00"
+  },
+  {
+    "id": "DEF-003",
+    "externalCode": "GF-BUG-003",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/11",
+    "testCaseId": "CP-CSH-005",
+    "module": "cash",
+    "title": "Lectura de propiedad err.problem en lugar de err.detail (RFC 7807) en componentes de caja y reportes",
+    "severity": "Media",
+    "severityCode": "P3",
+    "priority": "Media",
+    "status": "Cerrado",
+    "reopened": false,
+    "description": "Los componentes frontend de los módulos cash y reports accedían a err.problem sobre instancias de ApiProblemError cuando el contrato estándar RFC 7807 expone el mensaje legible para el usuario en err.detail, mostrando un banner vacío o genérico ante rechazos de negocio (400/409/422).",
+    "stepsToReproduce": [
+      "Abrir la vista /cashier en viewport tablet 1024x768 con una orden activa de saldo pendiente $45.000.",
+      "Intentar registrar un pago con tarjeta por monto superior ($60.000) para provocar un rechazo HTTP 422.",
+      "Observar el mensaje de error renderizado en el componente AlertBanner."
+    ],
+    "expectedResult": "AlertBanner debe mostrar el texto exacto de err.detail devuelto por el backend en formato application/problem+json (RFC 7807).",
+    "actualResult": "Antes de la corrección se leía err.problem (undefined). Estandarizado con err.detail y verificado en commit be9089e tanto en pruebas unitarias frontend como en validación manual.",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-003-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:46:00-05:00",
+        "description": "Verificación manual en /cashier de renderizado de err.detail en AlertBanner (DEF-03 en EVIDENCIAS-PRUEBAS-MANUALES.md)."
+      },
+      {
+        "id": "EVID-DEF-003-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:15:05-05:00",
+        "description": "Ejecución exitosa de app/lib/api/problem-details.test.ts y app/lib/api/client.test.ts."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "reportedAt": "2026-11-15T21:40:00-05:00",
+    "assignedTo": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "resolvedAt": "2026-11-15T23:30:00-05:00"
+  },
+  {
+    "id": "DEF-004",
+    "externalCode": "GF-BUG-004",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/12",
+    "testCaseId": "CP-AUTH-006",
+    "module": "auth",
+    "title": "Rol MESERO posee permisos kitchen:read y kitchen:advance_status sin filtro de estación en can.helper.ts",
+    "severity": "Media",
+    "severityCode": "P3",
+    "priority": "Media",
+    "status": "Asignado",
+    "reopened": false,
+    "description": "En apps/api/src/modules/auth/domain/can.helper.ts (líneas 68-77) del commit be9089e, el conjunto MESERO_ACTIONS incluye las acciones 'kitchen:read' y 'kitchen:advance_status' sin exigir validación de stationId, mientras que la Matriz de Capacidades de PRD.md (§2.1, líneas 89-90) y la Tabla de Decisión de TESTING-PLAN.md (§2.2, línea 120) establecen que Mesero NO tiene permiso para ver la cola KDS ni avanzar estados de preparación (Preparing/Ready).",
+    "stepsToReproduce": [
+      "Inspeccionar apps/api/src/modules/auth/domain/can.helper.ts líneas 68-77 en el commit be9089e.",
+      "Evaluar can({ userId: 'u-4', memberId: 'm-4', role: 'MESERO' }, 'kitchen:advance_status').",
+      "Comparar el resultado booleano contra la tabla de decisión de TESTING-PLAN.md (§2.2) y PRD.md (§2.1)."
+    ],
+    "expectedResult": "can(mesero, 'kitchen:advance_status') debe retornar false (o existir una acción separada 'orders:mark_served' exclusiva para pasar de READY a SERVED sin permitir avanzar estados internos de cocina).",
+    "actualResult": "can(mesero, 'kitchen:advance_status') retorna true para cualquier estación sin restricción de stationId.",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-004-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:34:00-05:00",
+        "description": "Auditoría de código en apps/api/src/modules/auth/domain/can.helper.ts#L68-L77 frente a PRD.md §2.1 y TESTING-PLAN.md §2.2."
+      },
+      {
+        "id": "EVID-DEF-004-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución de src/modules/auth/domain/can.helper.spec.ts y hallazgo de exceso de permisos en MESERO_ACTIONS."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "reportedAt": "2026-11-16T02:15:00-05:00",
+    "assignedTo": "Jhonatan A. Méndez R. (@JhonatanM2005)"
+  },
+  {
+    "id": "DEF-005",
+    "externalCode": "GF-BUG-005",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/13",
+    "testCaseId": "CP-ORD-006",
+    "module": "orders",
+    "title": "Discrepancia entre PRD.md y can.helper.ts sobre el permiso del rol CAJERO para abrir órdenes (orders:create)",
+    "severity": "Media",
+    "severityCode": "P3",
+    "priority": "Media",
+    "status": "Asignado",
+    "reopened": false,
+    "description": "Existe una contradicción entre la especificación de requisitos de producto y la implementación de dominio en el commit be9089e: PRD.md (§2.1, línea 86) especifica que el rol Cajero SÍ puede 'Abrir orden / cuenta (Mesa o Para Llevar)', pero CAJERO_ACTIONS en apps/api/src/modules/auth/domain/can.helper.ts (líneas 79-86) y can.helper.spec.ts (línea 47) deniegan 'orders:create' al rol CAJERO.",
+    "stepsToReproduce": [
+      "Revisar docs/prd/PRD.md §2.1 (Matriz de capacidades por rol en MVP, fila 'Abrir orden / cuenta').",
+      "Ejecutar o inspeccionar apps/api/src/modules/auth/domain/can.helper.spec.ts línea 47: expect(can(cajero, 'orders:create')).toBe(false).",
+      "Verificar el mismo comportamiento en el cliente web en apps/web/app/features/auth/domain/can.test.ts."
+    ],
+    "expectedResult": "Alineación unívoca entre PRD.md, TESTING-PLAN.md y can.helper.ts respecto a si el Cajero puede crear órdenes TAKEOUT/mostrador o si dicha capacidad es exclusiva de Mesero/Gerente/Admin.",
+    "actualResult": "PRD.md declara Sí para Cajero mientras que can.helper.ts y TESTING-PLAN.md retornan false (No).",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-005-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:52:00-05:00",
+        "description": "Inspección normativa de CAJERO_ACTIONS en can.helper.ts y can.test.ts frente a PRD.md §2.1."
+      },
+      {
+        "id": "EVID-DEF-005-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:15:05-05:00",
+        "description": "Ejecución de apps/web/app/features/auth/domain/can.test.ts y apps/api/src/modules/auth/domain/can.helper.spec.ts."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "reportedAt": "2026-11-16T02:45:00-05:00",
+    "assignedTo": "Julián Santiago Pico Pinzón (@H3llz07)"
+  },
+  {
+    "id": "DEF-006",
+    "externalCode": "GF-BUG-006",
+    "issueUrl": "https://github.com/H3llz07/GastroForge-Testing/issues/14",
+    "testCaseId": "CP-ORD-001",
+    "module": "orders",
+    "title": "Inconsistencia documental en el umbral mínimo de objetivos táctiles (48x48 px vs 44x44 px)",
+    "severity": "Baja",
+    "severityCode": "P4",
+    "priority": "Baja",
+    "status": "Asignado",
+    "reopened": false,
+    "description": "El plan maestro de pruebas del SUT (docs/testing/TESTING-PLAN.md §1 Nivel 6 y §5.1 Guion M-01) exige botones y selectores táctiles con dimensiones mínimas de 48x48 px (min-h-[48px] min-w-[48px]), mientras que PRD.md (§1.2), EVIDENCIAS-PRUEBAS-MANUALES.md y la suite E2E tablet-golden-path.e2e.spec.ts implementan y validan el umbral WCAG 2.5.5 AAA de 44x44 px (min-h-[44px]).",
+    "stepsToReproduce": [
+      "Comparar docs/testing/TESTING-PLAN.md líneas 87 y 264 (48x48 px) contra docs/prd/PRD.md línea 35 y docs/testing/EVIDENCIAS-PRUEBAS-MANUALES.md líneas 22 y 33-35 (44px).",
+      "Inspeccionar las clases Tailwind min-h-[44px] en los componentes táctiles de apps/web en viewport 1024x768."
+    ],
+    "expectedResult": "Criterio único de ergonomía táctil (44x44 px o 48x48 px) armonizado entre PRD.md, TESTING-PLAN.md y las aserciones automatizadas de Playwright.",
+    "actualResult": "Los componentes cumplen >= 44x44 px (aprobando las aserciones de Playwright), pero algunos controles secundarios están entre 44px y 47px, por debajo de los 48px citados en TESTING-PLAN.md.",
+    "evidenceRefs": [
+      {
+        "id": "EVID-DEF-006-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:22:00-05:00",
+        "description": "Ejecución del Guion M-01 en 1024x768 y registro de la discrepancia documental menor DEF-006 (44x44 px vs 48x48 px)."
+      }
+    ],
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "releaseCommit": "be9089e",
+    "reportedBy": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "reportedAt": "2026-11-16T03:10:00-05:00",
+    "assignedTo": "Jhonatan A. Méndez R. (@JhonatanM2005)"
+  }
+]

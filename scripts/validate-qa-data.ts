@@ -38,6 +38,9 @@ function validateQaData(): void {
   if (!fs.existsSync(testRunsPath)) {
     errors.push('Missing file: data/test-runs.json');
   }
+  if (!fs.existsSync(defectsPath)) {
+    errors.push('Missing file: data/defects.json');
+  }
 
   if (errors.length > 0) {
     for (const err of errors) {
@@ -50,9 +53,7 @@ function validateQaData(): void {
   const requirements = readJsonFile<Requirement[]>(requirementsPath);
   const testCases = readJsonFile<TestCase[]>(testCasesPath);
   const testRuns = readJsonFile<TestRun[]>(testRunsPath);
-  const defects: Defect[] = fs.existsSync(defectsPath)
-    ? readJsonFile<Defect[]>(defectsPath)
-    : [];
+  const defects = readJsonFile<Defect[]>(defectsPath);
 
   // 1. Validate metadata.json
   if (metadata.frozenCommit !== 'be9089e') {
@@ -189,33 +190,44 @@ function validateQaData(): void {
     }
   }
 
-  // 5. Validate defects.json if present and non-empty
-  if (defects.length > 0) {
-    const defectIdSet = new Set<string>();
-    for (const defect of defects) {
-      if (defectIdSet.has(defect.id)) {
-        errors.push(`Duplicate Defect id: ${defect.id}`);
-      }
-      defectIdSet.add(defect.id);
+  // 5. Validate defects.json (strictly required: 6 defects, GitHub issueUrls, testRun resolution, P1+P2 open === 0)
+  if (defects.length !== 6) {
+    errors.push(`Expected 6 defects in data/defects.json, found ${defects.length}`);
+  }
 
-      if (!tcIdSet.has(defect.testCaseId)) {
-        errors.push(
-          `Defect ${defect.id} references unknown testCaseId "${defect.testCaseId}"`,
-        );
-      }
+  const defectIdSet = new Set<string>();
+  for (const defect of defects) {
+    if (defectIdSet.has(defect.id)) {
+      errors.push(`Duplicate Defect id: ${defect.id}`);
+    }
+    defectIdSet.add(defect.id);
 
-      if (defect.releaseCommit !== 'be9089e') {
-        errors.push(
-          `Defect ${defect.id} must have releaseCommit="be9089e", found "${defect.releaseCommit}"`,
-        );
-      }
+    if (!tcIdSet.has(defect.testCaseId)) {
+      errors.push(
+        `Defect ${defect.id} references unknown testCaseId "${defect.testCaseId}"`,
+      );
+    }
 
-      if (!defect.issueUrl || !defect.issueUrl.startsWith('https://github.com/')) {
-        errors.push(
-          `Defect ${defect.id} must have a valid GitHub issueUrl, found "${defect.issueUrl}"`,
-        );
-      }
+    if (defect.releaseCommit !== 'be9089e') {
+      errors.push(
+        `Defect ${defect.id} must have releaseCommit="be9089e", found "${defect.releaseCommit}"`,
+      );
+    }
 
+    if (
+      !defect.issueUrl ||
+      !defect.issueUrl.startsWith(
+        'https://github.com/H3llz07/GastroForge-Testing/issues/',
+      )
+    ) {
+      errors.push(
+        `Defect ${defect.id} must have a valid GitHub issueUrl matching https://github.com/H3llz07/GastroForge-Testing/issues/, found "${defect.issueUrl}"`,
+      );
+    }
+
+    if (!defect.evidenceRefs || defect.evidenceRefs.length === 0) {
+      errors.push(`Defect ${defect.id} must include at least 1 evidenceRef`);
+    } else {
       for (const ev of defect.evidenceRefs) {
         const resolvedEvPath = path.resolve(ROOT_DIR, ev.location);
         if (!fs.existsSync(resolvedEvPath)) {
@@ -225,14 +237,14 @@ function validateQaData(): void {
         }
       }
     }
+  }
 
-    for (const run of testRuns) {
-      for (const defId of run.defectIds) {
-        if (!defectIdSet.has(defId)) {
-          errors.push(
-            `TestRun ${run.id} references unknown defectId "${defId}"`,
-          );
-        }
+  for (const run of testRuns) {
+    for (const defId of run.defectIds) {
+      if (!defectIdSet.has(defId)) {
+        errors.push(
+          `TestRun ${run.id} references unknown defectId "${defId}"`,
+        );
       }
     }
   }
@@ -252,6 +264,14 @@ function validateQaData(): void {
   if (metrics.executionRate !== 100) {
     errors.push(
       `Expected executionRate === 100%, got ${metrics.executionRate}%`,
+    );
+  }
+
+  const openCriticalOrHigh =
+    metrics.defectsBySeverity.P1.open + metrics.defectsBySeverity.P2.open;
+  if (openCriticalOrHigh !== 0) {
+    errors.push(
+      `Expected 0 open P1/P2 defects, found ${openCriticalOrHigh} (P1=${metrics.defectsBySeverity.P1.open}, P2=${metrics.defectsBySeverity.P2.open})`,
     );
   }
 

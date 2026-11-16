@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import rawDefects from '../../data/defects.json';
 import rawMetadata from '../../data/metadata.json';
 import rawRequirements from '../../data/requirements.json';
 import rawTestCases from '../../data/test-cases.json';
@@ -529,6 +530,49 @@ describe('calculateQaMetrics', () => {
       expect(run.releaseCommit).toBe('be9089e');
       expect(run.evidenceRefs.length).toBeGreaterThan(0);
       for (const ev of run.evidenceRefs) {
+        const fullEvPath = path.resolve(process.cwd(), ev.location);
+        expect(fs.existsSync(fullEvPath)).toBe(true);
+      }
+    }
+  });
+
+  it('validates the 6 real defects in defects.json and full metrics across all 4 real datasets', () => {
+    const requirements: Requirement[] = rawRequirements as Requirement[];
+    const testCases: TestCase[] = rawTestCases as unknown as TestCase[];
+    const testRuns: TestRun[] = rawTestRuns as unknown as TestRun[];
+    const defects: Defect[] = rawDefects as unknown as Defect[];
+
+    expect(defects).toHaveLength(6);
+
+    const summary = calculateQaMetrics({
+      requirements,
+      testCases,
+      testRuns,
+      defects,
+    });
+
+    expect(summary.totalDefects).toBe(6);
+    expect(summary.openDefects).toBe(3);
+    expect(summary.closedDefects).toBe(3);
+    expect(summary.reopenedDefects).toBe(0);
+    expect(summary.reopenRate).toBe(0);
+    expect(summary.defectDensity).toBe(0.15);
+    expect(summary.openDefectDensity).toBe(0.075);
+
+    expect(summary.defectsBySeverity.P1.open).toBe(0);
+    expect(summary.defectsBySeverity.P2.open).toBe(0);
+    expect(summary.defectsBySeverity.P2.closed).toBe(1);
+    expect(summary.defectsBySeverity.P3.open).toBe(2);
+    expect(summary.defectsBySeverity.P3.closed).toBe(2);
+    expect(summary.defectsBySeverity.P4.open).toBe(1);
+
+    for (const defect of defects) {
+      expect(defect.releaseCommit).toBe('be9089e');
+      expect(defect.issueUrl).toMatch(
+        /^https:\/\/github\.com\/H3llz07\/GastroForge-Testing\/issues\/\d+$/,
+      );
+      expect(defect.evidenceRefs.length).toBeGreaterThan(0);
+      for (const ev of defect.evidenceRefs) {
         const fullEvPath = path.resolve(process.cwd(), ev.location);
         expect(fs.existsSync(fullEvPath)).toBe(true);
       }
