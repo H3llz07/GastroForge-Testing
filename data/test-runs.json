@@ -1,0 +1,1031 @@
+[
+  {
+    "id": "RUN-001",
+    "testCaseId": "CP-AUTH-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:05:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El usuario con rol MESERO inicia sesión en /login (HTTP 200 OK), recibe Access Token en memoria y cookie HttpOnly de Refresh Token, y es redirigido automáticamente a /tables con encabezado de restaurante activo en viewport 1024x768.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-001-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:05:00-05:00",
+        "description": "Registro de ejecución manual en tablet 1024x768 del inicio de sesión y redirección contextual por rol (CP-AUTH-001)."
+      }
+    ],
+    "observations": "Botón principal 'Ingresar al sistema' verificado con altura táctil >= 44px y respuesta inmediata sin zoom accidental."
+  },
+  {
+    "id": "RUN-002",
+    "testCaseId": "CP-AUTH-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:10:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Los intentos fallidos 1 a 5 en POST /api/v1/auth/login responden HTTP 401 con estructura RFC 7807 uniforme sin enumeración de cuentas; el intento 6 dispara HTTP 429 Too Many Requests (SYSTEM_RATE_LIMIT_EXCEEDED) con X-Request-Id.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-002-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:10:00-05:00",
+        "description": "Verificación de integración en apps/api/test/auth-login.int-spec.ts y rate-limit.guard.spec.ts sobre commit be9089e."
+      },
+      {
+        "id": "EVID-RUN-002-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Log de ejecución de HybridRateLimitGuard y AuthService en suite unitaria."
+      }
+    ],
+    "observations": "Frontera BVA [1..5 -> 401, 6 -> 429] validada en L1/L2 rate limiter sin filtración de existencia del correo."
+  },
+  {
+    "id": "RUN-003",
+    "testCaseId": "CP-AUTH-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:16:00-05:00",
+    "status": "PASSED",
+    "actualResult": "POST /api/v1/auth/refresh rota el token T1 -> T2 en cookie HttpOnly; al reenviar el token rotado T1 se detecta reuso (auth_refresh_reuse_detected), se revoca toda la familia de sesiones incrementando token_version y /auth/logout limpia la sesión activa.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-003-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:16:00-05:00",
+        "description": "Evidencia de ejecución de apps/api/test/auth-refresh-logout.int-spec.ts sobre commit be9089e."
+      },
+      {
+        "id": "EVID-RUN-003-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Traza del evento WARN [AuthService] auth_refresh_reuse_detected en auth.service.spec.ts."
+      }
+    ],
+    "observations": "Cumple estrictamente ADR-0003 y UC-AUTH-02/UC-AUTH-03."
+  },
+  {
+    "id": "RUN-004",
+    "testCaseId": "CP-AUTH-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:22:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El cambio de restaurante activo desde el selector superior reemite el JWT con el nuevo restaurant_id y rol, recarga datos aislados del segundo tenant y mantiene ratio de contraste de marca de 7.42:1 (>= 4.5:1 WCAG AA).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-004-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:22:00-05:00",
+        "description": "Verificación manual de cambio de tenant y contraste WCAG AA en tablet 1024x768."
+      },
+      {
+        "id": "EVID-RUN-004-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de src/modules/tenants/domain/brand-wcag.helper.spec.ts."
+      }
+    ],
+    "observations": "Respaldado además en integración por auth-switch-restaurant.int-spec.ts y tenants-restaurant-brand.int-spec.ts."
+  },
+  {
+    "id": "RUN-005",
+    "testCaseId": "CP-AUTH-005",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:28:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El Administrador genera el token temporal de restablecimiento (TTL 15 min); al consumirse por primera vez actualiza el hash Argon2id, incrementa token_version revocando la sesión previa del cajero y rechaza el segundo intento de uso con HTTP 400/401.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-005-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:28:00-05:00",
+        "description": "Registro de prueba manual de restablecimiento administrativo de contraseña y revocación de sesión activa."
+      },
+      {
+        "id": "EVID-RUN-005-2",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:28:00-05:00",
+        "description": "Cobertura complementaria en apps/api/test/auth-password-reset.int-spec.ts."
+      }
+    ],
+    "observations": "Token de un solo uso invalidado atómicamente tras el primer consumo."
+  },
+  {
+    "id": "RUN-006",
+    "testCaseId": "CP-AUTH-006",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:34:00-05:00",
+    "status": "FAILED",
+    "actualResult": "La suite unitaria de can.helper.spec.ts pasa sus aserciones internas, pero la inspección de tabla de decisión contra PRD.md (§2.1) y TESTING-PLAN.md (§2.2) revela que MESERO_ACTIONS en can.helper.ts (líneas 75-76) incluye 'kitchen:read' y 'kitchen:advance_status' sin validación de stationId.",
+    "defectIds": ["DEF-004"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-006-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:34:00-05:00",
+        "description": "Inspección de código de apps/api/src/modules/auth/domain/can.helper.ts (líneas 68-77) vs PRD.md §2.1 y TESTING-PLAN.md §2.2."
+      },
+      {
+        "id": "EVID-RUN-006-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución de src/modules/auth/domain/can.helper.spec.ts y nota de auditoría QA para DEF-004."
+      }
+    ],
+    "observations": "Defecto abierto de severidad Media (P3) registrado como DEF-004 (GF-BUG-004): exceso de privilegios en MESERO_ACTIONS frente a la matriz normativa."
+  },
+  {
+    "id": "RUN-007",
+    "testCaseId": "CP-CAT-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:40:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Las estaciones 'PARRILLA' y 'BARRA' y la categoría 'Cortes Madurados' (sort_order = 1) se crean y ordenan correctamente; al desactivar una categoría secundaria desaparece de inmediato de la vista POS de toma de pedidos.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-007-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:40:00-05:00",
+        "description": "Evidencia de ejecución manual de gestión de estaciones y categorías de catálogo en 1024x768."
+      },
+      {
+        "id": "EVID-RUN-007-2",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:40:00-05:00",
+        "description": "Verificación de catalog-stations.int-spec.ts y catalog-categories.int-spec.ts."
+      }
+    ],
+    "observations": "Unicidad de código de estación y nombre de categoría por tenant confirmada."
+  },
+  {
+    "id": "RUN-008",
+    "testCaseId": "CP-CAT-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:46:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El helper calculateTaxBreakdown calcula base gravable e impuesto incluido con precisión exacta Decimal(12,2) en fronteras (0.01, 100.00, 35900.00, 9999999999.99) y tasas (0%, 8%, 19%) cumpliendo netAmount + taxAmount === grossAmount.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-008-1",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/catalog/domain/tax-breakdown.helper.spec.ts en commit be9089e."
+      }
+    ],
+    "observations": "Cero errores de redondeo de coma flotante IEEE 754 en desglose de IVA incluido."
+  },
+  {
+    "id": "RUN-009",
+    "testCaseId": "CP-CAT-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:52:00-05:00",
+    "status": "PASSED",
+    "actualResult": "En el grupo de modificadores con rango [1..2], las selecciones fuera de frontera (0 y 3 opciones) son rechazadas con HTTP 400 Bad Request, mientras que las fronteras válidas (1 y 2 opciones) son aceptadas sumando el price_delta exacto.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-009-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:52:00-05:00",
+        "description": "Verificación de integración de apps/api/test/catalog-modifier-groups.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-009-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/catalog/domain/modifier-rules.helper.spec.ts."
+      }
+    ],
+    "observations": "Cobertura completa de particiones y valores límite (min - 1, min, max, max + 1)."
+  },
+  {
+    "id": "RUN-010",
+    "testCaseId": "CP-CAT-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T01:58:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Al cambiar el estado de 'Lomo al Trapo' a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-010-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T01:58:00-05:00",
+        "description": "Evidencia manual de transición de disponibilidad rápida (86ing) en turno activo."
+      },
+      {
+        "id": "EVID-RUN-010-2",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T01:58:00-05:00",
+        "description": "Verificación de integración en apps/api/test/catalog-menu-items.int-spec.ts."
+      }
+    ],
+    "observations": "Sincronización reactiva confirmada entre catálogo administrativo y pantalla de pedidos."
+  },
+  {
+    "id": "RUN-011",
+    "testCaseId": "CP-TAB-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:04:00-05:00",
+    "status": "PASSED",
+    "actualResult": "La creación de mesa con capacidad 0 es rechazada con HTTP 400; capacidades válidas (1 y 12) se persisten con éxito; un código duplicado 'M-01' en el mismo restaurante retorna HTTP 409 mientras que el Tenant B puede registrar su propia mesa 'M-01'.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-011-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T02:04:00-05:00",
+        "description": "Verificación de integración de apps/api/test/tables-management.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-011-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/tables/domain/tables-validation.helper.spec.ts."
+      }
+    ],
+    "observations": "Restricción UNIQUE (restaurant_id, code) y validación BVA de capacidad verificadas."
+  },
+  {
+    "id": "RUN-012",
+    "testCaseId": "CP-TAB-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:10:00-05:00",
+    "status": "PASSED",
+    "actualResult": "En viewport 1024x768 la vista /tables renderiza tarjetas táctiles con altura medida de 108px (>= 104px requeridos), sin scroll horizontal y diferenciando mesas libres y ocupadas por color semántico, etiqueta textual e ícono.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-012-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:10:00-05:00",
+        "description": "Medición DOM en DevTools 1024x768 de tarjetas de mesa (>= 104px) y semántica visual FREE vs OCCUPIED."
+      }
+    ],
+    "observations": "Cumple ergonomía táctil tablet-first y accesibilidad visual de salón."
+  },
+  {
+    "id": "RUN-013",
+    "testCaseId": "CP-TAB-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:16:00-05:00",
+    "status": "PASSED",
+    "actualResult": "GET /api/v1/tables/overview reporta la mesa 'M-05' como FREE inicialmente, cambia automáticamente a OCCUPIED al abrir una orden DINE_IN activa y retorna a FREE tras liquidar y cerrar la orden.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-013-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T02:16:00-05:00",
+        "description": "Verificación de integración de apps/api/test/tables-overview.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-013-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/tables/domain/table-occupancy.helper.spec.ts."
+      }
+    ],
+    "observations": "Ocupación derivada dinámicamente sin columnas de estado redundantes."
+  },
+  {
+    "id": "RUN-014",
+    "testCaseId": "CP-ORD-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:22:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M-02, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (< 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006).",
+    "defectIds": ["DEF-006"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-014-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:22:00-05:00",
+        "description": "Ejecución del Guion M-01 en 1024x768 y registro de la discrepancia documental menor DEF-006 (44x44 px vs 48x48 px)."
+      }
+    ],
+    "observations": "El caso aprueba funcionalmente en < 15s en 1024x768; se vincula el hallazgo documental cosmético P4 DEF-006 (GF-BUG-006) entre PRD.md/E2E (44x44 px) y TESTING-PLAN.md (48x48 px)."
+  },
+  {
+    "id": "RUN-015",
+    "testCaseId": "CP-ORD-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:28:00-05:00",
+    "status": "PASSED",
+    "actualResult": "POST /api/v1/orders crea la cuenta DINE_IN en mesa M-03 (HTTP 201, correlativo diario #1), rechaza una segunda apertura simultánea sobre la misma mesa M-03 con HTTP 409 Conflict y permite crear orden TAKEOUT sin mesa con correlativo #2.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-015-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T02:28:00-05:00",
+        "description": "Verificación de integración de apps/api/test/orders-open.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-015-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/orders/domain/order-number.helper.spec.ts."
+      }
+    ],
+    "observations": "Numeración correlativa diaria por tenant e invariante de orden activa única por mesa verificados."
+  },
+  {
+    "id": "RUN-016",
+    "testCaseId": "CP-ORD-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:34:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Cantidades en frontera inválida (0 y 100) responden HTTP 400; cantidades válidas (1 y 99) despachan la tanda, recalculan totales, encolan outbox_event e incrementan version = 2; una mutación concurrente con version obsoleta (1) recibe HTTP 409 ORDER_CONFLICT_VERSION.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-016-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T02:34:00-05:00",
+        "description": "Verificación de integración de apps/api/test/orders-rounds.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-016-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/orders/domain/round-pricing.helper.spec.ts."
+      }
+    ],
+    "observations": "Control de concurrencia optimista e inmutabilidad de snapshots de precios verificados."
+  },
+  {
+    "id": "RUN-017",
+    "testCaseId": "CP-ORD-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:40:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El Mesero no puede anular directamente un ítem en estado PREPARING; al suministrar autorización de Gerente y el motivo obligatorio ('Cliente cambió de opinión por alergia alimentaria'), el ítem pasa a CANCELLED, se descuenta del total y se audita en audit_log.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-017-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:40:00-05:00",
+        "description": "Registro de prueba manual de cancelación supervisada de ítem en preparación con motivo obligatorio."
+      }
+    ],
+    "observations": "Validación de formulario impide confirmar la anulación cuando el motivo está vacío."
+  },
+  {
+    "id": "RUN-018",
+    "testCaseId": "CP-ORD-005",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:46:00-05:00",
+    "status": "PASSED",
+    "actualResult": "En backend, MESERO cancela exitosamente en PENDING (HTTP 200) y recibe HTTP 403 en PREPARING; GERENTE cancela con motivo obligatorio en PREPARING y READY registrando audit_log; cualquier intento de cancelar un ítem SERVED retorna HTTP 409/422.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-018-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T02:46:00-05:00",
+        "description": "Verificación de integración de apps/api/test/orders-item-cancellation.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-018-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/orders/domain/item-cancellation.helper.spec.ts."
+      }
+    ],
+    "observations": "Máquina de estados y matriz de permisos de cancelación verificadas en dominio e integración."
+  },
+  {
+    "id": "RUN-019",
+    "testCaseId": "CP-ORD-006",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T02:52:00-05:00",
+    "status": "FAILED",
+    "actualResult": "La función can({ role: 'CAJERO' }, 'orders:create') retorna false en can.helper.ts (línea 47 de can.helper.spec.ts), contradiciendo la Matriz de Capacidades del PRD.md (§2.1, línea 86) que establece que Cajero sí puede abrir orden/cuenta.",
+    "defectIds": ["DEF-005"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-019-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:52:00-05:00",
+        "description": "Inspección normativa de CAJERO_ACTIONS en can.helper.ts y can.test.ts frente a PRD.md §2.1."
+      },
+      {
+        "id": "EVID-RUN-019-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:15:05-05:00",
+        "description": "Ejecución de apps/web/app/features/auth/domain/can.test.ts y nota de auditoría para DEF-005."
+      }
+    ],
+    "observations": "Defecto abierto de severidad Media (P3) registrado como DEF-005 (GF-BUG-005): CAJERO carece de orders:create para abrir órdenes TAKEOUT en caja."
+  },
+  {
+    "id": "RUN-020",
+    "testCaseId": "CP-KIT-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T02:58:00-05:00",
+    "status": "PASSED",
+    "actualResult": "En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación 'PARRILLA' en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-020-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T02:58:00-05:00",
+        "description": "Evidencia manual en 1024x768 de la cola KDS por estación y semáforo de urgencia."
+      },
+      {
+        "id": "EVID-RUN-020-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/kitchen/domain/kds-urgency.helper.spec.ts."
+      }
+    ],
+    "observations": "Filtros de estación con altura táctil >= 44px y alta legibilidad a distancia en cocina."
+  },
+  {
+    "id": "RUN-021",
+    "testCaseId": "CP-KIT-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T03:04:00-05:00",
+    "status": "PASSED",
+    "actualResult": "GET /api/v1/kitchen/queue retorna al cocinero asignado a PARRILLA únicamente los ítems de PARRILLA (excluyendo BARRA), y bloquea en modo fail-closed con HTTP 403 Forbidden al cocinero sin estación asignada o que solicita otra estación.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-021-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:04:00-05:00",
+        "description": "Verificación de integración de apps/api/test/kitchen-queue.int-spec.ts."
+      }
+    ],
+    "observations": "Aislamiento por estación de cocina verificado a nivel de dominio y endpoint HTTP."
+  },
+  {
+    "id": "RUN-022",
+    "testCaseId": "CP-KIT-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T03:10:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Las transiciones secuenciales PENDING -> PREPARING -> READY -> SERVED se ejecutan con éxito insertando 3 registros inmutables en order_item_status_history, mientras que los saltos (PENDING -> READY) o retrocesos (READY -> PREPARING, SERVED -> PENDING) son rechazados con HTTP 400/422.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-022-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:10:00-05:00",
+        "description": "Verificación de integración de apps/api/test/kitchen-status.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-022-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/kitchen/domain/kitchen-status.helper.spec.ts."
+      }
+    ],
+    "observations": "Trazabilidad completa de actor y marca de tiempo en order_item_status_history."
+  },
+  {
+    "id": "RUN-023",
+    "testCaseId": "CP-KIT-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T03:16:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Durante el corte simulado de red Wi-Fi de 30 segundos en la tablet KDS, la tanda despachada se persiste en outbox_event; al restaurar la red, el cliente SSE se reconecta automáticamente, invalida las queries de TanStack Query y muestra el nuevo pedido sin presionar F5.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-023-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:16:00-05:00",
+        "description": "Evidencia de ejecución del Guion M-02 (reconexión reactiva SSE tras caída de red de 30s)."
+      },
+      {
+        "id": "EVID-RUN-023-2",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:16:00-05:00",
+        "description": "Verificación de integración de apps/api/test/outbox-sse.int-spec.ts."
+      }
+    ],
+    "observations": "Cumple ADR-0004 (Transactional Outbox + FOR UPDATE SKIP LOCKED + reconexión SSE)."
+  },
+  {
+    "id": "RUN-024",
+    "testCaseId": "CP-CSH-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:22:00-05:00",
+    "status": "PASSED",
+    "actualResult": "La apertura inicial de 'CAJA-PRINCIPAL' con $200.000 retorna HTTP 201 (OPEN); un segundo intento simultáneo sobre la misma caja es rechazado por el índice parcial uq_cash_register_open con HTTP 409 (CASH_REGISTER_ALREADY_OPEN), permitiendo reabrir solo tras cerrar el turno activo.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-024-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:22:00-05:00",
+        "description": "Verificación de integración de apps/api/test/cash-session.int-spec.ts."
+      }
+    ],
+    "observations": "Garantiza unicidad de sesión abierta por caja a nivel de motor PostgreSQL."
+  },
+  {
+    "id": "RUN-025",
+    "testCaseId": "CP-CSH-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:28:00-05:00",
+    "status": "PASSED",
+    "actualResult": "La interfaz ejecuta arqueo ciego sin revelar el saldo esperado ($350.000); al declarar $345.000 físicos e ingresar la observación obligatoria, calcula exactamente la diferencia (-$5.000 faltante), transiciona a CLOSED inmutable y bloquea cobros posteriores.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-025-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:28:00-05:00",
+        "description": "Evidencia manual de apertura y cierre de turno con arqueo ciego en /cashier."
+      },
+      {
+        "id": "EVID-RUN-025-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/cash/domain/cash-reconciliation.helper.spec.ts."
+      }
+    ],
+    "observations": "Conciliación aritmética exacta y estado terminal CLOSED inmutable verificados."
+  },
+  {
+    "id": "RUN-026",
+    "testCaseId": "CP-CSH-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:34:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El cobro dividido ($50.000 CASH + $30.000 CARD) para liquidar la orden de $80.000 se ejecuta exitosamente bajo app_user (HTTP 201), verificando que la eliminación de FOR UPDATE sobre la tabla append-only payment corrigió el error SQL 42501 (DEF-001) y liberó la mesa a estado FREE.",
+    "defectIds": ["DEF-001"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-026-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:34:00-05:00",
+        "description": "Verificación de regresión de DEF-001 en apps/api/test/cash-payments.int-spec.ts bajo rol app_user."
+      },
+      {
+        "id": "EVID-RUN-026-2",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:34:00-05:00",
+        "description": "Registro de defecto histórico resuelto y cerrado DEF-001 (GF-BUG-001) en commit be9089e."
+      }
+    ],
+    "observations": "Regresión de DEF-001 (GF-BUG-001) verificada y cerrada satisfactoriamente en el commit congelado be9089e."
+  },
+  {
+    "id": "RUN-027",
+    "testCaseId": "CP-CSH-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:40:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Los porcentajes de propina fuera de frontera (-1% y 101%) son rechazados; los valores límite válidos (0%, 10% y 100%) calculan la propina exacta en Decimal(12,2) manteniendo inalterado el IVA de la orden ($15.966,39).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-027-1",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/cash/domain/payment-balance.helper.spec.ts."
+      }
+    ],
+    "observations": "La propina voluntaria nunca altera la base gravable ni el impuesto de consumo/IVA."
+  },
+  {
+    "id": "RUN-028",
+    "testCaseId": "CP-CSH-005",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:46:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Al intentar cobrar $60.000 sobre un saldo pendiente de $45.000, el backend responde HTTP 422 (application/problem+json) y el componente AlertBanner renderiza explícitamente el campo err.detail del problema RFC 7807, confirmando la corrección de DEF-003.",
+    "defectIds": ["DEF-003"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-028-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:46:00-05:00",
+        "description": "Verificación manual en /cashier de renderizado de err.detail en AlertBanner (regresión de DEF-003)."
+      },
+      {
+        "id": "EVID-RUN-028-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:15:05-05:00",
+        "description": "Ejecución exitosa de app/lib/api/problem-details.test.ts y app/lib/api/client.test.ts."
+      }
+    ],
+    "observations": "Regresión de DEF-003 (GF-BUG-003) verificada y cerrada en commit be9089e."
+  },
+  {
+    "id": "RUN-029",
+    "testCaseId": "CP-CSH-006",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:52:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El reintento con idéntico Idempotency-Key ('idem-cash-pay-0001-uuid') y mismo payload retorna el resultado original sin duplicar el registro en la tabla payment; el reuso de la misma llave con monto distinto ($25.000) es rechazado con HTTP 409 Conflict.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-029-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T03:52:00-05:00",
+        "description": "Verificación de idempotencia transaccional con hash SHA-256 en apps/api/test/cash-payments.int-spec.ts."
+      }
+    ],
+    "observations": "Cero cobros duplicados ante reintentos concurrentes de red en tablet."
+  },
+  {
+    "id": "RUN-030",
+    "testCaseId": "CP-CSH-007",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T03:58:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El usuario con rol GERENTE ejecuta el reverso del pago de $65.000 ingresando motivo obligatorio; el pago original se mantiene inmutable, se inserta el asiento compensatorio referenciando reverses_payment_id y el saldo pendiente vuelve a $65.000.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-030-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T03:58:00-05:00",
+        "description": "Evidencia de ejecución manual de reverso compensatorio y ajuste de saldo en módulo de Caja."
+      }
+    ],
+    "observations": "Cumple contabilidad append-only sin UPDATE ni DELETE sobre pagos."
+  },
+  {
+    "id": "RUN-031",
+    "testCaseId": "CP-CSH-008",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:04:00-05:00",
+    "status": "PASSED",
+    "actualResult": "POST /api/v1/cash/payments/:id/reverse rechaza al rol CAJERO con HTTP 403 Forbidden, rechaza a GERENTE sin motivo con HTTP 400 Bad Request y aprueba con HTTP 201 cuando GERENTE envía motivo válido, preservando inmutable la fila original en payment.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-031-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:04:00-05:00",
+        "description": "Verificación de integración de apps/api/test/cash-reversals.int-spec.ts."
+      }
+    ],
+    "observations": "Autorización RBAC e inmutabilidad SQL verificadas en reversos financieros."
+  },
+  {
+    "id": "RUN-032",
+    "testCaseId": "CP-INV-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:10:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Para el insumo 'Bife Chorizo Madurado (kg)' con minThreshold = 10, el indicador de alerta permanece en false con stock = 11 y se activa exactamente en las fronteras BVA stock = 10 y stock = 9 (currentStock <= minThreshold).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-032-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:10:00-05:00",
+        "description": "Verificación de integración de apps/api/test/inventory-items.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-032-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/inventory/domain/inventory-stock.helper.spec.ts."
+      }
+    ],
+    "observations": "Frontera BVA [11, 10, 9] evaluada en dominio e integración."
+  },
+  {
+    "id": "RUN-033",
+    "testCaseId": "CP-INV-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:16:00-05:00",
+    "status": "PASSED",
+    "actualResult": "El movimiento IN (+10) actualiza el stock de 5 a 15; un movimiento OUT sin motivo es rechazado con HTTP 400; el movimiento OUT (-18) con motivo válido es aceptado (HTTP 201), lleva el stock a -3 con alerta auditada y persiste en la tabla append-only inventory_movement.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-033-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:16:00-05:00",
+        "description": "Verificación de integración de apps/api/test/inventory-movements.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-033-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/inventory/domain/inventory-stock.helper.spec.ts."
+      }
+    ],
+    "observations": "Tolerancia de stock negativo auditado e inmutabilidad del kardex verificadas."
+  },
+  {
+    "id": "RUN-034",
+    "testCaseId": "CP-REP-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:22:00-05:00",
+    "status": "PASSED",
+    "actualResult": "GET /api/v1/reports/dashboard retorna con exactitud ventas netas, IVA, propinas, ticket promedio, desglose por medio de pago y top productos del tenant activo, hidratando la caché Redis en la primera consulta e invalidándola tras un nuevo cobro.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-034-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:22:00-05:00",
+        "description": "Verificación de integración de apps/api/test/reports-dashboard.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-034-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/reports/domain/reports-analytics.helper.spec.ts."
+      }
+    ],
+    "observations": "Consistencia entre agregaciones SQL por tenant y caché Redis confirmada."
+  },
+  {
+    "id": "RUN-035",
+    "testCaseId": "CP-REP-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:28:00-05:00",
+    "status": "PASSED",
+    "actualResult": "En vista previa de impresión (@media print) con ancho de papel de 80mm (~302px), la navegación lateral y botones quedan ocultos (display: none) y tanto el recibo de orden como la tirilla de cierre de caja se ajustan sin truncamiento ni scroll horizontal.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-035-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T04:28:00-05:00",
+        "description": "Verificación manual de formato de impresión térmica de 80mm (@media print)."
+      }
+    ],
+    "observations": "Tipografía tabular monoespaciada alinea perfectamente montos, IVA, propinas y arqueo."
+  },
+  {
+    "id": "RUN-036",
+    "testCaseId": "CP-REP-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executedAt": "2026-11-16T04:34:00-05:00",
+    "status": "PASSED",
+    "actualResult": "La exportación CSV responde HTTP 200 con prefijo UTF-8 BOM (\\uFEFF), proyecta correctamente firstName/lastName y cashierId sin error de esquema Prisma (verificando la corrección de DEF-002) y neutraliza payloads de CSV Formula Injection (=, +, -, @) prefijando comilla simple.",
+    "defectIds": ["DEF-002"],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-036-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:34:00-05:00",
+        "description": "Verificación de regresión de DEF-002 en apps/api/test/reports-export.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-036-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/modules/reports/domain/reports-export.helper.spec.ts."
+      }
+    ],
+    "observations": "Regresión de DEF-002 (GF-BUG-002) verificada y cerrada en el commit congelado be9089e."
+  },
+  {
+    "id": "RUN-037",
+    "testCaseId": "CP-RLS-001",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T04:40:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Con token del Tenant A, toda lectura o mutación por UUID sobre recursos del Tenant B retorna HTTP 404/403, la inserción con FK compuesta inter-tenant es rechazada por PostgreSQL y las consultas bajo app_user sin app.restaurant_id devuelven exactamente 0 filas.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-037-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:40:00-05:00",
+        "description": "Verificación de suite negativa multi-tenant apps/api/test/rls-negative-hardening.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-037-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/common/database/tenant-tx.spec.ts."
+      }
+    ],
+    "observations": "Cero fugas de datos entre restaurantes (FORCE ROW LEVEL SECURITY activo en las 23 tablas de tenant)."
+  },
+  {
+    "id": "RUN-038",
+    "testCaseId": "CP-RLS-002",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T04:45:00-05:00",
+    "status": "PASSED",
+    "actualResult": "pg_roles confirma rolsuper = false y rolbypassrls = false para app_user, auth_lookup y outbox_worker; RlsStartupGuardService aprueba para app_user y aborta ante rol privilegiado; las 10 operaciones UPDATE/DELETE sobre las 5 tablas append-only son rechazadas con permission denied.",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-038-1",
+        "kind": "SPEC",
+        "location": "data/evidence/integration-rls-verification-be9089e.md",
+        "capturedAt": "2026-11-16T04:45:00-05:00",
+        "description": "Verificación de integración de apps/api/test/rls-least-privilege.int-spec.ts."
+      },
+      {
+        "id": "EVID-RUN-038-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de PASS src/common/database/rls-startup.guard.spec.ts."
+      }
+    ],
+    "observations": "Cumplimiento total de ADR-0002 y ADR-0006 a nivel de privilegios SQL."
+  },
+  {
+    "id": "RUN-039",
+    "testCaseId": "CP-RLS-003",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T04:50:00-05:00",
+    "status": "PASSED",
+    "actualResult": "La suite Playwright E2E (tablet-golden-path.e2e.spec.ts) completa sin errores el flujo login -> sesión de caja -> mapa de mesas -> apertura de pedido y envío de tanda -> avance KDS (Pendiente -> En preparación -> Listo) -> cobro y vista de reportes en Chromium y WebKit (1024x768).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-039-1",
+        "kind": "SPEC",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T04:50:00-05:00",
+        "description": "Evidencia de ejecución de apps/web/e2e/specs/tablet-golden-path.e2e.spec.ts en Chromium y WebKit (1024x768)."
+      }
+    ],
+    "observations": "Integración punta a punta verificada en ambos motores de renderizado sobre viewport tablet."
+  },
+  {
+    "id": "RUN-040",
+    "testCaseId": "CP-RLS-004",
+    "releaseCommit": "be9089e",
+    "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
+    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executedAt": "2026-11-16T04:55:00-05:00",
+    "status": "PASSED",
+    "actualResult": "Las peticiones con Origin: null y Origin: https://evil-attacker.example.com no reciben cabecera Access-Control-Allow-Origin; la respuesta HTTP 401 conserva X-Request-Id: req-qa-audit-0040 y devuelve payload estándar RFC 7807 (application/problem+json).",
+    "defectIds": [],
+    "evidenceRefs": [
+      {
+        "id": "EVID-RUN-040-1",
+        "kind": "LOG",
+        "location": "data/evidence/playwright-e2e-and-manual-tablet-be9089e.md",
+        "capturedAt": "2026-11-16T04:55:00-05:00",
+        "description": "Inspección manual de cabeceras Zero-Trust CORS, X-Request-Id y RFC 7807."
+      },
+      {
+        "id": "EVID-RUN-040-2",
+        "kind": "LOG",
+        "location": "data/evidence/unit-tests-execution-be9089e.txt",
+        "capturedAt": "2026-11-16T01:14:40-05:00",
+        "description": "Ejecución exitosa de cors.config.spec.ts y problem-details.filter.spec.ts."
+      }
+    ],
+    "observations": "Respaldado además en integración por rls-negative-hardening.int-spec.ts y security-health.int-spec.ts."
+  }
+]

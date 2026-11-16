@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import rawMetadata from '../../data/metadata.json';
 import rawRequirements from '../../data/requirements.json';
 import rawTestCases from '../../data/test-cases.json';
+import rawTestRuns from '../../data/test-runs.json';
 import type {
   Defect,
   QaMetadata,
@@ -497,5 +498,40 @@ describe('calculateQaMetrics', () => {
         expect(fs.existsSync(fullSpecPath)).toBe(true);
       }
     });
+  });
+
+  it('validates the 40 real test executions in test-runs.json against commit be9089e and evidence files', () => {
+    const requirements: Requirement[] = rawRequirements as Requirement[];
+    const testCases: TestCase[] = rawTestCases as unknown as TestCase[];
+    const testRuns: TestRun[] = rawTestRuns as unknown as TestRun[];
+
+    expect(testRuns).toHaveLength(40);
+
+    const summary = calculateQaMetrics({
+      requirements,
+      testCases,
+      testRuns,
+      defects: [],
+    });
+
+    expect(summary.totalCases).toBe(40);
+    expect(summary.executedCases).toBe(40);
+    expect(summary.passedCases).toBe(38);
+    expect(summary.failedCases).toBe(2);
+    expect(summary.blockedCases).toBe(0);
+    expect(summary.skippedCases).toBe(0);
+    expect(summary.notRunCases).toBe(0);
+    expect(summary.executionRate).toBe(100);
+    expect(summary.passRate).toBe(95);
+    expect(summary.requirementCoverage).toBe(100);
+
+    for (const run of testRuns) {
+      expect(run.releaseCommit).toBe('be9089e');
+      expect(run.evidenceRefs.length).toBeGreaterThan(0);
+      for (const ev of run.evidenceRefs) {
+        const fullEvPath = path.resolve(process.cwd(), ev.location);
+        expect(fs.existsSync(fullEvPath)).toBe(true);
+      }
+    }
   });
 });

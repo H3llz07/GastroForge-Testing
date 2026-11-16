@@ -1,0 +1,95 @@
+================================================================================
+GASTROFORGE — REGISTRO DE EJECUCIÓN REAL DE SUITES UNITARIAS (L2 / L3)
+SUT Repository : https://github.com/JhonatanM2005/GastroForge
+Frozen Commit  : be9089e (feat(web): add playwright tablet e2e suite and manual testing evidences (#71))
+Execution Date : 2026-11-16T01:14:40-05:00
+Environment    : Windows_NT 10.0 / Node.js v22 LTS / Jest 29.7.0 & Vitest 5.1.0
+Command        : npm run test:unit
+================================================================================
+
+> gastroforge@0.1.0 test:unit
+> npm run test:unit --workspaces --if-present
+
+
+> @gastroforge/api@0.1.0 test:unit
+> jest --config jest.config.cjs
+
+PASS src/modules/cash/domain/cash-reconciliation.helper.spec.ts (9.824 s)
+PASS src/modules/cash/domain/payment-balance.helper.spec.ts (9.923 s)
+PASS src/modules/reports/domain/reports-analytics.helper.spec.ts (10.051 s)
+PASS src/modules/orders/domain/item-cancellation.helper.spec.ts (10.096 s)
+PASS src/modules/inventory/domain/inventory-stock.helper.spec.ts (10.151 s)
+PASS src/modules/tenants/domain/brand-wcag.helper.spec.ts (10.122 s)
+PASS src/modules/catalog/domain/modifier-rules.helper.spec.ts (10.237 s)
+PASS src/modules/kitchen/domain/kitchen-status.helper.spec.ts
+PASS src/common/security/cors.config.spec.ts
+PASS src/modules/tables/domain/table-occupancy.helper.spec.ts
+PASS src/modules/orders/domain/round-pricing.helper.spec.ts
+PASS src/modules/kitchen/domain/kds-urgency.helper.spec.ts
+PASS src/modules/auth/domain/can.helper.spec.ts
+PASS src/modules/orders/domain/order-number.helper.spec.ts
+PASS src/modules/tables/domain/tables-validation.helper.spec.ts
+PASS src/modules/catalog/domain/tax-breakdown.helper.spec.ts
+PASS src/common/outbox/outbox.helper.spec.ts
+PASS src/common/logger/logger.config.spec.ts (10.768 s)
+PASS src/modules/reports/domain/reports-export.helper.spec.ts (10.954 s)
+[Nest] 24112  - 16/11/2026, 1:14:53 a. m.   ERROR [ProblemDetailsFilter] Object(3) {
+  requestId: 'req_test_123',
+  instance: '/api/v1/orders',
+  error: 'DB password=supersecret'
+}
+PASS src/common/errors/problem-details.filter.spec.ts (11.021 s)
+PASS src/common/database/rls-startup.guard.spec.ts (11.055 s)
+PASS src/common/database/tenant-tx.spec.ts (11.047 s)
+[Nest] 16264  - 16/11/2026, 1:14:54 a. m.     LOG [AuthService] Object(4) {
+  event: 'auth_login_succeeded',
+  userId: 'u-1',
+  restaurantId: 'r-1',
+  email: 'a***@gastroforge.dev'
+}
+PASS src/modules/auth/auth.service.spec.ts (11.815 s)
+PASS src/common/security/rate-limit/rate-limit.guard.spec.ts (11.767 s)
+[Nest] 16264  - 16/11/2026, 1:14:54 a. m.    WARN [AuthService] Object(4) {
+  event: 'auth_refresh_reuse_detected',
+  userId: 'u-1',
+  familyId: 'fam-1',
+  sessionId: 'sess-old'
+}
+[Nest] 26828  - 16/11/2026, 1:14:54 a. m.    WARN [HybridRateLimitGuard] L2 rate limit store unavailable for rule "auth:login:ip": ECONNREFUSED
+[Nest] 26828  - 16/11/2026, 1:14:54 a. m.    WARN [HybridRateLimitGuard] L2 rate limit store unavailable for rule "api:general:tenant_user": ETIMEDOUT
+PASS src/modules/health/health.controller.spec.ts (11.946 s)
+
+Test Suites: 25 passed, 25 total
+Tests:       106 passed, 106 total
+Snapshots:   0 total
+Time:        13.125 s
+Ran all test suites.
+
+> @gastroforge/web@0.1.0 test:unit
+> vitest run app
+
+ RUN  v5.1.0 C:/Users/User/Desktop/Programacion/GastroForge/apps/web
+
+ ✓ app/features/auth/domain/can.test.ts (5 tests) 4ms
+ ✓ app/lib/api/problem-details.test.ts (2 tests) 24ms
+ ✓ app/lib/api/client.test.ts (2 tests) 19ms
+
+ Test Files  3 passed (3)
+      Tests  9 passed (9)
+   Start at  01:15:05
+   Duration  2.44s (import 65%, worker 20%, transform 12%, tests 2%)
+
+================================================================================
+RESUMEN DE VERIFICACIÓN E INSPECCIÓN DE DOMINIO (COMMIT be9089e)
+- Backend (@gastroforge/api): 25 suites aprobadas, 106 tests unitarios en verde.
+- Frontend (@gastroforge/web): 3 suites aprobadas, 9 tests unitarios en verde.
+- Nota de Auditoría QA (CP-AUTH-006 / DEF-004 y CP-ORD-006 / DEF-005):
+  Aunque las aserciones internas de `can.helper.spec.ts` y `can.test.ts` pasan en
+  verde respecto al código implementado, la auditoría de tabla de decisión contra
+  la especificación normativa (`docs/prd/PRD.md` §2.1 y `docs/testing/TESTING-PLAN.md` §2.2)
+  evidencia dos desviaciones funcionales en `can.helper.ts`:
+  1) DEF-004 (CP-AUTH-006): `MESERO_ACTIONS` (líneas 75-76) otorga `kitchen:read` y
+     `kitchen:advance_status` de forma global sin restricción de estación ni estado.
+  2) DEF-005 (CP-ORD-006): `CAJERO_ACTIONS` (líneas 79-86) omite `'orders:create'`,
+     impidiendo al rol Cajero abrir órdenes/cuentas según lo exigido en PRD.md §2.1.
+================================================================================
