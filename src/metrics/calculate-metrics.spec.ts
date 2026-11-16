@@ -578,4 +578,73 @@ describe('calculateQaMetrics', () => {
       }
     }
   });
+
+  it('verifies generated markdown deliverables exist, contain all 40 test case IDs and 6 defect IDs, and have zero unreplaced placeholders', () => {
+    const testCases: TestCase[] = rawTestCases as unknown as TestCase[];
+    const defects: Defect[] = rawDefects as unknown as Defect[];
+
+    const planPath = path.resolve(
+      process.cwd(),
+      'docs',
+      'plan-de-pruebas-gastroforge.md',
+    );
+    const matrixPath = path.resolve(
+      process.cwd(),
+      'docs',
+      'matriz-trazabilidad.md',
+    );
+    const bugsPath = path.resolve(process.cwd(), 'docs', 'reporte-bugs.md');
+
+    expect(fs.existsSync(planPath)).toBe(true);
+    expect(fs.existsSync(matrixPath)).toBe(true);
+    expect(fs.existsSync(bugsPath)).toBe(true);
+
+    const planContent = fs.readFileSync(planPath, 'utf-8');
+    const matrixContent = fs.readFileSync(matrixPath, 'utf-8');
+    const bugsContent = fs.readFileSync(bugsPath, 'utf-8');
+
+    const forbiddenPlaceholders = [
+      '[Nombre',
+      '[DD/MM/AAAA]',
+      '[Agregar',
+      '[Describir',
+      '[Definir',
+      '[Módulo',
+      '[Criterio',
+      '[%]',
+    ];
+
+    for (const docContent of [planContent, matrixContent, bugsContent]) {
+      for (const placeholder of forbiddenPlaceholders) {
+        expect(docContent).not.toContain(placeholder);
+      }
+    }
+
+    for (const tc of testCases) {
+      expect(planContent).toContain(tc.id);
+      expect(matrixContent).toContain(tc.id);
+    }
+
+    for (const defect of defects) {
+      expect(planContent).toContain(defect.id);
+      expect(matrixContent).toContain(defect.id);
+      expect(bugsContent).toContain(defect.id);
+      expect(bugsContent).toContain(defect.externalCode);
+      expect(bugsContent).toContain(defect.issueUrl);
+    }
+
+    expect(planContent).toContain('## 1. Historial de Cambios');
+    expect(planContent).toContain('## 7. Casos de Prueba');
+    expect(planContent).toContain('## 8. Gestión de Defectos');
+    expect(planContent).toContain('## 13. Métricas de Calidad');
+    expect(planContent).toContain('## 14. Criterios de Cierre y Entregables');
+    expect(planContent).toContain('## 15. Términos y Acrónimos');
+    expect(planContent).toContain('100% (40/40)');
+    expect(planContent).toContain('95% (38/40)');
+    expect(planContent).toContain('0.075 (3/40)');
+    expect(planContent).toContain('0.15 (6/40)');
+    expect(planContent).toContain('0 (P1=0, P2=0)');
+    expect(planContent).toContain('0% (0/3)');
+    expect(planContent).toContain('100% (28/28)');
+  });
 });
