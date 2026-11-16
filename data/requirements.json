@@ -1,0 +1,272 @@
+[
+  {
+    "id": "REQ-AUTH-01",
+    "code": "UC-AUTH-01 / HU-004, HU-005",
+    "source": "docs/use-cases/auth/UC-AUTH-01-login.md",
+    "module": "auth",
+    "title": "Inicio de sesión con credenciales, validación de estado de cuenta y bloqueo por rate-limit",
+    "description": "Autenticación de usuarios mediante correo electrónico y contraseña verificada con Argon2id/bcrypt, validando estado activo del usuario y de su membresía en al menos un restaurante activo, con protección contra fuerza bruta por IP y cuenta (HTTP 429) y respuestas RFC 7807 sin enumeración de cuentas.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-AUTH-02",
+    "code": "UC-AUTH-02 / HU-006",
+    "source": "docs/use-cases/auth/UC-AUTH-02-token-refresh.md",
+    "module": "auth",
+    "title": "Rotación segura de Refresh Token en cookie HttpOnly y detección de reuso (token_version)",
+    "description": "Emisión de nuevo par de tokens (Access Token JWT en memoria y Refresh Token opaco en cookie HttpOnly/SameSite=Strict conforme a ADR-0003) invalidando el token anterior; ante intento de reuso de un token ya rotado, revoca toda la familia de sesiones incrementando token_version.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-AUTH-03",
+    "code": "UC-AUTH-03 / HU-007",
+    "source": "docs/use-cases/auth/UC-AUTH-03-logout.md",
+    "module": "auth",
+    "title": "Cierre de sesión explícito e invalidación inmediata de sesión activa",
+    "description": "Revocación inmediata de la sesión de refresh activa en base de datos, limpieza de la cookie HttpOnly de refresh token y purga del estado de autenticación en el cliente.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-AUTH-04",
+    "code": "UC-AUTH-04 / HU-008, HU-009, HU-010",
+    "source": "docs/use-cases/auth/UC-AUTH-04-restaurant-selection.md",
+    "module": "auth",
+    "title": "Selección y cambio de restaurante activo multi-tenant, gestión de miembros y branding WCAG",
+    "description": "Permite a usuarios con membresía en múltiples restaurantes seleccionar o cambiar su tenant activo reemitiendo el contexto JWT (restaurant_id y rol), administrar miembros por restaurante y aplicar paleta de marca validando contraste mínimo WCAG AA (ratio >= 4.5:1).",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-AUTH-05",
+    "code": "UC-AUTH-05 / HU-011",
+    "source": "docs/use-cases/auth/UC-AUTH-05-password-reset-by-admin.md",
+    "module": "auth",
+    "title": "Restablecimiento administrativo de contraseña con token de un solo uso (15 min) y revocación de sesiones",
+    "description": "Generación por parte de un Administrador de un token temporal de restablecimiento con expiración de 15 minutos y uso único; al consumirse, actualiza el hash de contraseña, incrementa token_version y revoca todas las sesiones activas del usuario.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-AUTH-06",
+    "code": "ADR-0005 / HU-009",
+    "source": "docs/adr/0005-alcance-mvp-vs-fase2.md",
+    "module": "auth",
+    "title": "Matriz de autorización pura deny-by-default can(actor, action, context) para los 5 roles MVP (Admin, Gerente, Mesero, Cocina, Cajero)",
+    "description": "Evaluación determinista en dominio (ADR-0001 / ADR-0005) de permisos basados en los 5 roles fijos del MVP con política deny-by-default antes de ejecutar cualquier caso de uso o mutación en el backend.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CAT-01",
+    "code": "UC-CAT-01 / HU-012",
+    "source": "docs/use-cases/catalog/UC-CAT-01-stations-management.md",
+    "module": "catalog",
+    "title": "Gestión de estaciones de preparación de cocina (PARRILLA, COCINA_FRIA, BARRA, etc.)",
+    "description": "Creación, edición y activación/desactivación de estaciones de preparación por restaurante con código único por tenant para el enrutamiento de ítems hacia las pantallas KDS.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CAT-02",
+    "code": "UC-CAT-02 / HU-013",
+    "source": "docs/use-cases/catalog/UC-CAT-02-categories-management.md",
+    "module": "catalog",
+    "title": "Gestión de categorías del menú con ordenamiento visual y estado activo/inactivo",
+    "description": "Administración de categorías del catálogo comercial con orden de visualización (sort_order), unicidad de nombre por restaurante y ocultamiento inmediato en el POS al desactivarse.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CAT-03",
+    "code": "UC-CAT-03 / HU-014",
+    "source": "docs/use-cases/catalog/UC-CAT-03-products-and-prices.md",
+    "module": "catalog",
+    "title": "Gestión de productos, disponibilidad rápida y desglose exacto de IVA incluido (Decimal(12,2))",
+    "description": "Registro y actualización de productos asociados a categoría y estación de preparación, cambio rápido de disponibilidad (86ing) y cálculo aritmético exacto en Decimal(12,2) de precio base e impuesto incluido.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CAT-04",
+    "code": "UC-CAT-04 / HU-015",
+    "source": "docs/use-cases/catalog/UC-CAT-04-modifier-groups.md",
+    "module": "catalog",
+    "title": "Grupos de modificadores con cotas min_selectable y max_selectable (BVA)",
+    "description": "Definición de grupos de modificadores obligatorios u opcionales y sus opciones con precio adicional Decimal(12,2), validando invariantes de frontera (0 <= min_selectable <= max_selectable) tanto en configuración como en la captura de ítems de orden.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-TAB-01",
+    "code": "UC-TAB-01 / HU-016",
+    "source": "docs/use-cases/tables/UC-TAB-01-areas-and-tables-management.md",
+    "module": "tables",
+    "title": "Gestión de áreas del salón, mesas, capacidad de comensales y unicidad de código por restaurante",
+    "description": "Configuración de zonas operativas del restaurante (Salón, Terraza, Barra) y mesas con capacidad entera positiva (>= 1) y código identificador único dentro del tenant.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-TAB-02",
+    "code": "UC-TAB-02 / HU-017",
+    "source": "docs/use-cases/tables/UC-TAB-02-table-occupancy-status.md",
+    "module": "tables",
+    "title": "Mapa operativo de mesas con estado de ocupación derivado dinámicamente de órdenes activas (FREE / OCCUPIED)",
+    "description": "Consulta en tiempo real del mapa de mesas por área donde el estado FREE u OCCUPIED se deriva de la existencia de una orden DINE_IN activa sin requerir banderas manuales desincronizables.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-ORD-01",
+    "code": "UC-ORD-01 / HU-018, HU-019",
+    "source": "docs/use-cases/orders/UC-ORD-01-order-creation-dine-in-takeout.md",
+    "module": "orders",
+    "title": "Apertura de cuentas DINE_IN y TAKEOUT con numeración secuencial diaria por tenant y control de mesa ocupada",
+    "description": "Creación de órdenes en salón (DINE_IN, verificando e impidiendo doble orden activa en la misma mesa con HTTP 409) o para llevar (TAKEOUT, sin mesa asociada) asignando número secuencial diario por restaurante.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-ORD-02",
+    "code": "UC-ORD-02 / HU-020, HU-021",
+    "source": "docs/use-cases/orders/UC-ORD-02-order-rounds-dispatch.md",
+    "module": "orders",
+    "title": "Captura y despacho de tandas (OrderRound), recálculo de totales e incremento de versión por concurrencia optimista (version)",
+    "description": "Agrupación de ítems y modificadores en tandas numeradas (OrderRound), persistencia de snapshots de precios, recálculo exacto de subtotal/impuestos/total, encolado de evento Outbox hacia cocina y control de concurrencia optimista mediante columna version.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-ORD-03",
+    "code": "UC-ORD-03 / HU-022",
+    "source": "docs/use-cases/orders/UC-ORD-03-item-cancellation.md",
+    "module": "orders",
+    "title": "Cancelación de ítems de orden según estado (PENDING libre para mesero; PREPARING/READY exige autorización/PIN de Gerente o Admin y motivo obligatorio)",
+    "description": "Anulación controlada de ítems de una comanda: permitida directamente al mesero cuando el ítem está en estado PENDING, pero restringida a autorización de Gerente/Admin con motivo de auditoría obligatorio cuando ya está en PREPARING o READY, rechazando cancelaciones sobre ítems SERVED.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-KIT-01",
+    "code": "UC-KIT-01 / HU-023",
+    "source": "docs/use-cases/kitchen/UC-KIT-01-station-kds-queue.md",
+    "module": "kitchen",
+    "title": "Cola KDS en tiempo real filtrada por estación asignada e indicadores semafóricos de urgencia por tiempo transcurrido",
+    "description": "Visualización en pantalla de cocina (KDS) de las comandas e ítems pendientes filtrados por estación de preparación, ordenados FIFO y clasificados visualmente por umbrales de tiempo de espera (a tiempo, alerta, demorado).",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-KIT-02",
+    "code": "UC-KIT-02 / HU-024",
+    "source": "docs/use-cases/kitchen/UC-KIT-02-item-status-transitions.md",
+    "module": "kitchen",
+    "title": "Máquina de estados de preparación de ítems (PENDING -> PREPARING -> READY -> SERVED) e historial de auditoría inmutable",
+    "description": "Aplicación estricta de transiciones válidas del ciclo de vida de cada ítem de orden bloqueando saltos o retrocesos inválidos (HTTP 409/422) y registrando cada transición en la tabla append-only order_status_history.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-KIT-03",
+    "code": "ADR-0004 / HU-025, HU-033",
+    "source": "docs/adr/0004-outbox-sse-tiempo-real.md",
+    "module": "kitchen",
+    "title": "Despacho Transactional Outbox (FOR UPDATE SKIP LOCKED), canal Server-Sent Events (SSE) y reconexión reactiva en tablet (1024x768)",
+    "description": "Publicación confiable de eventos de dominio mediante tabla outbox_events en la misma transacción SQL, relay con FOR UPDATE SKIP LOCKED hacia suscriptores SSE autenticados por tenant y diseño táctil responsivo en viewport tablet 1024x768.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CSH-01",
+    "code": "UC-CSH-01 / HU-026",
+    "source": "docs/use-cases/cash/UC-CSH-01-cash-session-open-close-reconciliation.md",
+    "module": "cash",
+    "title": "Apertura de turno único por caja registradora (OPEN) y cierre con arqueo ciego e inmutabilidad (CLOSED)",
+    "description": "Apertura de sesión de caja con monto base inicial impidiendo más de una sesión OPEN por caja o cajero, y cierre de turno con declaración de efectivo contado, cálculo automático de diferencia (expected vs counted) e inmutabilidad posterior.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CSH-02",
+    "code": "UC-CSH-02 / HU-027",
+    "source": "docs/use-cases/cash/UC-CSH-02-split-payments-and-tips.md",
+    "module": "cash",
+    "title": "Cobro de órdenes con pagos parciales/divididos, propinas sin IVA, protección Idempotency-Key y recibo térmico 80mm",
+    "description": "Procesamiento de pagos simples o divididos (efectivo, tarjeta, transferencia) verificando que la suma cubra el saldo pendiente exacto, registrando propinas voluntarias sin alterar la base gravable de IVA, garantizando idempotencia por Idempotency-Key y generando tirilla térmica de 80mm.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-CSH-03",
+    "code": "UC-CSH-03 / HU-028",
+    "source": "docs/use-cases/cash/UC-CSH-03-payment-reversals-and-adjustments.md",
+    "module": "cash",
+    "title": "Reversos compensatorios de pago y ajustes administrativos de saldo autorizados por Gerente/Admin",
+    "description": "Ejecución de asientos compensatorios inmutables (nunca UPDATE/DELETE físicos sobre pagos) para reversar cobros erróneos dentro de una sesión de caja abierta, exigiendo rol Gerente o Admin y motivo obligatorio.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-INV-01",
+    "code": "UC-INV-01 / HU-029",
+    "source": "docs/use-cases/inventory/UC-INV-01-inventory-items-and-thresholds.md",
+    "module": "inventory",
+    "title": "Catálogo de insumos de inventario con unidad de medida y alertas visuales por umbral de stock mínimo",
+    "description": "Registro de insumos operativos con unidad de medida estandarizada, stock actual y punto de reorden (min_stock_threshold), activando indicadores de alerta cuando current_stock <= min_stock_threshold.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-INV-02",
+    "code": "UC-INV-02 / HU-030",
+    "source": "docs/use-cases/inventory/UC-INV-02-manual-stock-movements.md",
+    "module": "inventory",
+    "title": "Movimientos manuales de stock (IN, OUT, ADJUSTMENT) inmutables con motivo obligatorio y tolerancia de stock negativo auditado",
+    "description": "Kardex append-only de movimientos manuales de inventario con cantidad positiva y justificación obligatoria, actualizando atómicamente el stock del insumo y permitiendo saldo negativo con bandera de advertencia auditada para no bloquear la operación gastronómica.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-REP-01",
+    "code": "UC-REP-01 / HU-031",
+    "source": "docs/use-cases/reports/UC-REP-01-daily-sales-and-kpis-dashboard.md",
+    "module": "reports",
+    "title": "Dashboard ejecutivo de ventas diarias, ticket promedio, desglose por medio de pago y top productos con caché Redis",
+    "description": "Consolidación de indicadores clave de ventas netas, impuestos, propinas, ticket promedio, distribución por método de pago y ranking de productos vendidos por rango de fechas, respaldado por caché Redis con invalidación o TTL corto.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-REP-02",
+    "code": "UC-REP-02 / HU-032",
+    "source": "docs/use-cases/reports/UC-REP-02-printable-cash-close-report.md",
+    "module": "reports",
+    "title": "Reporte imprimible de cierre y conciliación de caja en formato térmico 80mm (@media print)",
+    "description": "Generación de tirilla de arqueo de turno de caja con desglose de apertura, ventas por medio de pago, propinas, reversos, efectivo esperado vs declarado y firmas, optimizado mediante reglas CSS @media print para impresora térmica de 80mm.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-REP-03",
+    "code": "UC-REP-03 / HU-032",
+    "source": "docs/use-cases/reports/UC-REP-03-csv-export.md",
+    "module": "reports",
+    "title": "Exportación CSV en streaming con cabecera UTF-8 BOM y prevención de inyección de fórmulas de hoja de cálculo",
+    "description": "Descarga de reportes tabulares de ventas, sesiones de caja y kardex de inventario en formato CSV con BOM UTF-8 para compatibilidad con Excel y sanitización de celdas que inicien con caracteres ejecutables (=, +, -, @, TAB, CR).",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-RLS-01",
+    "code": "ADR-0002 / HU-001, HU-002",
+    "source": "docs/adr/0002-aislamiento-multitenant-rls-neon.md",
+    "module": "rls",
+    "title": "Aislamiento multi-tenant estricto en PostgreSQL mediante FORCE ROW LEVEL SECURITY, rol app_user (rolbypassrls = false) y tenantTx",
+    "description": "Arquitectura de aislamiento por tenant (ADR-0001 / ADR-0002) donde toda tabla operativa tiene RLS habilitado y forzado, las consultas se ejecutan con el rol sin privilegios de superusuario app_user y el wrapper transaccional tenantTx fija SET LOCAL app.current_tenant_id.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-RLS-02",
+    "code": "ADR-0006 / HU-003, HU-034",
+    "source": "docs/adr/0006-zero-trust-least-privilege-rate-limit.md",
+    "module": "rls",
+    "title": "Mínimo privilegio en tablas append-only (UPDATE/DELETE revocados para app_user), CORS estricto, Rate Limiting L1/L2 y trazabilidad RFC 7807",
+    "description": "Defensa en profundidad Zero-Trust (ADR-0006): revocación SQL de UPDATE y DELETE sobre tablas de auditoría e historial para app_user, validación estricta de orígenes CORS, rate limiting en dos capas (IP y usuario/tenant) y errores estandarizados RFC 7807 con x-request-id.",
+    "status": "IN_SCOPE"
+  },
+  {
+    "id": "REQ-PH2-01",
+    "code": "UC-PH2-01 / ADR-0005",
+    "source": "docs/use-cases/phase2-reservations-employees/UC-PH2-01-table-reservations.md",
+    "module": "tables",
+    "title": "Gestión de reservas anticipadas de mesas con bloqueo horario (Excluido del MVP — Fase 2)",
+    "description": "Módulo de reservaciones con calendario de disponibilidad futura, bloqueo automático de mesas por ventana horaria y notificaciones a comensales; explícitamente fuera del alcance del MVP conforme a ADR-0005.",
+    "status": "PHASE_2"
+  },
+  {
+    "id": "REQ-PH2-02",
+    "code": "UC-PH2-02 / ADR-0005, ADR-0006",
+    "source": "docs/use-cases/phase2-reservations-employees/UC-PH2-02-advanced-permissions-and-shifts.md",
+    "module": "auth",
+    "title": "Permisos granulares editables en base de datos, gestión de turnos de empleados y X-API-Key externas (Excluido del MVP — Fase 2)",
+    "description": "Configuración dinámica de matrices RBAC/ABAC en base de datos, programación de horarios/asistencia de personal y emisión de llaves X-API-Key para integraciones de terceros; explícitamente diferido a Fase 2 según ADR-0005 y ADR-0006.",
+    "status": "PHASE_2"
+  }
+]

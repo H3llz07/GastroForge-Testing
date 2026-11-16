@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import rawMetadata from '../../data/metadata.json';
+import rawRequirements from '../../data/requirements.json';
 import type {
   Defect,
   QaMetadata,
@@ -343,5 +344,70 @@ describe('calculateQaMetrics', () => {
     expect(metadata.risks.length).toBeGreaterThanOrEqual(5);
     expect(metadata.glossaryTerms.length).toBeGreaterThanOrEqual(11);
     expect(metadata.acronyms.length).toBeGreaterThanOrEqual(11);
+  });
+
+  it('validates structured requirements catalog against MVP scope (28 IN_SCOPE, 2 PHASE_2, 22 UCs, HU-001..034, ADRs)', () => {
+    const requirements: Requirement[] = rawRequirements as Requirement[];
+
+    expect(requirements).toHaveLength(30);
+
+    const ids = requirements.map((req) => req.id.trim());
+    expect(ids.every((id) => id.length > 0)).toBe(true);
+    expect(new Set(ids).size).toBe(requirements.length);
+
+    for (const req of requirements) {
+      expect(req.code.trim().length).toBeGreaterThan(0);
+      expect(req.source.trim().length).toBeGreaterThan(0);
+      expect(req.module.trim().length).toBeGreaterThan(0);
+      expect(req.title.trim().length).toBeGreaterThan(0);
+      expect(req.description.trim().length).toBeGreaterThan(0);
+    }
+
+    const inScope = requirements.filter((req) => req.status === 'IN_SCOPE');
+    const phase2 = requirements.filter((req) => req.status === 'PHASE_2');
+
+    expect(inScope).toHaveLength(28);
+    expect(phase2.map((req) => req.id)).toEqual(['REQ-PH2-01', 'REQ-PH2-02']);
+
+    const combinedInScopeCodes = inScope.map((req) => req.code).join(' | ');
+
+    const expectedUseCases = [
+      'UC-AUTH-01',
+      'UC-AUTH-02',
+      'UC-AUTH-03',
+      'UC-AUTH-04',
+      'UC-AUTH-05',
+      'UC-CAT-01',
+      'UC-CAT-02',
+      'UC-CAT-03',
+      'UC-CAT-04',
+      'UC-TAB-01',
+      'UC-TAB-02',
+      'UC-ORD-01',
+      'UC-ORD-02',
+      'UC-ORD-03',
+      'UC-KIT-01',
+      'UC-KIT-02',
+      'UC-CSH-01',
+      'UC-CSH-02',
+      'UC-CSH-03',
+      'UC-INV-01',
+      'UC-INV-02',
+      'UC-REP-01',
+      'UC-REP-02',
+      'UC-REP-03',
+    ];
+    for (const uc of expectedUseCases) {
+      expect(combinedInScopeCodes).toContain(uc);
+    }
+
+    for (let i = 1; i <= 34; i += 1) {
+      const huCode = `HU-${String(i).padStart(3, '0')}`;
+      expect(combinedInScopeCodes).toContain(huCode);
+    }
+
+    for (const adr of ['ADR-0002', 'ADR-0004', 'ADR-0005', 'ADR-0006']) {
+      expect(combinedInScopeCodes).toContain(adr);
+    }
   });
 });
