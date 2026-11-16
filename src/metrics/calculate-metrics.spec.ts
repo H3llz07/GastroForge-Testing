@@ -1,6 +1,9 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import rawMetadata from '../../data/metadata.json';
 import rawRequirements from '../../data/requirements.json';
+import rawTestCases from '../../data/test-cases.json';
 import type {
   Defect,
   QaMetadata,
@@ -409,5 +412,90 @@ describe('calculateQaMetrics', () => {
     for (const adr of ['ADR-0002', 'ADR-0004', 'ADR-0005', 'ADR-0006']) {
       expect(combinedInScopeCodes).toContain(adr);
     }
+  });
+
+  it('validates the 40 traceable test cases (15 manual, 25 automated, 100% requirement coverage, and real spec paths in GastroForge)', () => {
+    const requirements: Requirement[] = rawRequirements as Requirement[];
+    const testCases: TestCase[] = rawTestCases as unknown as TestCase[];
+
+    expect(testCases).toHaveLength(40);
+
+    const summary = calculateQaMetrics({
+      requirements,
+      testCases,
+      testRuns: [],
+      defects: [],
+    });
+
+    expect(summary.totalCases).toBe(40);
+    expect(summary.manualCases).toBe(15);
+    expect(summary.automatedCases).toBe(25);
+    expect(summary.inScopeRequirements).toBe(28);
+    expect(summary.coveredRequirements).toBe(28);
+    expect(summary.requirementCoverage).toBe(100);
+
+    const byArea = {
+      auth: testCases.filter((tc) => tc.module === 'auth'),
+      catalogAndTables: testCases.filter(
+        (tc) => tc.module === 'catalog' || tc.module === 'tables',
+      ),
+      ordersAndKitchen: testCases.filter(
+        (tc) => tc.module === 'orders' || tc.module === 'kitchen',
+      ),
+      cash: testCases.filter((tc) => tc.module === 'cash'),
+      inventoryAndReports: testCases.filter(
+        (tc) => tc.module === 'inventory' || tc.module === 'reports',
+      ),
+      rls: testCases.filter((tc) => tc.module === 'rls'),
+    };
+
+    expect(byArea.auth).toHaveLength(6);
+    expect(byArea.auth.filter((tc) => tc.executionMode === 'Manual')).toHaveLength(3);
+
+    expect(byArea.catalogAndTables).toHaveLength(7);
+    expect(
+      byArea.catalogAndTables.filter((tc) => tc.executionMode === 'Manual'),
+    ).toHaveLength(3);
+
+    expect(byArea.ordersAndKitchen).toHaveLength(10);
+    expect(
+      byArea.ordersAndKitchen.filter((tc) => tc.executionMode === 'Manual'),
+    ).toHaveLength(4);
+
+    expect(byArea.cash).toHaveLength(8);
+    expect(byArea.cash.filter((tc) => tc.executionMode === 'Manual')).toHaveLength(3);
+
+    expect(byArea.inventoryAndReports).toHaveLength(5);
+    expect(
+      byArea.inventoryAndReports.filter((tc) => tc.executionMode === 'Manual'),
+    ).toHaveLength(1);
+
+    expect(byArea.rls).toHaveLength(4);
+    expect(byArea.rls.filter((tc) => tc.executionMode === 'Manual')).toHaveLength(1);
+
+    const validRequirementIds = new Set(requirements.map((req) => req.id));
+    const sutRoot = path.resolve(process.cwd(), '..', 'GastroForge');
+
+    testCases.forEach((tc, index) => {
+      expect(tc.number).toBe(index + 1);
+      expect(tc.id.trim().length).toBeGreaterThan(0);
+      expect(tc.requirementIds.length).toBeGreaterThan(0);
+      for (const reqId of tc.requirementIds) {
+        expect(validRequirementIds.has(reqId)).toBe(true);
+      }
+
+      expect(tc.preconditions.length).toBeGreaterThan(0);
+      expect(tc.steps.length).toBeGreaterThan(0);
+      expect(Object.keys(tc.inputData).length).toBeGreaterThan(0);
+      expect(tc.expectedResult.trim().length).toBeGreaterThan(0);
+
+      if (tc.executionMode === 'Automatizada') {
+        expect(tc.automatedSpecPath).toBeDefined();
+        const specPath = tc.automatedSpecPath ?? '';
+        expect(specPath.trim().length).toBeGreaterThan(0);
+        const fullSpecPath = path.join(sutRoot, specPath);
+        expect(fs.existsSync(fullSpecPath)).toBe(true);
+      }
+    });
   });
 });
