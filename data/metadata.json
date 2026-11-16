@@ -1,0 +1,707 @@
+{
+  "project": "GastroForge — Sistema ERP Multi-Restaurante Tablet-First",
+  "version": "1.0",
+  "date": "16/11/2026",
+  "updatedAt": "2026-11-16T00:45:00-05:00",
+  "sutRepo": "https://github.com/JhonatanM2005/GastroForge",
+  "qaRepo": "https://github.com/H3llz07/GastroForge-Testing",
+  "frozenCommit": "be9089e",
+  "frozenCommitTitle": "feat(web): add playwright tablet e2e suite and manual testing evidences (#71)",
+  "institution": "Institución Universitaria Pascual Bravo",
+  "elaboratedBy": "Jhonatan A. Méndez R. (@JhonatanM2005) & Julián Santiago Pico Pinzón (@H3llz07)",
+  "reviewedBy": "Jhonatan A. Méndez R. (QA Lead — Bloque A)",
+  "approvedBy": "Julián Santiago Pico Pinzón (QA Lead / Arquitectura — Bloque B)",
+  "status": "Aprobado",
+  "changeHistory": [
+    {
+      "version": "1.0",
+      "date": "16/11/2026",
+      "description": "Versión inicial aprobada del plan de pruebas sobre el commit congelado be9089e de GastroForge",
+      "author": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "approvedBy": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R."
+    }
+  ],
+  "purpose": "Este documento describe la estrategia piramidal de 6 niveles, recursos, matriz RACI, cronograma, criterios de entrada/salida y los 40 casos de prueba (15 manuales y 25 automatizados) para el sistema GastroForge — Sistema ERP Multi-Restaurante Tablet-First en su versión congelada (commit be9089e), con el fin de garantizar de manera empírica que cumple con los requisitos funcionales, transaccionales, de concurrencia e idempotencia y de aislamiento multi-tenant mediante Row-Level Security (RLS).",
+  "scope": {
+    "inScope": [
+      "Autenticación JWT + rotación de refresh token, restauración de contraseña de un solo uso y matriz RBAC can() para 5 roles MVP (Admin, Gerente, Mesero, Cocina, Cajero)",
+      "Catálogo multi-tenant, categorías, productos con desglose de IVA incluido, grupos de modificadores (BVA min/max) y estaciones de preparación",
+      "Plano de mesas con ocupación derivada dinámicamente, órdenes DINE_IN y TAKEOUT, tandas (rounds), control de concurrencia optimista (version) y cancelación con PIN gerencial",
+      "Kitchen Display System (KDS), máquina de estados de ítems (PENDING -> PREPARING -> READY -> SERVED / CANCELLED) y canal reactivo Server-Sent Events (SSE) respaldado por Transactional Outbox",
+      "Sesiones de caja con restricción de turno abierto único (uq_cash_register_open), pagos divididos, propinas, idempotencia financiera (Idempotency-Key), reversos autorizados y arqueo ciego inmutable",
+      "Inventario manual con motivo obligatorio, alertas de umbral mínimo, KPIs operativos en caché, tirilla térmica de 80mm y exportación CSV con BOM UTF-8",
+      "Aislamiento multi-tenant estricto en PostgreSQL 16 mediante el rol no privilegiado app_user (rolbypassrls = false), FORCE ROW LEVEL SECURITY, claves foráneas compuestas y mínimo privilegio en tablas append-only (ADR-0006)"
+    ],
+    "outOfScope": [
+      "Funcionalidades posteriores o no disponibles en el commit congelado be9089e de JhonatanM2005/GastroForge",
+      "Módulo de reservas de mesas y permisos editables dinámicos por usuario catalogados en Fase 2 (ADR-0005)",
+      "Autenticación mediante X-API-Key para integraciones externas de Fase 2 (ADR-0006)",
+      "Datos reales de restaurantes comerciales o conexión a bases de datos e infraestructura de producción",
+      "Integraciones externas con pasarelas bancarias reales o facturación electrónica DIAN en vivo",
+      "Pruebas destructivas sobre infraestructura compartida o métricas inventadas sin evidencia verificable"
+    ]
+  },
+  "references": [
+    "PRD.md — Documento de Requisitos de Producto de GastroForge v1.0 (22 Casos de Uso MVP y 34 Historias de Usuario HU-001 a HU-034)",
+    "API-SCHEMA.md & openapi.json — Especificación formal de contratos RESTful y errores RFC 7807 (Problem Details)",
+    "ADR-0001 a ADR-0006 — Registro de Decisiones de Arquitectura (Monolito Modular Hexagonal, Aislamiento Multi-Tenant RLS en Neon/PostgreSQL, Patrón UnitOfWork Transaccional, Outbox + SSE, RBAC fijo MVP y Hardening Zero Trust)",
+    "TESTING-PLAN.md — Estrategia Piramidal de Pruebas de 6 Niveles de GastroForge (commit be9089e)",
+    "ISO/IEC/IEEE 29119-3 — Software and systems engineering — Software testing — Part 3: Test documentation"
+  ],
+  "team": [
+    {
+      "role": "QA Lead / Líder de Pruebas (Bloque A)",
+      "name": "Jhonatan A. Méndez R.",
+      "handle": "@JhonatanM2005",
+      "block": "Bloque A (Auth, Catálogo, Mesas, Órdenes y Cocina — CP-001 a CP-023)",
+      "responsibilities": "Planificar, coordinar y supervisar las actividades de prueba del Bloque A. Diseñar y ejecutar casos de autenticación, catálogo, mesas, órdenes y KDS. Revisar matriz de trazabilidad y aprobar entregables cruzados.",
+      "participation": "100%"
+    },
+    {
+      "role": "QA Lead / Arquitecto de Pruebas (Bloque B)",
+      "name": "Julián Santiago Pico Pinzón",
+      "handle": "@H3llz07",
+      "block": "Bloque B (Caja, Pagos, Inventario, Reportes y Seguridad RLS — CP-024 a CP-040)",
+      "responsibilities": "Liderar la arquitectura del arnés de pruebas e infraestructura Data-First. Diseñar y ejecutar casos de caja, pagos idempotentes, inventario, reportes y suite multi-tenant RLS. Consolidar métricas e informe APA 7.",
+      "participation": "100%"
+    },
+    {
+      "role": "QA Analyst / Analista de Pruebas",
+      "name": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "handle": "@JhonatanM2005 / @H3llz07",
+      "block": "Compartido (40 Casos de Prueba: 15 Manuales + 25 Automatizados)",
+      "responsibilities": "Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos.",
+      "participation": "100%"
+    },
+    {
+      "role": "QA Automatizador",
+      "name": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "handle": "@JhonatanM2005 / @H3llz07",
+      "block": "Suites L1–L5 (Jest, Supertest, Playwright)",
+      "responsibilities": "Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright).",
+      "participation": "100%"
+    },
+    {
+      "role": "Desarrollador / Dev del SUT",
+      "name": "Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón)",
+      "handle": "@JhonatanM2005 / @H3llz07",
+      "block": "Repositorio SUT (JhonatanM2005/GastroForge @ be9089e)",
+      "responsibilities": "Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006).",
+      "participation": "75%"
+    },
+    {
+      "role": "Product Owner / PO Académico",
+      "name": "Comité Evaluador — Ingeniería de Software / Aseguramiento de Calidad",
+      "handle": "I.U. Pascual Bravo",
+      "block": "Gobernanza y Evaluación Académica",
+      "responsibilities": "Validar el cumplimiento de los criterios de aceptación del plan de pruebas, auditar la trazabilidad de requisitos y aprobar el cierre formal del ciclo de aseguramiento de calidad.",
+      "participation": "25%"
+    },
+    {
+      "role": "Usuario Final / Cliente Representativo",
+      "name": "Operadores de Salón, Cocina y Caja (Simulación UAT Tablet 1024x768)",
+      "handle": "Perfiles Operativos MVP",
+      "block": "Validación de Aceptación y Usabilidad Táctil (Nivel L6)",
+      "responsibilities": "Participar en las pruebas de aceptación (UAT) sobre flujos operativos de restaurante (comanda rápida, KDS en vivo y arqueo ciego de caja).",
+      "participation": "25%"
+    }
+  ],
+  "raciMatrix": [
+    {
+      "activity": "Planificación del plan de pruebas",
+      "qaLead": "R/A",
+      "qaAnalyst": "C",
+      "dev": "C",
+      "po": "C",
+      "client": "I"
+    },
+    {
+      "activity": "Diseño de casos de prueba",
+      "qaLead": "A",
+      "qaAnalyst": "R",
+      "dev": "C",
+      "po": "C",
+      "client": "I"
+    },
+    {
+      "activity": "Preparación del ambiente",
+      "qaLead": "A",
+      "qaAnalyst": "C",
+      "dev": "R",
+      "po": "I",
+      "client": "I"
+    },
+    {
+      "activity": "Ejecución de pruebas funcionales",
+      "qaLead": "A",
+      "qaAnalyst": "R",
+      "dev": "C",
+      "po": "I",
+      "client": "I"
+    },
+    {
+      "activity": "Reporte y seguimiento de defectos",
+      "qaLead": "A",
+      "qaAnalyst": "R",
+      "dev": "R",
+      "po": "I",
+      "client": "I"
+    },
+    {
+      "activity": "Corrección de defectos",
+      "qaLead": "I",
+      "qaAnalyst": "C",
+      "dev": "R",
+      "po": "A",
+      "client": "I"
+    },
+    {
+      "activity": "Pruebas de aceptación (UAT)",
+      "qaLead": "A",
+      "qaAnalyst": "C",
+      "dev": "C",
+      "po": "R",
+      "client": "R"
+    },
+    {
+      "activity": "Aprobación del cierre de pruebas",
+      "qaLead": "C",
+      "qaAnalyst": "I",
+      "dev": "I",
+      "po": "A",
+      "client": "R"
+    }
+  ],
+  "objectives": [
+    {
+      "id": 1,
+      "objective": "Verificar que todas las funcionalidades de los 8 módulos MVP cumplen los requisitos especificados en PRD.md y API-SCHEMA.md.",
+      "successCriterion": "100% de los requisitos en alcance (IN_SCOPE) cubiertos por al menos un caso de prueba ejecutado y tasa de aprobación global >= 90%."
+    },
+    {
+      "id": 2,
+      "objective": "Identificar, clasificar y documentar defectos con evidencia reproducible antes de la sustentación y liberación.",
+      "successCriterion": "0 defectos Críticos (P1) y 0 defectos Altos (P2) abiertos al cierre del ciclo de pruebas en el commit be9089e."
+    },
+    {
+      "id": 3,
+      "objective": "Certificar el aislamiento multi-tenant en PostgreSQL bajo el rol no privilegiado app_user con FORCE ROW LEVEL SECURITY.",
+      "successCriterion": "100% de las pruebas negativas cross-tenant (lectura, escritura, FK compuesta y tablas append-only) aprobadas sin fugas de datos entre restaurantes."
+    },
+    {
+      "id": 4,
+      "objective": "Validar la integridad financiera, concurrencia optimista e idempotencia en operaciones críticas de órdenes y caja.",
+      "successCriterion": "Cero cobros duplicados ante reintentos con Idempotency-Key, rechazo determinista 409 en colisiones de versión o turno de caja duplicado y exactitud Decimal(12,2) en IVA y arqueo."
+    },
+    {
+      "id": 5,
+      "objective": "Evaluar la usabilidad táctil tablet-first (1024x768) y la resiliencia de reconexión en tiempo real del KDS mediante SSE.",
+      "successCriterion": "Ejecución completa de los 15 casos manuales verificables con registro de evidencias y análisis de riesgo residual para hallazgos menores."
+    }
+  ],
+  "strategyTestTypes": [
+    {
+      "type": "Funcional",
+      "description": "Verifica que cada caso de uso y regla de negocio de los módulos auth, catalog, tables, orders, kitchen, cash, inventory y reports opere conforme a los requisitos.",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "included": true
+    },
+    {
+      "type": "Regresión",
+      "description": "Asegura que las correcciones aplicadas durante el ciclo MVP (como DEF-001, DEF-002 y DEF-003) no degraden funcionalidades previamente validadas.",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "included": true
+    },
+    {
+      "type": "Integración",
+      "description": "Valida la interacción real entre controladores NestJS, servicios de aplicación, Prisma UnitOfWork, PostgreSQL 16 (con políticas RLS activas) y Redis 7 (Outbox/SSE).",
+      "responsible": "Julián Santiago Pico Pinzón",
+      "included": true
+    },
+    {
+      "type": "Rendimiento",
+      "description": "Evalúa tiempos de respuesta transaccionales en concurrencia simultánea de órdenes/pagos, latencia de despacho Outbox y lectura de KPIs desde caché.",
+      "responsible": "Julián Santiago Pico Pinzón",
+      "included": true
+    },
+    {
+      "type": "Seguridad",
+      "description": "Verifica aislamiento multi-tenant (RLS bajo app_user), matriz de autorización RBAC deny-by-default, revocación de permisos UPDATE/DELETE en tablas de auditoría, CORS y Rate Limiting.",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "included": true
+    },
+    {
+      "type": "Usabilidad",
+      "description": "Evalúa la ergonomía táctil en viewport tablet (1024x768), dimensiones de objetivos interactivos, alto contraste en KDS y claridad de mensajes de error RFC 7807.",
+      "responsible": "Jhonatan A. Méndez R.",
+      "included": true
+    },
+    {
+      "type": "Aceptación (UAT)",
+      "description": "Validación integral de extremo a extremo del flujo operativo de restaurante (apertura de mesa, comanda por tandas, preparación en KDS, cobro dividido y arqueo ciego).",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "included": true
+    }
+  ],
+  "strategyLevels": [
+    {
+      "level": "Pruebas estáticas y de contratos (Nivel L1)",
+      "pyramidCode": "L1",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "tool": "TypeScript 5.7 (tsc --noEmit), ESLint 9, Prettier y validación OpenAPI",
+      "description": "Verificación estática de tipos, invariantes de compilación y sincronización de esquemas antes de la ejecución."
+    },
+    {
+      "level": "Pruebas unitarias de dominio puro (Nivel L2)",
+      "pyramidCode": "L2",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "tool": "Jest (Dominio puro sin I/O) y Vitest (Motor de métricas QA)",
+      "description": "Validación en memoria de agregados, máquinas de estado (OrderItemStatus, CashSessionStatus), objetos de valor (Money con IVA incluido) y matriz can()."
+    },
+    {
+      "level": "Pruebas de servicios de aplicación en memoria (Nivel L3)",
+      "pyramidCode": "L3",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "tool": "Jest con repositorios Fake en memoria y UnitOfWork simulado",
+      "description": "Orquestación de casos de uso, control de versiones optimistas, cálculo de arqueo ciego y emisión de eventos Outbox sin acoplamiento a base de datos."
+    },
+    {
+      "level": "Pruebas de integración multi-tenant e infraestructura (Nivel L4)",
+      "pyramidCode": "L4",
+      "responsible": "Julián Santiago Pico Pinzón",
+      "tool": "Jest + Supertest + NestJS TestingModule + Docker (PostgreSQL 16 app_user RLS & Redis 7)",
+      "description": "Verificación de extremo a extremo en la capa HTTP/DB ejecutando transacciones reales con set_config('app.restaurant_id'), RLS forzado e idempotencia."
+    },
+    {
+      "level": "Pruebas de sistema End-to-End en Tablet (Nivel L5)",
+      "pyramidCode": "L5",
+      "responsible": "Jhonatan A. Méndez R.",
+      "tool": "Playwright Test (Chromium & WebKit en viewport 1024x768)",
+      "description": "Automatización del Golden Path operativo completo desde el navegador emulando interacción táctil de mesero, cocinero, cajero y administrador."
+    },
+    {
+      "level": "Pruebas manuales exploratorias y de aceptación UAT (Nivel L6)",
+      "pyramidCode": "L6",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "tool": "Inspección interactiva en navegador (DevTools Tablet 1024x768), cliente HTTP y capturas de evidencia",
+      "description": "Ejecución controlada de los 15 casos manuales para evaluar ergonomía táctil, reconexión SSE ante caídas de red, formato de tirilla 80mm y contraste visual."
+    }
+  ],
+  "suspensionCriteria": [
+    {
+      "suspensionCriterion": "Defecto crítico (P1 — Blocker) que impide la ejecución de casos de prueba o compromete el aislamiento multi-tenant (rolbypassrls = true).",
+      "resumptionRequirement": "El defecto crítico ha sido corregido, la migración o política RLS ha sido restaurada y la aserción de seguridad en beforeAll pasa exitosamente."
+    },
+    {
+      "suspensionCriterion": "Ambiente de pruebas no disponible o inestable (caída de contenedores Docker PostgreSQL 16 o Redis 7).",
+      "resumptionRequirement": "Los servicios de base de datos y caché han sido reconstruidos, las semillas deterministas han sido cargadas y el endpoint de salud responde HTTP 200."
+    },
+    {
+      "suspensionCriterion": "Cambio significativo o ruptura de alcance respecto al commit congelado be9089e que invalide los casos diseñados.",
+      "resumptionRequirement": "Se restablece el árbol de trabajo exactamente en el commit be9089e y se verifica la integridad referencial mediante npm run validate:data."
+    },
+    {
+      "suspensionCriterion": "Más del 30% de los casos de prueba fallan en un ciclo de ejecución por causa sistémica.",
+      "resumptionRequirement": "Se ha identificado la causa raíz, aplicado la corrección correspondiente y validado el humo inicial por el equipo QA."
+    },
+    {
+      "suspensionCriterion": "Falta de datos de prueba esenciales (fixtures de Tenant A y Tenant B, sesiones de caja o catálogo semilla).",
+      "resumptionRequirement": "Los datasets de prueba multi-tenant han sido preparados, sembrados y verificados en el ambiente correspondiente."
+    }
+  ],
+  "completionThresholds": [
+    {
+      "criterion": "100% de cobertura de ejecución de pruebas (todos los 40 casos de prueba ejecutados).",
+      "target": "100%",
+      "metricKey": "executionRate"
+    },
+    {
+      "criterion": "Tasa de casos aprobados igual o superior al umbral definido (excluyendo no ejecutados/bloqueados).",
+      "target": ">= 90%",
+      "metricKey": "passRate"
+    },
+    {
+      "criterion": "0 defectos de severidad Crítica (P1) o Alta (P2) abiertos al cierre.",
+      "target": "= 0",
+      "metricKey": "criticalOrHighOpen"
+    },
+    {
+      "criterion": "100% de los requisitos en alcance (IN_SCOPE) cubiertos por al menos un caso de prueba.",
+      "target": "100%",
+      "metricKey": "requirementCoverage"
+    },
+    {
+      "criterion": "Todos los defectos históricos de regresión MVP resueltos y verificados en el commit congelado.",
+      "target": "= 0 pendientes (3/3 cerrados)",
+      "metricKey": "regressionResolved"
+    },
+    {
+      "criterion": "Informe de pruebas, matriz de trazabilidad, reporte de defectos e informe APA 7 generados y entregados.",
+      "target": "Entregado",
+      "metricKey": "deliverablesReady"
+    },
+    {
+      "criterion": "Aprobación formal del cierre de pruebas por ambos QA Leads (Bloque A y Bloque B).",
+      "target": "Aprobado",
+      "metricKey": "formalApproval"
+    }
+  ],
+  "entryExitCriteria": {
+    "entry": [
+      "Repositorio del SUT congelado verificablemente en el commit be9089e (feat(web): add playwright tablet e2e suite and manual testing evidences (#71)).",
+      "Ambiente de pruebas Docker configurado con PostgreSQL 16 (rol app_user con rolbypassrls = false) y Redis 7 activos.",
+      "Catálogo de 40 casos de prueba (15 manuales y 25 automatizados) revisado y aprobado con trazabilidad a requisitos.",
+      "Datos semilla de prueba preparados para dos restaurantes aislados (Tenant A: Restaurante Central y Tenant B: Restaurante Norte)."
+    ],
+    "exit": [
+      "100% de los 40 casos de prueba ejecutados sobre el commit be9089e con resultados y evidencias registradas.",
+      "Tasa de defectos Críticos (P1) abiertos = 0 y defectos Altos (P2) abiertos = 0.",
+      "Defectos abiertos de severidad Media/Baja (P3/P4: DEF-004, DEF-005 y DEF-006) documentados en GitHub Issues con análisis de riesgo residual.",
+      "Plan de pruebas, matriz de trazabilidad, reporte de bugs, dashboard interactivo e informe de calidad APA 7 compilados sin errores."
+    ]
+  },
+  "deliverables": [
+    {
+      "name": "Plan de Pruebas",
+      "description": "Documento maestro que describe el alcance, estrategia piramidal, recursos, matriz RACI, riesgos, cronograma y las 40 fichas de casos de prueba.",
+      "phase": "Planificación y Diseño",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "docs/plan-de-pruebas-gastroforge.md"
+    },
+    {
+      "name": "Casos de Prueba Normalizados",
+      "description": "Catálogo estructurado de los 40 casos de prueba (15 manuales y 25 automatizados) con precondiciones, datos de entrada, pasos y resultados esperados.",
+      "phase": "Diseño",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "data/test-cases.json"
+    },
+    {
+      "name": "Matriz de Trazabilidad de Requisitos",
+      "description": "Documento que vincula cada caso de uso MVP (UC-01 a UC-22), historia de usuario (HU-001 a HU-034) y ADR (ADR-0001 a ADR-0006) con sus casos de prueba, ejecuciones y defectos.",
+      "phase": "Diseño y Ejecución",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "docs/matriz-trazabilidad.md"
+    },
+    {
+      "name": "Informes de Errores y GitHub Issues",
+      "description": "Registro detallado de los 6 defectos (DEF-001 a DEF-006 / GF-BUG-001 a GF-BUG-006) con severidad P1–P4, pasos de reproducción y trazabilidad a GitHub Issues.",
+      "phase": "Ejecución",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "estimatedDate": "Continuo (Cierre 16/11/2026)",
+      "artifactPath": "docs/reporte-bugs.md"
+    },
+    {
+      "name": "Estrategia de Pruebas",
+      "description": "Definición técnica de la pirámide de 6 niveles, arnés de aislamiento RLS y técnicas formales (EP, BVA, Tabla de decisión y Transición de estados).",
+      "phase": "Planificación",
+      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "docs/plan-de-pruebas-gastroforge.md#5-estrategia-de-pruebas"
+    },
+    {
+      "name": "Dashboard Interactivo de Métricas de Pruebas",
+      "description": "Aplicación web SPA en React 19 + TypeScript + Tailwind CSS v4 con cálculo en vivo de indicadores, filtros multicriterio, grabador de ejecuciones manuales e impresión.",
+      "phase": "Cierre",
+      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "src/App.tsx"
+    },
+    {
+      "name": "Informe Final de Calidad y Aprobación (APA 7)",
+      "description": "Informe académico en formato estudiantil APA 7 (Institución Universitaria Pascual Bravo) con interpretación de métricas, análisis de defectos, riesgo residual y dictamen de cierre.",
+      "phase": "Cierre",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "estimatedDate": "16/11/2026",
+      "artifactPath": "docs/informe-calidad-apa.md"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Gestión de pruebas y defectos",
+      "tool": "GitHub Issues & Milestones (H3llz07/GastroForge-Testing) + Catálogo JSON Data-First",
+      "purpose": "Registro trazable de Historias de Usuario QA (HU-QA-001..008), casos de prueba y defectos (GF-BUG-001..006)"
+    },
+    {
+      "category": "Automatización Backend y Dominio (L2–L4)",
+      "tool": "Jest 29 + Supertest + Testcontainers / Docker PostgreSQL 16 & Redis 7",
+      "purpose": "Ejecución de pruebas unitarias de dominio, servicios en memoria e integración transaccional bajo rol app_user con RLS"
+    },
+    {
+      "category": "Automatización End-to-End y UI (L5)",
+      "tool": "Playwright Test (Viewport Tablet 1024x768, Chromium & WebKit)",
+      "purpose": "Ejecución automatizada de flujos completos de salón, cocina (KDS) y caja con verificación táctil"
+    },
+    {
+      "category": "Motor de Métricas y Validación QA",
+      "tool": "Vitest 3 + TypeScript 5.7 + tsx",
+      "purpose": "Validación de integridad referencial de datos QA, cálculo determinista de métricas y generación automática de entregables Markdown"
+    },
+    {
+      "category": "Rendimiento y Concurrencia",
+      "tool": "Suites de concurrencia paralela Supertest (Promise.all) con Idempotency-Key y bloqueo optimista",
+      "purpose": "Verificación empírica de condiciones de carrera en órdenes, sesiones de caja únicas y despacho Outbox"
+    },
+    {
+      "category": "Control de versiones",
+      "tool": "Git & GitHub (JhonatanM2005/GastroForge @ be9089e y H3llz07/GastroForge-Testing)",
+      "purpose": "Inmutabilidad de la versión evaluada del SUT y control de versiones de la evidencia QA"
+    },
+    {
+      "category": "Comunicación y Revisión",
+      "tool": "GitHub Pull Requests, Issues & Revisiones Cruzadas Bloque A / Bloque B",
+      "purpose": "Coordinación técnica del equipo QA, auditoría de pares y trazabilidad de aprobaciones"
+    }
+  ],
+  "environments": [
+    {
+      "name": "Desarrollo Local (SUT Dev)",
+      "urlOrServer": "http://localhost:5173 (Web SPA) / http://localhost:3000/api/v1 (NestJS API)",
+      "version": "Commit be9089e (Node.js 22 LTS, PostgreSQL 16, Redis 7)",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón"
+    },
+    {
+      "name": "QA / Integración y Arnés RLS",
+      "urlOrServer": "postgresql://app_user:***@localhost:5432/gastroforge_test + redis://localhost:6379/1",
+      "version": "Commit be9089e (FORCE RLS, rolbypassrls = false)",
+      "responsible": "Julián Santiago Pico Pinzón"
+    },
+    {
+      "name": "Simulación Producción / UAT Tablet-First",
+      "urlOrServer": "Playwright & Navegador Tablet Viewport 1024x768 (100% local reproducible) + Dashboard QA",
+      "version": "v1.0.0-qa (Commit be9089e)",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón"
+    }
+  ],
+  "schedule": [
+    {
+      "activity": "Planificación, congelación del SUT (be9089e) y diseño de casos",
+      "startDate": "02/11/2026",
+      "endDate": "05/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Preparación del ambiente Docker, semillas multi-tenant y arnés RLS (app_user)",
+      "startDate": "06/11/2026",
+      "endDate": "07/11/2026",
+      "responsible": "Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Ejecución de pruebas funcionales y de dominio (Bloques A y B)",
+      "startDate": "08/11/2026",
+      "endDate": "10/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Ejecución de pruebas de integración transaccional, concurrencia y Outbox/SSE",
+      "startDate": "11/11/2026",
+      "endDate": "12/11/2026",
+      "responsible": "Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Pruebas de rendimiento concurrente y seguridad multi-tenant RLS",
+      "startDate": "12/11/2026",
+      "endDate": "13/11/2026",
+      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "status": "Completado"
+    },
+    {
+      "activity": "Pruebas de aceptación (UAT) y ejecución de los 15 guiones manuales en tablet 1024x768",
+      "startDate": "13/11/2026",
+      "endDate": "14/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Corrección de defectos bloqueantes/altos de validación MVP (DEF-001, DEF-002, DEF-003)",
+      "startDate": "14/11/2026",
+      "endDate": "15/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Regresión post-corrección y registro de hallazgos abiertos en commit be9089e (DEF-004, DEF-005, DEF-006)",
+      "startDate": "15/11/2026",
+      "endDate": "15/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    },
+    {
+      "activity": "Cierre, generación de dashboard interactivo y entrega del informe de calidad APA 7",
+      "startDate": "16/11/2026",
+      "endDate": "16/11/2026",
+      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "status": "Completado"
+    }
+  ],
+  "risks": [
+    {
+      "id": 1,
+      "risk": "Retrasos o deriva en el código del SUT durante la campaña de pruebas que invaliden las evidencias recolectadas.",
+      "probability": "Media",
+      "impact": "Alto",
+      "mitigationPlan": "Congelar formalmente la línea base de evaluación en el commit be9089e y aislar el repositorio GastroForge-Testing sin modificar el ERP."
+    },
+    {
+      "id": 2,
+      "risk": "Ambiente de pruebas inestable o ejecución accidental con superusuario PostgreSQL que omita las políticas RLS (rolbypassrls = true).",
+      "probability": "Baja",
+      "impact": "Alto",
+      "mitigationPlan": "Forzar la conexión de integración con el rol app_user y ejecutar una aserción bloqueante en beforeAll que verifica rolbypassrls = false en pg_roles."
+    },
+    {
+      "id": 3,
+      "risk": "Discrepancias normativas entre documentos de especificación (PRD.md vs TESTING-PLAN.md vs implementación en can.helper.ts).",
+      "probability": "Alta",
+      "impact": "Medio",
+      "mitigationPlan": "Auditar exhaustivamente la matriz RBAC y las dimensiones táctiles, registrando toda discrepancia real como defecto trazable (DEF-004, DEF-005, DEF-006) con análisis de riesgo residual."
+    },
+    {
+      "id": 4,
+      "risk": "Falta de datos de prueba suficientes para comprobar escenarios multi-tenant, pagos divididos y concurrencia.",
+      "probability": "Media",
+      "impact": "Medio",
+      "mitigationPlan": "Sembrar determinísticamente dos tenants completos (Restaurante Central y Restaurante Norte) con usuarios en los 5 roles, mesas, catálogo con IVA y sesiones de caja."
+    },
+    {
+      "id": 5,
+      "risk": "Distorsión de métricas de calidad por incluir casos no ejecutados o funcionalidades de Fase 2 en el denominador de aprobación o cobertura.",
+      "probability": "Baja",
+      "impact": "Alto",
+      "mitigationPlan": "Implementar y probar unitariamente el motor calculateQaMetrics() excluyendo NOT_RUN, BLOCKED y SKIPPED del denominador de aprobación y separando explícitamente PHASE_2."
+    }
+  ],
+  "glossaryTerms": [
+    {
+      "term": "Caso de prueba",
+      "definition": "Conjunto de condiciones, precondiciones, datos de entrada, pasos de ejecución y resultado esperado que valida una funcionalidad o invariante específico de GastroForge."
+    },
+    {
+      "term": "Ciclo de pruebas",
+      "definition": "Periodo controlado en el cual se diseñan, ejecutan y evalúan los 40 casos de prueba sobre la versión congelada be9089e del sistema."
+    },
+    {
+      "term": "Criterio de aceptación",
+      "definition": "Condición medible y verificable que una historia de usuario o caso de uso debe satisfacer para considerarse completado y aprobado."
+    },
+    {
+      "term": "Datos de prueba",
+      "definition": "Conjunto de valores de entrada (credenciales por rol, UUIDs de tenants, montos Decimal(12,2), claves de idempotencia) empleados para ejecutar un caso de prueba."
+    },
+    {
+      "term": "Defecto / Bug",
+      "definition": "Discrepancia verificable entre el comportamiento real o documental del sistema en el commit be9089e y el comportamiento esperado según su especificación."
+    },
+    {
+      "term": "Entorno de pruebas",
+      "definition": "Configuración reproducible compuesta por Node.js, PostgreSQL 16 con RLS activo, Redis 7 y navegador en viewport tablet de 1024x768 píxeles."
+    },
+    {
+      "term": "Evidencia de prueba",
+      "definition": "Artefacto verificable (traza de ejecución, captura en data/evidence/, log de suite o referencia de código/commit) que demuestra el resultado obtenido."
+    },
+    {
+      "term": "Plan de pruebas",
+      "definition": "Documento rector que establece el alcance, la estrategia piramidal, la matriz RACI, los riesgos, el cronograma y el catálogo de casos de prueba del proyecto."
+    },
+    {
+      "term": "Regresión",
+      "definition": "Ejecución repetible de casos de prueba para confirmar que la corrección de defectos previos no ha introducido fallos en módulos ya verificados."
+    },
+    {
+      "term": "Severidad",
+      "definition": "Grado de impacto técnico y operativo que un defecto ejerce sobre el sistema, clasificado en Crítica (P1), Alta (P2), Media (P3) y Baja (P4)."
+    },
+    {
+      "term": "Arqueo ciego de caja",
+      "definition": "Procedimiento de cierre de turno en el cual el cajero declara el efectivo físico contado sin que la interfaz revele previamente el saldo esperado por el sistema."
+    },
+    {
+      "term": "Row-Level Security (RLS)",
+      "definition": "Mecanismo nativo de PostgreSQL que restringe a nivel de motor qué filas puede leer o escribir una transacción según la variable de sesión app.restaurant_id."
+    }
+  ],
+  "acronyms": [
+    {
+      "acronym": "ADR",
+      "meaning": "Architecture Decision Record",
+      "description": "Registro formal de una decisión arquitectónica inmutable del sistema (ADR-0001 a ADR-0006)."
+    },
+    {
+      "acronym": "BVA",
+      "meaning": "Boundary Value Analysis",
+      "description": "Análisis de Valores Límite. Técnica de diseño de pruebas que evalúa los extremos exactos de las particiones numéricas y de rango."
+    },
+    {
+      "acronym": "CI/CD",
+      "meaning": "Continuous Integration / Continuous Delivery",
+      "description": "Integración y entrega continua mediante flujos automatizados de validación de tipos, linter y pruebas."
+    },
+    {
+      "acronym": "EP",
+      "meaning": "Equivalence Partitioning",
+      "description": "Partición de equivalencia. Técnica de diseño que divide el dominio de entrada en clases válidas e inválidas representativas."
+    },
+    {
+      "acronym": "KDS",
+      "meaning": "Kitchen Display System",
+      "description": "Sistema de pantallas de cocina en tiempo real para gestionar la preparación de comandas por estación."
+    },
+    {
+      "acronym": "KPI",
+      "meaning": "Key Performance Indicator",
+      "description": "Indicador Clave de Rendimiento utilizado para medir tanto el desempeño del restaurante como la calidad del proceso de pruebas."
+    },
+    {
+      "acronym": "PM",
+      "meaning": "Project Manager",
+      "description": "Gerente o coordinador del proyecto encargado del seguimiento de cronograma y riesgos."
+    },
+    {
+      "acronym": "PO",
+      "meaning": "Product Owner",
+      "description": "Dueño del producto responsable de definir el alcance funcional y validar los criterios de aceptación."
+    },
+    {
+      "acronym": "QA",
+      "meaning": "Quality Assurance",
+      "description": "Aseguramiento de la calidad. Proceso sistemático para verificar y evidenciar que el software cumple sus especificaciones."
+    },
+    {
+      "acronym": "RACI",
+      "meaning": "Responsible, Accountable, Consulted, Informed",
+      "description": "Matriz de asignación de roles y responsabilidades en las actividades críticas del ciclo de pruebas."
+    },
+    {
+      "acronym": "RBAC",
+      "meaning": "Role-Based Access Control",
+      "description": "Control de acceso basado en roles implementado en GastroForge mediante la función pura can(role, action, stationId)."
+    },
+    {
+      "acronym": "RLS",
+      "meaning": "Row-Level Security",
+      "description": "Seguridad a nivel de fila en PostgreSQL para garantizar aislamiento estricto entre múltiples restaurantes (tenants)."
+    },
+    {
+      "acronym": "SSE",
+      "meaning": "Server-Sent Events",
+      "description": "Canal HTTP unidireccional persistente usado para notificar cambios de órdenes y cocina en tiempo real a las tablets."
+    },
+    {
+      "acronym": "SUT",
+      "meaning": "System Under Test",
+      "description": "Sistema bajo prueba. En este repositorio corresponde a GastroForge en el commit congelado be9089e."
+    },
+    {
+      "acronym": "UAT",
+      "meaning": "User Acceptance Testing",
+      "description": "Pruebas de Aceptación de Usuario ejecutadas para validar que el sistema responde a la operación real del restaurante."
+    }
+  ]
+}

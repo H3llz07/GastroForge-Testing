@@ -1,0 +1,347 @@
+import { describe, expect, it } from 'vitest';
+import rawMetadata from '../../data/metadata.json';
+import type {
+  Defect,
+  QaMetadata,
+  Requirement,
+  TestCase,
+  TestRun,
+} from '../domain/qa-types';
+import { calculateQaMetrics } from './calculate-metrics';
+
+const createRequirement = (
+  id: string,
+  status: 'IN_SCOPE' | 'PHASE_2' = 'IN_SCOPE',
+  module = 'orders',
+): Requirement => ({
+  id,
+  code: id,
+  source: 'PRD.md',
+  module,
+  title: `Requirement ${id}`,
+  description: `Description for ${id}`,
+  status,
+});
+
+const createTestCase = (
+  id: string,
+  number: number,
+  overrides: Partial<TestCase> = {},
+): TestCase => ({
+  id,
+  number,
+  requirementIds: ['HU-001'],
+  userStory: 'HU-001 — Apertura de orden',
+  module: 'orders',
+  title: `Caso ${id}`,
+  priority: 'Alta',
+  type: 'Funcional',
+  executionMode: 'Automatizada',
+  pyramidLevel: 'L4',
+  technique: 'EP',
+  preconditions: ['Tenant activo'],
+  inputData: { tableId: 'T-01' },
+  steps: ['Paso 1', 'Paso 2'],
+  expectedResult: 'HTTP 201',
+  responsible: 'Jhonatan A. Méndez R.',
+  ...overrides,
+});
+
+const createTestRun = (
+  id: string,
+  testCaseId: string,
+  status: TestRun['status'],
+  executedAt = '2026-11-16T01:00:00Z',
+  defectIds: string[] = [],
+): TestRun => ({
+  id,
+  testCaseId,
+  releaseCommit: 'be9089e',
+  environment: 'Docker PostgreSQL 16 (app_user RLS) + Playwright Tablet',
+  executor: 'Julián Santiago Pico Pinzón',
+  executedAt,
+  status,
+  actualResult: `Result ${status}`,
+  defectIds,
+  evidenceRefs: [],
+  observations: '',
+});
+
+const createDefect = (
+  id: string,
+  externalCode: string,
+  testCaseId: string,
+  severity: Defect['severity'],
+  severityCode: Defect['severityCode'],
+  status: Defect['status'],
+  overrides: Partial<Defect> = {},
+): Defect => ({
+  id,
+  externalCode,
+  issueUrl: `https://github.com/H3llz07/GastroForge-Testing/issues/${id}`,
+  testCaseId,
+  module: 'orders',
+  title: `Defect ${id}`,
+  severity,
+  severityCode,
+  priority: 'Alta',
+  status,
+  description: 'Descripción del defecto',
+  stepsToReproduce: ['Paso 1'],
+  expectedResult: 'Esperado',
+  actualResult: 'Obtenido',
+  evidenceRefs: [],
+  environment: 'Local Docker',
+  releaseCommit: 'be9089e',
+  reportedBy: 'Jhonatan A. Méndez R.',
+  reportedAt: '2026-11-16T01:00:00Z',
+  assignedTo: 'Julián Santiago Pico Pinzón',
+  ...overrides,
+});
+
+describe('calculateQaMetrics', () => {
+  it('returns safe zero-initialized metrics when all input collections are empty', () => {
+    const summary = calculateQaMetrics({
+      requirements: [],
+      testCases: [],
+      testRuns: [],
+      defects: [],
+    });
+
+    expect(summary.totalCases).toBe(0);
+    expect(summary.manualCases).toBe(0);
+    expect(summary.automatedCases).toBe(0);
+    expect(summary.executedCases).toBe(0);
+    expect(summary.passedCases).toBe(0);
+    expect(summary.failedCases).toBe(0);
+    expect(summary.blockedCases).toBe(0);
+    expect(summary.skippedCases).toBe(0);
+    expect(summary.notRunCases).toBe(0);
+    expect(summary.executionRate).toBe(0);
+    expect(summary.passRate).toBe(0);
+    expect(summary.inScopeRequirements).toBe(0);
+    expect(summary.coveredRequirements).toBe(0);
+    expect(summary.requirementCoverage).toBe(0);
+    expect(summary.totalDefects).toBe(0);
+    expect(summary.openDefects).toBe(0);
+    expect(summary.closedDefects).toBe(0);
+    expect(summary.reopenedDefects).toBe(0);
+    expect(summary.resolvedOrClosedDefects).toBe(0);
+    expect(summary.defectDensity).toBe(0);
+    expect(summary.openDefectDensity).toBe(0);
+    expect(summary.reopenRate).toBe(0);
+    expect(summary.defectsBySeverity.P1.total).toBe(0);
+    expect(summary.defectsBySeverity.P2.total).toBe(0);
+    expect(summary.defectsBySeverity.P3.total).toBe(0);
+    expect(summary.defectsBySeverity.P4.total).toBe(0);
+  });
+
+  it('excludes NOT_RUN, BLOCKED, and SKIPPED from executedCases and passRate denominator', () => {
+    const testCases: TestCase[] = [
+      createTestCase('CP-ORD-001', 1, { executionMode: 'Manual', pyramidLevel: 'L6' }),
+      createTestCase('CP-ORD-002', 2, { executionMode: 'Automatizada', pyramidLevel: 'L4' }),
+      createTestCase('CP-ORD-003', 3, { executionMode: 'Automatizada', pyramidLevel: 'L2' }),
+      createTestCase('CP-ORD-004', 4, { executionMode: 'Manual', pyramidLevel: 'L6' }),
+      createTestCase('CP-ORD-005', 5, { executionMode: 'Automatizada', pyramidLevel: 'L5' }),
+      createTestCase('CP-ORD-006', 6, { executionMode: 'Manual', pyramidLevel: 'L6' }),
+    ];
+
+    // 2 PASSED, 1 FAILED, 1 BLOCKED, 1 SKIPPED, 1 without any run (implicitly NOT_RUN)
+    const testRuns: TestRun[] = [
+      createTestRun('RUN-1', 'CP-ORD-001', 'PASSED'),
+      createTestRun('RUN-2', 'CP-ORD-002', 'PASSED'),
+      createTestRun('RUN-3', 'CP-ORD-003', 'FAILED'),
+      createTestRun('RUN-4', 'CP-ORD-004', 'BLOCKED'),
+      createTestRun('RUN-5', 'CP-ORD-005', 'SKIPPED'),
+    ];
+
+    const summary = calculateQaMetrics({
+      requirements: [createRequirement('HU-001', 'IN_SCOPE')],
+      testCases,
+      testRuns,
+      defects: [],
+    });
+
+    expect(summary.totalCases).toBe(6);
+    expect(summary.manualCases).toBe(3);
+    expect(summary.automatedCases).toBe(3);
+    expect(summary.executedCases).toBe(3); // Only PASSED (2) + FAILED (1)
+    expect(summary.passedCases).toBe(2);
+    expect(summary.failedCases).toBe(1);
+    expect(summary.blockedCases).toBe(1);
+    expect(summary.skippedCases).toBe(1);
+    expect(summary.notRunCases).toBe(1);
+
+    // executionRate = (3 / 6) * 100 = 50%
+    expect(summary.executionRate).toBe(50);
+    // passRate = (2 / 3) * 100 = 66.67% (never 2/6)
+    expect(summary.passRate).toBe(66.67);
+  });
+
+  it('uses the most recent TestRun per testCaseId when multiple runs exist', () => {
+    const testCases: TestCase[] = [createTestCase('CP-AUTH-001', 1)];
+    const testRuns: TestRun[] = [
+      createTestRun('RUN-OLD', 'CP-AUTH-001', 'FAILED', '2026-11-15T10:00:00Z'),
+      createTestRun('RUN-NEW', 'CP-AUTH-001', 'PASSED', '2026-11-16T10:00:00Z'),
+    ];
+
+    const summary = calculateQaMetrics({
+      requirements: [createRequirement('HU-001', 'IN_SCOPE')],
+      testCases,
+      testRuns,
+      defects: [],
+    });
+
+    expect(summary.executedCases).toBe(1);
+    expect(summary.passedCases).toBe(1);
+    expect(summary.failedCases).toBe(0);
+    expect(summary.passRate).toBe(100);
+  });
+
+  it('computes requirementCoverage strictly over IN_SCOPE requirements and ignores PHASE_2 exclusions', () => {
+    const requirements: Requirement[] = [
+      createRequirement('HU-001', 'IN_SCOPE', 'auth'),
+      createRequirement('HU-002', 'IN_SCOPE', 'catalog'),
+      createRequirement('HU-003', 'IN_SCOPE', 'orders'),
+      createRequirement('HU-004', 'IN_SCOPE', 'cash'),
+      createRequirement('FASE2-RESERVATIONS', 'PHASE_2', 'tables'),
+      createRequirement('FASE2-API-KEYS', 'PHASE_2', 'auth'),
+    ];
+
+    const testCases: TestCase[] = [
+      createTestCase('CP-AUTH-001', 1, { requirementIds: ['HU-001', 'HU-002'] }),
+      createTestCase('CP-ORD-001', 2, { requirementIds: ['HU-003'] }),
+    ];
+
+    const summary = calculateQaMetrics({
+      requirements,
+      testCases,
+      testRuns: [],
+      defects: [],
+    });
+
+    expect(summary.inScopeRequirements).toBe(4);
+    expect(summary.coveredRequirements).toBe(3); // HU-001, HU-002, HU-003 covered; HU-004 uncovered
+    expect(summary.requirementCoverage).toBe(75);
+    expect(summary.passRate).toBe(0); // 0 executed cases -> 0% passRate without NaN
+  });
+
+  it('calculates defect density, open defect density, reopen rate, and P1-P4 breakdown accurately', () => {
+    const testCases = Array.from({ length: 40 }, (_, idx) =>
+      createTestCase(`CP-MOD-${String(idx + 1).padStart(3, '0')}`, idx + 1, {
+        module: idx < 20 ? 'orders' : 'cash',
+        executionMode: idx < 15 ? 'Manual' : 'Automatizada',
+        pyramidLevel: idx < 15 ? 'L6' : 'L4',
+        technique: idx % 2 === 0 ? 'BVA' : 'Tabla de decisión',
+        type: idx % 2 === 0 ? 'Funcional' : 'Seguridad',
+      }),
+    );
+
+    const testRuns = testCases.map((tc, idx) =>
+      createTestRun(
+        `RUN-${idx + 1}`,
+        tc.id,
+        idx < 37 ? 'PASSED' : 'FAILED',
+      ),
+    );
+
+    const defects: Defect[] = [
+      createDefect('DEF-001', 'GF-BUG-001', 'CP-MOD-021', 'Alta', 'P2', 'Cerrado'),
+      createDefect('DEF-002', 'GF-BUG-002', 'CP-MOD-022', 'Media', 'P3', 'Cerrado'),
+      createDefect('DEF-003', 'GF-BUG-003', 'CP-MOD-023', 'Media', 'P3', 'Resuelto', {
+        reopened: true,
+      }),
+      createDefect('DEF-004', 'GF-BUG-004', 'CP-MOD-038', 'Media', 'P3', 'Asignado'),
+      createDefect('DEF-005', 'GF-BUG-005', 'CP-MOD-039', 'Media', 'P3', 'En progreso'),
+      createDefect('DEF-006', 'GF-BUG-006', 'CP-MOD-040', 'Baja', 'P4', 'Nuevo'),
+    ];
+
+    const summary = calculateQaMetrics({
+      requirements: [createRequirement('HU-001', 'IN_SCOPE')],
+      testCases,
+      testRuns,
+      defects,
+    });
+
+    expect(summary.totalCases).toBe(40);
+    expect(summary.manualCases).toBe(15);
+    expect(summary.automatedCases).toBe(25);
+    expect(summary.executedCases).toBe(40);
+    expect(summary.passedCases).toBe(37);
+    expect(summary.failedCases).toBe(3);
+    expect(summary.executionRate).toBe(100);
+    expect(summary.passRate).toBe(92.5);
+
+    expect(summary.totalDefects).toBe(6);
+    expect(summary.openDefects).toBe(3); // Asignado, En progreso, Nuevo
+    expect(summary.closedDefects).toBe(2); // Cerrado
+    expect(summary.resolvedOrClosedDefects).toBe(3); // 2 Cerrado + 1 Resuelto
+    expect(summary.reopenedDefects).toBe(1);
+
+    // defectDensity = 6 / 40 = 0.15
+    expect(summary.defectDensity).toBe(0.15);
+    // openDefectDensity = 3 / 40 = 0.075
+    expect(summary.openDefectDensity).toBe(0.075);
+    // reopenRate = (1 / 3) * 100 = 33.33%
+    expect(summary.reopenRate).toBe(33.33);
+
+    expect(summary.defectsBySeverity.P1).toEqual({
+      severityCode: 'P1',
+      severity: 'Crítica',
+      total: 0,
+      open: 0,
+      closed: 0,
+    });
+    expect(summary.defectsBySeverity.P2).toEqual({
+      severityCode: 'P2',
+      severity: 'Alta',
+      total: 1,
+      open: 0,
+      closed: 1,
+    });
+    expect(summary.defectsBySeverity.P3).toEqual({
+      severityCode: 'P3',
+      severity: 'Media',
+      total: 4,
+      open: 2,
+      closed: 2,
+    });
+    expect(summary.defectsBySeverity.P4).toEqual({
+      severityCode: 'P4',
+      severity: 'Baja',
+      total: 1,
+      open: 1,
+      closed: 0,
+    });
+
+    expect(summary.byModule.orders.totalCases).toBe(20);
+    expect(summary.byModule.cash.totalCases).toBe(20);
+    expect(summary.byPyramidLevel.L6.totalCases).toBe(15);
+    expect(summary.byPyramidLevel.L4.totalCases).toBe(25);
+    expect(summary.byTechnique.BVA.totalCases).toBe(20);
+    expect(summary.byTechnique['Tabla de decisión'].totalCases).toBe(20);
+    expect(summary.byType.Funcional.totalCases).toBe(20);
+    expect(summary.byType.Seguridad.totalCases).toBe(20);
+  });
+
+  it('validates governance metadata structure against QaMetadata contract and frozen commit be9089e', () => {
+    const metadata: QaMetadata = rawMetadata as QaMetadata;
+
+    expect(metadata.frozenCommit).toBe('be9089e');
+    expect(metadata.status).toBe('Aprobado');
+    expect(metadata.team.length).toBeGreaterThanOrEqual(6);
+    expect(metadata.raciMatrix.length).toBe(8);
+    expect(metadata.objectives.length).toBeGreaterThanOrEqual(3);
+    expect(metadata.suspensionCriteria.length).toBeGreaterThanOrEqual(5);
+    expect(metadata.completionThresholds.length).toBeGreaterThanOrEqual(7);
+    expect(metadata.entryExitCriteria.entry.length).toBeGreaterThanOrEqual(4);
+    expect(metadata.entryExitCriteria.exit.length).toBeGreaterThanOrEqual(4);
+    expect(metadata.deliverables.length).toBeGreaterThanOrEqual(7);
+    expect(metadata.tools.length).toBeGreaterThanOrEqual(5);
+    expect(metadata.environments.length).toBe(3);
+    expect(metadata.schedule.length).toBe(9);
+    expect(metadata.risks.length).toBeGreaterThanOrEqual(5);
+    expect(metadata.glossaryTerms.length).toBeGreaterThanOrEqual(11);
+    expect(metadata.acronyms.length).toBeGreaterThanOrEqual(11);
+  });
+});
