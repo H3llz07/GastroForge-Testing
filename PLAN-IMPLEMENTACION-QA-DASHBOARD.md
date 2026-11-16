@@ -157,10 +157,10 @@ Cada fase se ejecuta en una Historia de Usuario independiente para no mezclar co
 ## Criterios de aceptación
 
 - [x] Se identificó el commit (`be9089e`) y entorno evaluados.
-- [ ] El repositorio `H3llz07/GastroForge-Testing` cuenta con plantillas YAML, Milestones y las 8 Historias de Usuario `[HU-QA-001..008]`.
-- [ ] El plan de pruebas específico (`docs/plan-de-pruebas-gastroforge.md`) reemplaza el 100% de los marcadores genéricos de `plan_de_pruebas.md`.
-- [ ] Existen 40 CP con identificador, módulo, prioridad, historia/UC, técnica, datos de entrada, pasos y resultado esperado.
-- [ ] Al menos 15 CP tienen ejecución manual y evidencia reproducible.
-- [ ] Cada uno de los 6 defectos (`DEF-001..006`) enlaza a un CP, al commit `be9089e` y a su Issue `[GF-BUG]` en GitHub.
-- [ ] El dashboard muestra métricas calculadas con fórmula visible, fecha de actualización, filtros multicriterio y exportación/impresión.
-- [ ] El análisis de calidad (`docs/informe-calidad-apa.md`) separa hechos, limitaciones y riesgo residual cumpliendo APA 7 estudiantil.
+- [x] El repositorio `H3llz07/GastroForge-Testing` cuenta con plantillas YAML, Milestones y las 8 Historias de Usuario `[HU-QA-001..008]`.
+- [x] El plan de pruebas específico (`docs/plan-de-pruebas-gastroforge.md`) reemplaza el 100% de los marcadores genéricos de `plan_de_pruebas.md`.
+- [x] Existen 40 CP con identificador, módulo, prioridad, historia/UC, técnica, datos de entrada, pasos y resultado esperado.
+- [x] Al menos 15 CP tienen ejecución manual y evidencia reproducible.
+- [x] Cada uno de los 6 defectos (`DEF-001..006`) enlaza a un CP, al commit `be9089e` y a su Issue `[GF-BUG]` en GitHub.
+- [x] El dashboard muestra métricas calculadas con fórmula visible, fecha de actualización, filtros multicriterio y exportación/impresión.
+- [x] El análisis de calidad (`docs/informe-calidad-apa.md`) separa hechos, limitaciones y riesgo residual cumpliendo APA 7 estudiantil.

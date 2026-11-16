@@ -646,5 +646,33 @@ describe('calculateQaMetrics', () => {
     expect(planContent).toContain('0 (P1=0, P2=0)');
     expect(planContent).toContain('0% (0/3)');
     expect(planContent).toContain('100% (28/28)');
+
+    const apaReportPath = path.resolve(
+      process.cwd(),
+      'docs',
+      'informe-calidad-apa.md',
+    );
+    const readmePath = path.resolve(process.cwd(), 'README.md');
+
+    expect(fs.existsSync(apaReportPath)).toBe(true);
+    expect(fs.existsSync(readmePath)).toBe(true);
+
+    const apaReportContent = fs.readFileSync(apaReportPath, 'utf-8');
+    const readmeContent = fs.readFileSync(readmePath, 'utf-8');
+
+    expect(apaReportContent).toContain('**Tabla 1**');
+    expect(apaReportContent).toContain('**Tabla 2**');
+    expect(apaReportContent).toContain('**Tabla 3**');
+    expect(apaReportContent).toContain('## Referencias');
+    expect(apaReportContent).toContain('Institución Universitaria Pascual Bravo');
+    expect(apaReportContent).toContain(
+      'Apto con Observaciones Menores Controladas',
+    );
+
+    expect(readmeContent).toContain('docs/plan-de-pruebas-gastroforge.md');
+    expect(readmeContent).toContain('docs/matriz-trazabilidad.md');
+    expect(readmeContent).toContain('docs/reporte-bugs.md');
+    expect(readmeContent).toContain('docs/informe-calidad-apa.md');
+    expect(readmeContent).toContain('be9089e');
   });
 });
