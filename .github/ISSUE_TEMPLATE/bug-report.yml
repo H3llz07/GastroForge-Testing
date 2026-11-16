@@ -1,0 +1,94 @@
+name: Reporte de Defecto SUT (GF-BUG)
+description: Registrar un defecto verificable del SUT GastroForge (commit congelado be9089e) vinculado a un Caso de Prueba
+title: '[GF-BUG-XXX] '
+labels: ['gf-bug']
+body:
+  - type: input
+    id: defect_id
+    attributes:
+      label: ID del Defecto (Plantilla Académica)
+      placeholder: 'DEF-001'
+    validations:
+      required: true
+  - type: input
+    id: test_case_id
+    attributes:
+      label: Caso de Prueba Relacionado
+      placeholder: 'CP-CSH-002'
+    validations:
+      required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Módulo Afectado
+      options:
+        - auth
+        - catalog
+        - tables
+        - orders
+        - kitchen
+        - cash
+        - inventory
+        - reports
+        - rls
+        - web
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      options:
+        - Crítica (P1 - Blocker)
+        - Alta (P2 - Critical)
+        - Media (P3 - Major)
+        - Baja (P4 - Minor)
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - Alta
+        - Media
+        - Baja
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Entorno y Commit Evaluado
+      value: 'QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768) — Commit be9089e'
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del Defecto
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para Reproducir
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado Esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado Obtenido
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia y Trazabilidad
+    validations:
+      required: true

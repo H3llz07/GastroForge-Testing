@@ -1,0 +1,49 @@
+name: Historia de Usuario QA (HU-QA)
+description: Crear una Historia de Usuario por fase para el desarrollo de GastroForge-Testing sin mezclar contexto
+title: '[HU-QA-XXX] '
+labels: ['user-story']
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Fase
+      options:
+        - Fase 0 - Congelación y Base
+        - Fase 1 - Requisitos y Alcance
+        - Fase 2 - Catálogo de 40 CP
+        - Fase 3 - Ejecución y Evidencias
+        - Fase 4 - Gestión de Defectos
+        - Fase 5 - Entregables Markdown
+        - Fase 6 - Dashboard QA SPA
+        - Fase 7 - Informe APA 7 y Cierre
+    validations:
+      required: true
+  - type: dropdown
+    id: owner
+    attributes:
+      label: Bloque / Responsable
+      options:
+        - Compartido (@JhonatanM2005 & @H3llz07)
+        - Bloque A (@JhonatanM2005)
+        - Bloque B (@H3llz07)
+    validations:
+      required: true
+  - type: textarea
+    id: story
+    attributes:
+      label: Historia de Usuario
+      description: Formato Como / Quiero / Para
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de Aceptación
+    validations:
+      required: true
+  - type: input
+    id: artifacts
+    attributes:
+      label: Artefactos y Archivos en Alcance
+    validations:
+      required: true
