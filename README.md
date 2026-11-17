@@ -11,7 +11,7 @@ Repositorio oficial e independiente de **Aseguramiento de Calidad (QA)**, trazab
 - **Repositorio del SUT Evaluado:** [`JhonatanM2005/GastroForge`](https://github.com/JhonatanM2005/GastroForge)
 - **Commit Congelado (Baseline QA):** `be9089e` (`feat(web): add playwright tablet e2e suite and manual testing evidences (#71)`)
 - **Repositorio de Evidencia QA:** [`H3llz07/GastroForge-Testing`](https://github.com/H3llz07/GastroForge-Testing)
-- **Autores / Equipo QA:** Jhonatan A. Méndez R. (`@JhonatanM2005` — QA Lead Bloque A) y Julián Santiago Pico Pinzón (`@H3llz07` — QA Lead Bloque B)
+- **Autores / Equipo QA:** Jhonatan A. Méndez R. ([`@JhonatanM2005`](https://github.com/JhonatanM2005) — QA Lead Bloque A), Julián Santiago Pico Pinzón ([`@H3llz07`](https://github.com/H3llz07) — QA Lead Bloque B) y Christian Urrego Issa ([`@Christu12`](https://github.com/Christu12) — QA Analyst & Automatizador)
 
 > **Frontera Inquebrantable:** Este repositorio jamás modifica el código fuente del ERP ni se conecta a bases de datos o credenciales productivas. Opera bajo una arquitectura **Data-First (Single Source of Truth)** donde todos los catálogos normalizados residen en `data/*.json`, son auditados automáticamente por `scripts/validate-qa-data.ts` y compilan determinísticamente tanto los documentos académicos como las vistas del dashboard interactivo.
 

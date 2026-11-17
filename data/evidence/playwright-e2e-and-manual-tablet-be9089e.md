@@ -5,8 +5,9 @@
 - **Niveles Piramidales:** Nivel L5 (Playwright E2E `1024x768` Chromium & WebKit) y Nivel L6 (15 Casos Manuales en Tablet Viewport `1024x768`)
 - **Fecha de Ejecución:** `2026-11-16T01:00:00-05:00` a `2026-11-16T04:55:00-05:00`
 - **Ejecutores:**
-  - **Bloque A (`CP-001` a `CP-010`, `CP-020` a `CP-023`, `CP-037` a `CP-040`):** Jhonatan A. Méndez R. (`@JhonatanM2005`)
-  - **Bloque B (`CP-011` a `CP-019`, `CP-024` a `CP-036`):** Julián Santiago Pico Pinzón (`@H3llz07`)
+  - **Bloque A (Auth, Órdenes y KDS parcial):** Jhonatan A. Méndez R. (`@JhonatanM2005`)
+  - **Bloque B (Caja, Órdenes, Seguridad RLS parcial):** Julián Santiago Pico Pinzón (`@H3llz07`)
+  - **QA Analyst & Automatizador (Catálogo, Mesas, KDS/Reportes manuales + Playwright E2E `CP-RLS-003`):** Christian Urrego Issa (`@Christu12`)
 
 ---
 

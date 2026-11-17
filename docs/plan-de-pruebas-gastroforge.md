@@ -5,11 +5,11 @@
 | Campo | Valor |
 |---|---|
 | **Proyecto** | GastroForge — Sistema ERP Multi-Restaurante Tablet-First |
-| **Versión** | 1.0 |
+| **Versión** | 1.1 |
 | **Fecha** | 16/11/2026 |
 | **Commit SUT Evaluado** | `be9089e` (feat(web): add playwright tablet e2e suite and manual testing evidences (#71)) — [`JhonatanM2005/GastroForge`](https://github.com/JhonatanM2005/GastroForge) |
 | **Institución** | Institución Universitaria Pascual Bravo |
-| **Elaborado por** | Jhonatan A. Méndez R. (@JhonatanM2005) & Julián Santiago Pico Pinzón (@H3llz07) |
+| **Elaborado por** | Jhonatan A. Méndez R. (@JhonatanM2005), Julián Santiago Pico Pinzón (@H3llz07) & Christian Urrego Issa (@Christu12) |
 | **Revisado por** | Jhonatan A. Méndez R. (QA Lead — Bloque A) |
 | **Aprobado por** | Julián Santiago Pico Pinzón (QA Lead / Arquitectura — Bloque B) |
 | **Estado** | [ ] Borrador  [ ] En revisión  [x] Aprobado |
@@ -23,6 +23,7 @@
 | Versión | Fecha | Descripción del Cambio | Autor | Aprobado por |
 |---|---|---|---|---|
 | 1.0 | 16/11/2026 | Versión inicial aprobada del plan de pruebas sobre el commit congelado be9089e de GastroForge | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. |
+| 1.1 | 16/11/2026 | Incorporación de Christian Urrego Issa (@Christu12) como co-autor, QA Analyst / Automatizador y redistribución equilibrada de casos de prueba y ejecuciones | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. |
 
 ---
 
@@ -74,9 +75,9 @@ La campaña de aseguramiento de calidad evalúa de forma estática, unitaria, de
 |---|---|---|---|
 | QA Lead / Líder de Pruebas (Bloque A) | Jhonatan A. Méndez R. (@JhonatanM2005) | Planificar, coordinar y supervisar las actividades de prueba del Bloque A. Diseñar y ejecutar casos de autenticación, catálogo, mesas, órdenes y KDS. Revisar matriz de trazabilidad y aprobar entregables cruzados. | 100% |
 | QA Lead / Arquitecto de Pruebas (Bloque B) | Julián Santiago Pico Pinzón (@H3llz07) | Liderar la arquitectura del arnés de pruebas e infraestructura Data-First. Diseñar y ejecutar casos de caja, pagos idempotentes, inventario, reportes y suite multi-tenant RLS. Consolidar métricas e informe APA 7. | 100% |
-| QA Analyst / Analista de Pruebas | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón (@JhonatanM2005 / @H3llz07) | Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos. | 100% |
-| QA Automatizador | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón (@JhonatanM2005 / @H3llz07) | Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright). | 100% |
-| Desarrollador / Dev del SUT | Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón) (@JhonatanM2005 / @H3llz07) | Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006). | 75% |
+| QA Analyst / Analista de Pruebas | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa (@JhonatanM2005 / @H3llz07 / @Christu12) | Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos. | 100% |
+| QA Automatizador | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa (@JhonatanM2005 / @H3llz07 / @Christu12) | Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright). | 100% |
+| Desarrollador / Dev del SUT | Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa) (@JhonatanM2005 / @H3llz07 / @Christu12) | Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006). | 75% |
 | Product Owner / PO Académico | Comité Evaluador — Ingeniería de Software / Aseguramiento de Calidad (I.U. Pascual Bravo) | Validar el cumplimiento de los criterios de aceptación del plan de pruebas, auditar la trazabilidad de requisitos y aprobar el cierre formal del ciclo de aseguramiento de calidad. | 25% |
 | Usuario Final / Cliente Representativo | Operadores de Salón, Cocina y Caja (Simulación UAT Tablet 1024x768) (Perfiles Operativos MVP) | Participar en las pruebas de aceptación (UAT) sobre flujos operativos de restaurante (comanda rápida, KDS en vivo y arqueo ciego de caja). | 25% |
 
@@ -105,13 +106,13 @@ La siguiente matriz define quién es Responsable (R), Aprobador (A), Consultado 
 
 | Tipo de Prueba | Descripción | Responsable | Incluida |
 |---|---|---|---|
-| Prueba funcional | Verifica que cada caso de uso y regla de negocio de los módulos auth, catalog, tables, orders, kitchen, cash, inventory y reports opere conforme a los requisitos. | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Sí [ ] No |
-| Prueba de regresión | Asegura que las correcciones aplicadas durante el ciclo MVP (como DEF-001, DEF-002 y DEF-003) no degraden funcionalidades previamente validadas. | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Sí [ ] No |
+| Prueba funcional | Verifica que cada caso de uso y regla de negocio de los módulos auth, catalog, tables, orders, kitchen, cash, inventory y reports opere conforme a los requisitos. | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Sí [ ] No |
+| Prueba de regresión | Asegura que las correcciones aplicadas durante el ciclo MVP (como DEF-001, DEF-002 y DEF-003) no degraden funcionalidades previamente validadas. | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Sí [ ] No |
 | Prueba de integración | Valida la interacción real entre controladores NestJS, servicios de aplicación, Prisma UnitOfWork, PostgreSQL 16 (con políticas RLS activas) y Redis 7 (Outbox/SSE). | Julián Santiago Pico Pinzón | [x] Sí [ ] No |
 | Prueba de rendimiento | Evalúa tiempos de respuesta transaccionales en concurrencia simultánea de órdenes/pagos, latencia de despacho Outbox y lectura de KPIs desde caché. | Julián Santiago Pico Pinzón | [x] Sí [ ] No |
-| Prueba de seguridad | Verifica aislamiento multi-tenant (RLS bajo app_user), matriz de autorización RBAC deny-by-default, revocación de permisos UPDATE/DELETE en tablas de auditoría, CORS y Rate Limiting. | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Sí [ ] No |
+| Prueba de seguridad | Verifica aislamiento multi-tenant (RLS bajo app_user), matriz de autorización RBAC deny-by-default, revocación de permisos UPDATE/DELETE en tablas de auditoría, CORS y Rate Limiting. | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Sí [ ] No |
 | Prueba de usabilidad | Evalúa la ergonomía táctil en viewport tablet (1024x768), dimensiones de objetivos interactivos, alto contraste en KDS y claridad de mensajes de error RFC 7807. | Jhonatan A. Méndez R. | [x] Sí [ ] No |
-| Prueba de aceptación (UAT) | Validación integral de extremo a extremo del flujo operativo de restaurante (apertura de mesa, comanda por tandas, preparación en KDS, cobro dividido y arqueo ciego). | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Sí [ ] No |
+| Prueba de aceptación (UAT) | Validación integral de extremo a extremo del flujo operativo de restaurante (apertura de mesa, comanda por tandas, preparación en KDS, cobro dividido y arqueo ciego). | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Sí [ ] No |
 
 ### 5.2 Técnicas de Diseño de Casos de Prueba
 
@@ -122,12 +123,12 @@ La siguiente matriz define quién es Responsable (R), Aprobador (A), Consultado 
 
 ### 5.3 Niveles de Prueba
 
-- **Pruebas estáticas y de contratos (Nivel L1):** Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón — *TypeScript 5.7 (tsc --noEmit), ESLint 9, Prettier y validación OpenAPI*. Verificación estática de tipos, invariantes de compilación y sincronización de esquemas antes de la ejecución. (0 casos de prueba directos en catálogo).
-- **Pruebas unitarias de dominio puro (Nivel L2):** Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón — *Jest (Dominio puro sin I/O) y Vitest (Motor de métricas QA)*. Validación en memoria de agregados, máquinas de estado (OrderItemStatus, CashSessionStatus), objetos de valor (Money con IVA incluido) y matriz can(). (3 casos de prueba directos en catálogo).
-- **Pruebas de servicios de aplicación en memoria (Nivel L3):** Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón — *Jest con repositorios Fake en memoria y UnitOfWork simulado*. Orquestación de casos de uso, control de versiones optimistas, cálculo de arqueo ciego y emisión de eventos Outbox sin acoplamiento a base de datos. (1 casos de prueba directos en catálogo).
+- **Pruebas estáticas y de contratos (Nivel L1):** Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa — *TypeScript 5.7 (tsc --noEmit), ESLint 9, Prettier y validación OpenAPI*. Verificación estática de tipos, invariantes de compilación y sincronización de esquemas antes de la ejecución. (0 casos de prueba directos en catálogo).
+- **Pruebas unitarias de dominio puro (Nivel L2):** Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa — *Jest (Dominio puro sin I/O) y Vitest (Motor de métricas QA)*. Validación en memoria de agregados, máquinas de estado (OrderItemStatus, CashSessionStatus), objetos de valor (Money con IVA incluido) y matriz can(). (3 casos de prueba directos en catálogo).
+- **Pruebas de servicios de aplicación en memoria (Nivel L3):** Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa — *Jest con repositorios Fake en memoria y UnitOfWork simulado*. Orquestación de casos de uso, control de versiones optimistas, cálculo de arqueo ciego y emisión de eventos Outbox sin acoplamiento a base de datos. (1 casos de prueba directos en catálogo).
 - **Pruebas de integración multi-tenant e infraestructura (Nivel L4):** Julián Santiago Pico Pinzón — *Jest + Supertest + NestJS TestingModule + Docker (PostgreSQL 16 app_user RLS & Redis 7)*. Verificación de extremo a extremo en la capa HTTP/DB ejecutando transacciones reales con set_config('app.restaurant_id'), RLS forzado e idempotencia. (20 casos de prueba directos en catálogo).
-- **Pruebas de sistema End-to-End en Tablet (Nivel L5):** Jhonatan A. Méndez R. — *Playwright Test (Chromium & WebKit en viewport 1024x768)*. Automatización del Golden Path operativo completo desde el navegador emulando interacción táctil de mesero, cocinero, cajero y administrador. (1 casos de prueba directos en catálogo).
-- **Pruebas manuales exploratorias y de aceptación UAT (Nivel L6):** Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón — *Inspección interactiva en navegador (DevTools Tablet 1024x768), cliente HTTP y capturas de evidencia*. Ejecución controlada de los 15 casos manuales para evaluar ergonomía táctil, reconexión SSE ante caídas de red, formato de tirilla 80mm y contraste visual. (15 casos de prueba directos en catálogo).
+- **Pruebas de sistema End-to-End en Tablet (Nivel L5):** Jhonatan A. Méndez R. & Christian Urrego Issa — *Playwright Test (Chromium & WebKit en viewport 1024x768)*. Automatización del Golden Path operativo completo desde el navegador emulando interacción táctil de mesero, cocinero, cajero y administrador. (1 casos de prueba directos en catálogo).
+- **Pruebas manuales exploratorias y de aceptación UAT (Nivel L6):** Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa — *Inspección interactiva en navegador (DevTools Tablet 1024x768), cliente HTTP y capturas de evidencia*. Ejecución controlada de los 15 casos manuales para evaluar ergonomía táctil, reconexión SSE ante caídas de red, formato de tirilla 80mm y contraste visual. (15 casos de prueba directos en catálogo).
 
 ### 5.4 Criterios de Suspensión y Requisitos de Reanudación
 
@@ -316,7 +317,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [x] Funcional  [ ] Regresión  [ ] Integración  [ ] Otro |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Manual** (L6). Unicidad de código de estación y nombre de categoría por tenant confirmada.<br>**Evidencia verificable:** `EVID-RUN-007-1` (LOG): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Evidencia de ejecución manual de gestión de estaciones y categorías de catálogo en 1024x768.<br>`EVID-RUN-007-2` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de catalog-stations.int-spec.ts y catalog-categories.int-spec.ts. |
@@ -337,7 +338,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [x] Funcional  [ ] Regresión  [ ] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [x] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L2) · Spec: `apps/api/src/modules/catalog/domain/tax-breakdown.helper.spec.ts`. Cero errores de redondeo de coma flotante IEEE 754 en desglose de IVA incluido.<br>**Evidencia verificable:** `EVID-RUN-008-1` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/catalog/domain/tax-breakdown.helper.spec.ts en commit be9089e. |
@@ -358,7 +359,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [x] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [x] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/catalog-modifier-groups.int-spec.ts`. Cobertura completa de particiones y valores límite (min - 1, min, max, max + 1).<br>**Evidencia verificable:** `EVID-RUN-009-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/catalog-modifier-groups.int-spec.ts.<br>`EVID-RUN-009-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/catalog/domain/modifier-rules.helper.spec.ts. |
@@ -379,7 +380,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [x] Funcional  [ ] Regresión  [ ] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [ ] BVA  [ ] Tabla de decisión  [x] Otro (Transición de estados) |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Manual** (L6). Sincronización reactiva confirmada entre catálogo administrativo y pantalla de pedidos.<br>**Evidencia verificable:** `EVID-RUN-010-1` (LOG): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Evidencia manual de transición de disponibilidad rápida (86ing) en turno activo.<br>`EVID-RUN-010-2` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración en apps/api/test/catalog-menu-items.int-spec.ts. |
@@ -400,7 +401,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [x] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [x] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/tables-management.int-spec.ts`. Restricción UNIQUE (restaurant_id, code) y validación BVA de capacidad verificadas.<br>**Evidencia verificable:** `EVID-RUN-011-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/tables-management.int-spec.ts.<br>`EVID-RUN-011-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/tables/domain/tables-validation.helper.spec.ts. |
@@ -421,7 +422,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [ ] Integración  [x] Otro (Usabilidad) |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Manual** (L6). Cumple ergonomía táctil tablet-first y accesibilidad visual de salón.<br>**Evidencia verificable:** `EVID-RUN-012-1` (LOG): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Medición DOM en DevTools 1024x768 de tarjetas de mesa (>= 104px) y semántica visual FREE vs OCCUPIED. |
@@ -442,7 +443,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [x] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [ ] BVA  [ ] Tabla de decisión  [x] Otro (Transición de estados) |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/tables-overview.int-spec.ts`. Ocupación derivada dinámicamente sin columnas de estado redundantes.<br>**Evidencia verificable:** `EVID-RUN-013-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/tables-overview.int-spec.ts.<br>`EVID-RUN-013-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/tables/domain/table-occupancy.helper.spec.ts. |
@@ -589,7 +590,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [ ] Integración  [x] Otro (Usabilidad) |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Manual** (L6). Filtros de estación con altura táctil >= 44px y alta legibilidad a distancia en cocina.<br>**Evidencia verificable:** `EVID-RUN-020-1` (LOG): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Evidencia manual en 1024x768 de la cola KDS por estación y semáforo de urgencia.<br>`EVID-RUN-020-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/kitchen/domain/kds-urgency.helper.spec.ts. |
@@ -610,7 +611,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [ ] Integración  [x] Otro (Seguridad) |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/kitchen-queue.int-spec.ts`. Aislamiento por estación de cocina verificado a nivel de dominio y endpoint HTTP.<br>**Evidencia verificable:** `EVID-RUN-021-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/kitchen-queue.int-spec.ts. |
@@ -841,7 +842,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [x] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [x] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/inventory-items.int-spec.ts`. Frontera BVA [11, 10, 9] evaluada en dominio e integración.<br>**Evidencia verificable:** `EVID-RUN-032-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/inventory-items.int-spec.ts.<br>`EVID-RUN-032-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/inventory/domain/inventory-stock.helper.spec.ts. |
@@ -883,7 +884,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [x] Integración  [ ] Otro |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L4) · Spec: `apps/api/test/reports-dashboard.int-spec.ts`. Consistencia entre agregaciones SQL por tenant y caché Redis confirmada.<br>**Evidencia verificable:** `EVID-RUN-034-1` (SPEC): `data/evidence/integration-rls-verification-be9089e.md` — Verificación de integración de apps/api/test/reports-dashboard.int-spec.ts.<br>`EVID-RUN-034-2` (LOG): `data/evidence/unit-tests-execution-be9089e.txt` — Ejecución exitosa de PASS src/modules/reports/domain/reports-analytics.helper.spec.ts. |
@@ -904,7 +905,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [ ] Alta  [x] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [ ] Regresión  [ ] Integración  [x] Otro (Usabilidad) |
 | Técnica aplicada | [x] EP  [ ] BVA  [ ] Tabla de decisión  [ ] Otro |
-| Responsable | Julián Santiago Pico Pinzón (@H3llz07) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Manual** (L6). Tipografía tabular monoespaciada alinea perfectamente montos, IVA, propinas y arqueo.<br>**Evidencia verificable:** `EVID-RUN-035-1` (LOG): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Verificación manual de formato de impresión térmica de 80mm (@media print). |
@@ -988,7 +989,7 @@ A continuación se documentan las **40 fichas detalladas de casos de prueba** (`
 | Prioridad | [x] Alta  [ ] Media  [ ] Baja |
 | Tipo de prueba | [ ] Funcional  [x] Regresión  [ ] Integración  [ ] Otro |
 | Técnica aplicada | [ ] EP  [ ] BVA  [ ] Tabla de decisión  [x] Otro (Transición de estados) |
-| Responsable | Jhonatan A. Méndez R. (@JhonatanM2005) |
+| Responsable | Christian Urrego Issa (@Christu12) |
 | Fecha de ejecución | 16/11/2026 |
 | Defectos asociados | N/A |
 | Observaciones | Modalidad: **Automatizada** (L5) · Spec: `apps/web/e2e/specs/tablet-golden-path.e2e.spec.ts`. Integración punta a punta verificada en ambos motores de renderizado sobre viewport tablet.<br>**Evidencia verificable:** `EVID-RUN-039-1` (SPEC): `data/evidence/playwright-e2e-and-manual-tablet-be9089e.md` — Evidencia de ejecución de apps/web/e2e/specs/tablet-golden-path.e2e.spec.ts en Chromium y WebKit (1024x768). |
@@ -1216,13 +1217,13 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 
 | Entregable | Descripción | Fase | Responsable | Fecha estimada |
 |---|---|---|---|---|
-| **Plan de Pruebas** (`docs/plan-de-pruebas-gastroforge.md`) | Documento maestro que describe el alcance, estrategia piramidal, recursos, matriz RACI, riesgos, cronograma y las 40 fichas de casos de prueba. | Planificación y Diseño | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | 16/11/2026 |
-| **Casos de Prueba Normalizados** (`data/test-cases.json`) | Catálogo estructurado de los 40 casos de prueba (15 manuales y 25 automatizados) con precondiciones, datos de entrada, pasos y resultados esperados. | Diseño | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | 16/11/2026 |
-| **Matriz de Trazabilidad de Requisitos** (`docs/matriz-trazabilidad.md`) | Documento que vincula cada caso de uso MVP (UC-01 a UC-22), historia de usuario (HU-001 a HU-034) y ADR (ADR-0001 a ADR-0006) con sus casos de prueba, ejecuciones y defectos. | Diseño y Ejecución | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | 16/11/2026 |
-| **Informes de Errores y GitHub Issues** (`docs/reporte-bugs.md`) | Registro detallado de los 6 defectos (DEF-001 a DEF-006 / GF-BUG-001 a GF-BUG-006) con severidad P1–P4, pasos de reproducción y trazabilidad a GitHub Issues. | Ejecución | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | Continuo (Cierre 16/11/2026) |
-| **Estrategia de Pruebas** (`docs/plan-de-pruebas-gastroforge.md#5-estrategia-de-pruebas`) | Definición técnica de la pirámide de 6 niveles, arnés de aislamiento RLS y técnicas formales (EP, BVA, Tabla de decisión y Transición de estados). | Planificación | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. | 16/11/2026 |
-| **Dashboard Interactivo de Métricas de Pruebas** (`src/App.tsx`) | Aplicación web SPA en React 19 + TypeScript + Tailwind CSS v4 con cálculo en vivo de indicadores, filtros multicriterio, grabador de ejecuciones manuales e impresión. | Cierre | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. | 16/11/2026 |
-| **Informe Final de Calidad y Aprobación (APA 7)** (`docs/informe-calidad-apa.md`) | Informe académico en formato estudiantil APA 7 (Institución Universitaria Pascual Bravo) con interpretación de métricas, análisis de defectos, riesgo residual y dictamen de cierre. | Cierre | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | 16/11/2026 |
+| **Plan de Pruebas** (`docs/plan-de-pruebas-gastroforge.md`) | Documento maestro que describe el alcance, estrategia piramidal, recursos, matriz RACI, riesgos, cronograma y las 40 fichas de casos de prueba. | Planificación y Diseño | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | 16/11/2026 |
+| **Casos de Prueba Normalizados** (`data/test-cases.json`) | Catálogo estructurado de los 40 casos de prueba (15 manuales y 25 automatizados) con precondiciones, datos de entrada, pasos y resultados esperados. | Diseño | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | 16/11/2026 |
+| **Matriz de Trazabilidad de Requisitos** (`docs/matriz-trazabilidad.md`) | Documento que vincula cada caso de uso MVP (UC-01 a UC-22), historia de usuario (HU-001 a HU-034) y ADR (ADR-0001 a ADR-0006) con sus casos de prueba, ejecuciones y defectos. | Diseño y Ejecución | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | 16/11/2026 |
+| **Informes de Errores y GitHub Issues** (`docs/reporte-bugs.md`) | Registro detallado de los 6 defectos (DEF-001 a DEF-006 / GF-BUG-001 a GF-BUG-006) con severidad P1–P4, pasos de reproducción y trazabilidad a GitHub Issues. | Ejecución | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | Continuo (Cierre 16/11/2026) |
+| **Estrategia de Pruebas** (`docs/plan-de-pruebas-gastroforge.md#5-estrategia-de-pruebas`) | Definición técnica de la pirámide de 6 niveles, arnés de aislamiento RLS y técnicas formales (EP, BVA, Tabla de decisión y Transición de estados). | Planificación | Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa | 16/11/2026 |
+| **Dashboard Interactivo de Métricas de Pruebas** (`src/App.tsx`) | Aplicación web SPA en React 19 + TypeScript + Tailwind CSS v4 con cálculo en vivo de indicadores, filtros multicriterio, grabador de ejecuciones manuales e impresión. | Cierre | Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa | 16/11/2026 |
+| **Informe Final de Calidad y Aprobación (APA 7)** (`docs/informe-calidad-apa.md`) | Informe académico en formato estudiantil APA 7 (Institución Universitaria Pascual Bravo) con interpretación de métricas, análisis de defectos, riesgo residual y dictamen de cierre. | Cierre | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | 16/11/2026 |
 
 ---
 
@@ -1234,9 +1235,9 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 |---|---|---|---|
 | Jhonatan A. Méndez R. (@JhonatanM2005) | QA Lead / Líder de Pruebas (Bloque A) | Planificar, coordinar y supervisar las actividades de prueba del Bloque A. Diseñar y ejecutar casos de autenticación, catálogo, mesas, órdenes y KDS. Revisar matriz de trazabilidad y aprobar entregables cruzados. | 100% |
 | Julián Santiago Pico Pinzón (@H3llz07) | QA Lead / Arquitecto de Pruebas (Bloque B) | Liderar la arquitectura del arnés de pruebas e infraestructura Data-First. Diseñar y ejecutar casos de caja, pagos idempotentes, inventario, reportes y suite multi-tenant RLS. Consolidar métricas e informe APA 7. | 100% |
-| Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón (@JhonatanM2005 / @H3llz07) | QA Analyst / Analista de Pruebas | Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos. | 100% |
-| Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón (@JhonatanM2005 / @H3llz07) | QA Automatizador | Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright). | 100% |
-| Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón) (@JhonatanM2005 / @H3llz07) | Desarrollador / Dev del SUT | Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006). | 75% |
+| Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa (@JhonatanM2005 / @H3llz07 / @Christu12) | QA Analyst / Analista de Pruebas | Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos. | 100% |
+| Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa (@JhonatanM2005 / @H3llz07 / @Christu12) | QA Automatizador | Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright). | 100% |
+| Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa) (@JhonatanM2005 / @H3llz07 / @Christu12) | Desarrollador / Dev del SUT | Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006). | 75% |
 | Comité Evaluador — Ingeniería de Software / Aseguramiento de Calidad (I.U. Pascual Bravo) | Product Owner / PO Académico | Validar el cumplimiento de los criterios de aceptación del plan de pruebas, auditar la trazabilidad de requisitos y aprobar el cierre formal del ciclo de aseguramiento de calidad. | 25% |
 | Operadores de Salón, Cocina y Caja (Simulación UAT Tablet 1024x768) (Perfiles Operativos MVP) | Usuario Final / Cliente Representativo | Participar en las pruebas de aceptación (UAT) sobre flujos operativos de restaurante (comanda rápida, KDS en vivo y arqueo ciego de caja). | 25% |
 
@@ -1256,9 +1257,9 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 
 | Ambiente | URL / Servidor | Versión | Responsable |
 |---|---|---|---|
-| Desarrollo Local (SUT Dev) | http://localhost:5173 (Web SPA) / http://localhost:3000/api/v1 (NestJS API) | Commit be9089e (Node.js 22 LTS, PostgreSQL 16, Redis 7) | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón |
+| Desarrollo Local (SUT Dev) | http://localhost:5173 (Web SPA) / http://localhost:3000/api/v1 (NestJS API) | Commit be9089e (Node.js 22 LTS, PostgreSQL 16, Redis 7) | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa |
 | QA / Integración y Arnés RLS | postgresql://app_user:***@localhost:5432/gastroforge_test + redis://localhost:6379/1 | Commit be9089e (FORCE RLS, rolbypassrls = false) | Julián Santiago Pico Pinzón |
-| Simulación Producción / UAT Tablet-First | Playwright & Navegador Tablet Viewport 1024x768 (100% local reproducible) + Dashboard QA | v1.0.0-qa (Commit be9089e) | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón |
+| Simulación Producción / UAT Tablet-First | Playwright & Navegador Tablet Viewport 1024x768 (100% local reproducible) + Dashboard QA | v1.0.0-qa (Commit be9089e) | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa |
 
 ---
 
@@ -1266,15 +1267,15 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 
 | Actividad | Fecha Inicio | Fecha Fin | Responsable | Estado |
 |---|---|---|---|---|
-| Planificación, congelación del SUT (be9089e) y diseño de casos | 02/11/2026 | 05/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
+| Planificación, congelación del SUT (be9089e) y diseño de casos | 02/11/2026 | 05/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
 | Preparación del ambiente Docker, semillas multi-tenant y arnés RLS (app_user) | 06/11/2026 | 07/11/2026 | Julián Santiago Pico Pinzón | [x] Completado |
-| Ejecución de pruebas funcionales y de dominio (Bloques A y B) | 08/11/2026 | 10/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
+| Ejecución de pruebas funcionales y de dominio (Bloques A y B) | 08/11/2026 | 10/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
 | Ejecución de pruebas de integración transaccional, concurrencia y Outbox/SSE | 11/11/2026 | 12/11/2026 | Julián Santiago Pico Pinzón | [x] Completado |
-| Pruebas de rendimiento concurrente y seguridad multi-tenant RLS | 12/11/2026 | 13/11/2026 | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. | [x] Completado |
-| Pruebas de aceptación (UAT) y ejecución de los 15 guiones manuales en tablet 1024x768 | 13/11/2026 | 14/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
-| Corrección de defectos bloqueantes/altos de validación MVP (DEF-001, DEF-002, DEF-003) | 14/11/2026 | 15/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
-| Regresión post-corrección y registro de hallazgos abiertos en commit be9089e (DEF-004, DEF-005, DEF-006) | 15/11/2026 | 15/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
-| Cierre, generación de dashboard interactivo y entrega del informe de calidad APA 7 | 16/11/2026 | 16/11/2026 | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | [x] Completado |
+| Pruebas de rendimiento concurrente y seguridad multi-tenant RLS | 12/11/2026 | 13/11/2026 | Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa | [x] Completado |
+| Pruebas de aceptación (UAT) y ejecución de los 15 guiones manuales en tablet 1024x768 | 13/11/2026 | 14/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
+| Corrección de defectos bloqueantes/altos de validación MVP (DEF-001, DEF-002, DEF-003) | 14/11/2026 | 15/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
+| Regresión post-corrección y registro de hallazgos abiertos en commit be9089e (DEF-004, DEF-005, DEF-006) | 15/11/2026 | 15/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
+| Cierre, generación de dashboard interactivo y entrega del informe de calidad APA 7 | 16/11/2026 | 16/11/2026 | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | [x] Completado |
 
 ---
 
@@ -1321,6 +1322,7 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 |---|---|---|---|
 | Jhonatan A. Méndez R. (@JhonatanM2005) | QA Lead — Bloque A (Auth, Catálogo, Mesas, Órdenes, KDS) | *Firmado digitalmente (@JhonatanM2005)* | 16/11/2026 |
 | Julián Santiago Pico Pinzón (@H3llz07) | QA Lead — Bloque B (Caja, Pagos, Inventario, Reportes, RLS) | *Firmado digitalmente (@H3llz07)* | 16/11/2026 |
+| Christian Urrego Issa (@Christu12) | QA Analyst & Automatizador (Manuales L6, E2E L5, L2–L4) | *Firmado digitalmente (@Christu12)* | 16/11/2026 |
 | Comité Evaluador — I.U. Pascual Bravo | Product Owner Académico / Aprobador de Calidad | *Aprobado en sustentación académica* | 16/11/2026 |
 
 ---

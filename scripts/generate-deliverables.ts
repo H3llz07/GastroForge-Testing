@@ -734,6 +734,9 @@ export function buildPlanDePruebasMarkdown(params: {
     `| Julián Santiago Pico Pinzón (@H3llz07) | QA Lead — Bloque B (Caja, Pagos, Inventario, Reportes, RLS) | *Firmado digitalmente (@H3llz07)* | ${metadata.date} |`,
   );
   lines.push(
+    `| Christian Urrego Issa (@Christu12) | QA Analyst & Automatizador (Manuales L6, E2E L5, L2–L4) | *Firmado digitalmente (@Christu12)* | ${metadata.date} |`,
+  );
+  lines.push(
     `| Comité Evaluador — I.U. Pascual Bravo | Product Owner Académico / Aprobador de Calidad | *Aprobado en sustentación académica* | ${metadata.date} |`,
   );
   lines.push('');

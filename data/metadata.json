@@ -1,14 +1,14 @@
 {
   "project": "GastroForge — Sistema ERP Multi-Restaurante Tablet-First",
-  "version": "1.0",
+  "version": "1.1",
   "date": "16/11/2026",
-  "updatedAt": "2026-11-16T00:45:00-05:00",
+  "updatedAt": "2026-11-16T22:35:00-05:00",
   "sutRepo": "https://github.com/JhonatanM2005/GastroForge",
   "qaRepo": "https://github.com/H3llz07/GastroForge-Testing",
   "frozenCommit": "be9089e",
   "frozenCommitTitle": "feat(web): add playwright tablet e2e suite and manual testing evidences (#71)",
   "institution": "Institución Universitaria Pascual Bravo",
-  "elaboratedBy": "Jhonatan A. Méndez R. (@JhonatanM2005) & Julián Santiago Pico Pinzón (@H3llz07)",
+  "elaboratedBy": "Jhonatan A. Méndez R. (@JhonatanM2005), Julián Santiago Pico Pinzón (@H3llz07) & Christian Urrego Issa (@Christu12)",
   "reviewedBy": "Jhonatan A. Méndez R. (QA Lead — Bloque A)",
   "approvedBy": "Julián Santiago Pico Pinzón (QA Lead / Arquitectura — Bloque B)",
   "status": "Aprobado",
@@ -18,6 +18,13 @@
       "date": "16/11/2026",
       "description": "Versión inicial aprobada del plan de pruebas sobre el commit congelado be9089e de GastroForge",
       "author": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "approvedBy": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R."
+    },
+    {
+      "version": "1.1",
+      "date": "16/11/2026",
+      "description": "Incorporación de Christian Urrego Issa (@Christu12) como co-autor, QA Analyst / Automatizador y redistribución equilibrada de casos de prueba y ejecuciones",
+      "author": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "approvedBy": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R."
     }
   ],
@@ -67,24 +74,24 @@
     },
     {
       "role": "QA Analyst / Analista de Pruebas",
-      "name": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
-      "handle": "@JhonatanM2005 / @H3llz07",
+      "name": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
+      "handle": "@JhonatanM2005 / @H3llz07 / @Christu12",
       "block": "Compartido (40 Casos de Prueba: 15 Manuales + 25 Automatizados)",
       "responsibilities": "Diseñar los 40 casos de prueba aplicando técnicas EP, BVA, Tabla de decisión y Transición de estados. Ejecutar los 15 guiones manuales en viewport tablet y documentar hallazgos.",
       "participation": "100%"
     },
     {
       "role": "QA Automatizador",
-      "name": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
-      "handle": "@JhonatanM2005 / @H3llz07",
+      "name": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
+      "handle": "@JhonatanM2005 / @H3llz07 / @Christu12",
       "block": "Suites L1–L5 (Jest, Supertest, Playwright)",
       "responsibilities": "Desarrollar y mantener las suites automatizadas unitarias (Jest), de integración con PostgreSQL/Redis bajo app_user (Supertest) y End-to-End en tablet 1024x768 (Playwright).",
       "participation": "100%"
     },
     {
       "role": "Desarrollador / Dev del SUT",
-      "name": "Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón)",
-      "handle": "@JhonatanM2005 / @H3llz07",
+      "name": "Equipo de Ingeniería GastroForge (Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa)",
+      "handle": "@JhonatanM2005 / @H3llz07 / @Christu12",
       "block": "Repositorio SUT (JhonatanM2005/GastroForge @ be9089e)",
       "responsibilities": "Entregar el build congelado be9089e, resolver los defectos históricos de validación MVP (DEF-001 a DEF-003) y documentar análisis de causa raíz para defectos abiertos (DEF-004 a DEF-006).",
       "participation": "75%"
@@ -203,13 +210,13 @@
     {
       "type": "Funcional",
       "description": "Verifica que cada caso de uso y regla de negocio de los módulos auth, catalog, tables, orders, kitchen, cash, inventory y reports opere conforme a los requisitos.",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "included": true
     },
     {
       "type": "Regresión",
       "description": "Asegura que las correcciones aplicadas durante el ciclo MVP (como DEF-001, DEF-002 y DEF-003) no degraden funcionalidades previamente validadas.",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "included": true
     },
     {
@@ -227,7 +234,7 @@
     {
       "type": "Seguridad",
       "description": "Verifica aislamiento multi-tenant (RLS bajo app_user), matriz de autorización RBAC deny-by-default, revocación de permisos UPDATE/DELETE en tablas de auditoría, CORS y Rate Limiting.",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "included": true
     },
     {
@@ -239,7 +246,7 @@
     {
       "type": "Aceptación (UAT)",
       "description": "Validación integral de extremo a extremo del flujo operativo de restaurante (apertura de mesa, comanda por tandas, preparación en KDS, cobro dividido y arqueo ciego).",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "included": true
     }
   ],
@@ -247,21 +254,21 @@
     {
       "level": "Pruebas estáticas y de contratos (Nivel L1)",
       "pyramidCode": "L1",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "tool": "TypeScript 5.7 (tsc --noEmit), ESLint 9, Prettier y validación OpenAPI",
       "description": "Verificación estática de tipos, invariantes de compilación y sincronización de esquemas antes de la ejecución."
     },
     {
       "level": "Pruebas unitarias de dominio puro (Nivel L2)",
       "pyramidCode": "L2",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "tool": "Jest (Dominio puro sin I/O) y Vitest (Motor de métricas QA)",
       "description": "Validación en memoria de agregados, máquinas de estado (OrderItemStatus, CashSessionStatus), objetos de valor (Money con IVA incluido) y matriz can()."
     },
     {
       "level": "Pruebas de servicios de aplicación en memoria (Nivel L3)",
       "pyramidCode": "L3",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "tool": "Jest con repositorios Fake en memoria y UnitOfWork simulado",
       "description": "Orquestación de casos de uso, control de versiones optimistas, cálculo de arqueo ciego y emisión de eventos Outbox sin acoplamiento a base de datos."
     },
@@ -275,14 +282,14 @@
     {
       "level": "Pruebas de sistema End-to-End en Tablet (Nivel L5)",
       "pyramidCode": "L5",
-      "responsible": "Jhonatan A. Méndez R.",
+      "responsible": "Jhonatan A. Méndez R. & Christian Urrego Issa",
       "tool": "Playwright Test (Chromium & WebKit en viewport 1024x768)",
       "description": "Automatización del Golden Path operativo completo desde el navegador emulando interacción táctil de mesero, cocinero, cajero y administrador."
     },
     {
       "level": "Pruebas manuales exploratorias y de aceptación UAT (Nivel L6)",
       "pyramidCode": "L6",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "tool": "Inspección interactiva en navegador (DevTools Tablet 1024x768), cliente HTTP y capturas de evidencia",
       "description": "Ejecución controlada de los 15 casos manuales para evaluar ergonomía táctil, reconexión SSE ante caídas de red, formato de tirilla 80mm y contraste visual."
     }
@@ -365,7 +372,7 @@
       "name": "Plan de Pruebas",
       "description": "Documento maestro que describe el alcance, estrategia piramidal, recursos, matriz RACI, riesgos, cronograma y las 40 fichas de casos de prueba.",
       "phase": "Planificación y Diseño",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "docs/plan-de-pruebas-gastroforge.md"
     },
@@ -373,7 +380,7 @@
       "name": "Casos de Prueba Normalizados",
       "description": "Catálogo estructurado de los 40 casos de prueba (15 manuales y 25 automatizados) con precondiciones, datos de entrada, pasos y resultados esperados.",
       "phase": "Diseño",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "data/test-cases.json"
     },
@@ -381,7 +388,7 @@
       "name": "Matriz de Trazabilidad de Requisitos",
       "description": "Documento que vincula cada caso de uso MVP (UC-01 a UC-22), historia de usuario (HU-001 a HU-034) y ADR (ADR-0001 a ADR-0006) con sus casos de prueba, ejecuciones y defectos.",
       "phase": "Diseño y Ejecución",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "docs/matriz-trazabilidad.md"
     },
@@ -389,7 +396,7 @@
       "name": "Informes de Errores y GitHub Issues",
       "description": "Registro detallado de los 6 defectos (DEF-001 a DEF-006 / GF-BUG-001 a GF-BUG-006) con severidad P1–P4, pasos de reproducción y trazabilidad a GitHub Issues.",
       "phase": "Ejecución",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "estimatedDate": "Continuo (Cierre 16/11/2026)",
       "artifactPath": "docs/reporte-bugs.md"
     },
@@ -397,7 +404,7 @@
       "name": "Estrategia de Pruebas",
       "description": "Definición técnica de la pirámide de 6 niveles, arnés de aislamiento RLS y técnicas formales (EP, BVA, Tabla de decisión y Transición de estados).",
       "phase": "Planificación",
-      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "responsible": "Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "docs/plan-de-pruebas-gastroforge.md#5-estrategia-de-pruebas"
     },
@@ -405,7 +412,7 @@
       "name": "Dashboard Interactivo de Métricas de Pruebas",
       "description": "Aplicación web SPA en React 19 + TypeScript + Tailwind CSS v4 con cálculo en vivo de indicadores, filtros multicriterio, grabador de ejecuciones manuales e impresión.",
       "phase": "Cierre",
-      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "responsible": "Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "src/App.tsx"
     },
@@ -413,7 +420,7 @@
       "name": "Informe Final de Calidad y Aprobación (APA 7)",
       "description": "Informe académico en formato estudiantil APA 7 (Institución Universitaria Pascual Bravo) con interpretación de métricas, análisis de defectos, riesgo residual y dictamen de cierre.",
       "phase": "Cierre",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "estimatedDate": "16/11/2026",
       "artifactPath": "docs/informe-calidad-apa.md"
     }
@@ -460,7 +467,7 @@
       "name": "Desarrollo Local (SUT Dev)",
       "urlOrServer": "http://localhost:5173 (Web SPA) / http://localhost:3000/api/v1 (NestJS API)",
       "version": "Commit be9089e (Node.js 22 LTS, PostgreSQL 16, Redis 7)",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón"
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa"
     },
     {
       "name": "QA / Integración y Arnés RLS",
@@ -472,7 +479,7 @@
       "name": "Simulación Producción / UAT Tablet-First",
       "urlOrServer": "Playwright & Navegador Tablet Viewport 1024x768 (100% local reproducible) + Dashboard QA",
       "version": "v1.0.0-qa (Commit be9089e)",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón"
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa"
     }
   ],
   "schedule": [
@@ -480,7 +487,7 @@
       "activity": "Planificación, congelación del SUT (be9089e) y diseño de casos",
       "startDate": "02/11/2026",
       "endDate": "05/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     },
     {
@@ -494,7 +501,7 @@
       "activity": "Ejecución de pruebas funcionales y de dominio (Bloques A y B)",
       "startDate": "08/11/2026",
       "endDate": "10/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     },
     {
@@ -508,35 +515,35 @@
       "activity": "Pruebas de rendimiento concurrente y seguridad multi-tenant RLS",
       "startDate": "12/11/2026",
       "endDate": "13/11/2026",
-      "responsible": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R.",
+      "responsible": "Julián Santiago Pico Pinzón, Jhonatan A. Méndez R. & Christian Urrego Issa",
       "status": "Completado"
     },
     {
       "activity": "Pruebas de aceptación (UAT) y ejecución de los 15 guiones manuales en tablet 1024x768",
       "startDate": "13/11/2026",
       "endDate": "14/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     },
     {
       "activity": "Corrección de defectos bloqueantes/altos de validación MVP (DEF-001, DEF-002, DEF-003)",
       "startDate": "14/11/2026",
       "endDate": "15/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     },
     {
       "activity": "Regresión post-corrección y registro de hallazgos abiertos en commit be9089e (DEF-004, DEF-005, DEF-006)",
       "startDate": "15/11/2026",
       "endDate": "15/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     },
     {
       "activity": "Cierre, generación de dashboard interactivo y entrega del informe de calidad APA 7",
       "startDate": "16/11/2026",
       "endDate": "16/11/2026",
-      "responsible": "Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón",
+      "responsible": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "status": "Completado"
     }
   ],

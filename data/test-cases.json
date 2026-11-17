@@ -2,7 +2,9 @@
   {
     "id": "CP-AUTH-001",
     "number": 1,
-    "requirementIds": ["REQ-AUTH-01"],
+    "requirementIds": [
+      "REQ-AUTH-01"
+    ],
     "userStory": "HU-004, HU-005 — Inicio de sesión con credenciales y redirección operativa por rol",
     "module": "auth",
     "title": "Inicio de sesión interactivo en tablet (1024x768) con credenciales válidas y redirección contextual por rol",
@@ -34,7 +36,10 @@
   {
     "id": "CP-AUTH-002",
     "number": 2,
-    "requirementIds": ["REQ-AUTH-01", "REQ-RLS-02"],
+    "requirementIds": [
+      "REQ-AUTH-01",
+      "REQ-RLS-02"
+    ],
     "userStory": "HU-004, HU-005, HU-034 — Protección contra fuerza bruta (HTTP 429) y rechazo sin enumeración de cuentas",
     "module": "auth",
     "title": "Bloqueo por exceso de intentos fallidos de login (HTTP 429 Too Many Requests) y rechazo de credenciales inválidas (401)",
@@ -50,7 +55,11 @@
     "inputData": {
       "email": "admin@gastroforge.io",
       "wrongPassword": "WrongPassword999!",
-      "attemptBoundaries": [1, 5, 6],
+      "attemptBoundaries": [
+        1,
+        5,
+        6
+      ],
       "expectedStatusBeforeLimit": 401,
       "expectedStatusAtLimit": 429
     },
@@ -67,7 +76,10 @@
   {
     "id": "CP-AUTH-003",
     "number": 3,
-    "requirementIds": ["REQ-AUTH-02", "REQ-AUTH-03"],
+    "requirementIds": [
+      "REQ-AUTH-02",
+      "REQ-AUTH-03"
+    ],
     "userStory": "HU-006, HU-007 — Rotación de Refresh Token en cookie HttpOnly, detección de reuso e invalidación en logout",
     "module": "auth",
     "title": "Rotación de Refresh Token en cookie HttpOnly, detección de reuso fraudulento e invalidación en logout",
@@ -99,7 +111,9 @@
   {
     "id": "CP-AUTH-004",
     "number": 4,
-    "requirementIds": ["REQ-AUTH-04"],
+    "requirementIds": [
+      "REQ-AUTH-04"
+    ],
     "userStory": "HU-008, HU-009, HU-010 — Selección de restaurante activo multi-tenant y contraste de marca WCAG AA",
     "module": "auth",
     "title": "Selección y cambio de restaurante activo multi-tenant y verificación de contraste de marca WCAG (>= 4.5:1)",
@@ -131,7 +145,9 @@
   {
     "id": "CP-AUTH-005",
     "number": 5,
-    "requirementIds": ["REQ-AUTH-05"],
+    "requirementIds": [
+      "REQ-AUTH-05"
+    ],
     "userStory": "HU-011 — Restablecimiento administrativo de contraseña con token de un solo uso y revocación de sesiones",
     "module": "auth",
     "title": "Restablecimiento administrativo de contraseña con token temporal de un solo uso (15 min) y revocación inmediata de sesiones activas",
@@ -161,7 +177,9 @@
   {
     "id": "CP-AUTH-006",
     "number": 6,
-    "requirementIds": ["REQ-AUTH-06"],
+    "requirementIds": [
+      "REQ-AUTH-06"
+    ],
     "userStory": "HU-009 / ADR-0005 — Matriz de autorización pura deny-by-default can(actor, action, context) para los 5 roles MVP",
     "module": "auth",
     "title": "Evaluación exhaustiva de la matriz de autorización can(actor, action, context) para los 5 roles MVP (incluyendo verificación de frontera de estación en COCINA y hallazgo de permiso kitchen:advance_status en MESERO -> DEF-004)",
@@ -175,7 +193,13 @@
       "Definición de los 5 roles fijos del MVP: ADMIN, GERENTE, MESERO, COCINA, CAJERO"
     ],
     "inputData": {
-      "roles": ["ADMIN", "GERENTE", "MESERO", "COCINA", "CAJERO"],
+      "roles": [
+        "ADMIN",
+        "GERENTE",
+        "MESERO",
+        "COCINA",
+        "CAJERO"
+      ],
       "criticalActions": [
         "catalog:manage",
         "orders:create",
@@ -198,7 +222,10 @@
   {
     "id": "CP-CAT-001",
     "number": 7,
-    "requirementIds": ["REQ-CAT-01", "REQ-CAT-02"],
+    "requirementIds": [
+      "REQ-CAT-01",
+      "REQ-CAT-02"
+    ],
     "userStory": "HU-012, HU-013 — Gestión de estaciones de preparación y categorías del menú con ordenamiento visual",
     "module": "catalog",
     "title": "Creación y ordenamiento visual de estaciones de cocina (PARRILLA, BARRA) y categorías de menú desde panel administrativo",
@@ -212,7 +239,10 @@
       "Acceso al módulo administrativo de Catálogo (/admin/catalog)"
     ],
     "inputData": {
-      "stations": ["PARRILLA", "BARRA"],
+      "stations": [
+        "PARRILLA",
+        "BARRA"
+      ],
       "categoryName": "Cortes Madurados",
       "sortOrder": 1,
       "isActive": true
@@ -224,12 +254,14 @@
       "Abrir la pantalla de toma de pedidos y comprobar que el orden coincida y la categoría inactiva no se muestre."
     ],
     "expectedResult": "Las estaciones y categorías se persisten correctamente, respetan el orden visual configurado (sort_order) y las categorías desactivadas quedan ocultas inmediatamente en el POS.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
+    "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
     "id": "CP-CAT-002",
     "number": 8,
-    "requirementIds": ["REQ-CAT-03"],
+    "requirementIds": [
+      "REQ-CAT-03"
+    ],
     "userStory": "HU-014 — Cálculo aritmético exacto de desglose de IVA incluido en Decimal(12,2)",
     "module": "catalog",
     "title": "Cálculo exacto de desglose de IVA incluido (tax = gross - gross / (1 + rate)) con precisión Decimal(12,2) y bordes de redondeo",
@@ -243,8 +275,17 @@
       "Tasas impositivas de frontera (0%, 8% impoconsumo, 19% IVA) y precios brutos con centavos críticos"
     ],
     "inputData": {
-      "grossAmounts": ["0.01", "100.00", "35900.00", "9999999999.99"],
-      "taxRates": ["0.00", "0.08", "0.19"],
+      "grossAmounts": [
+        "0.01",
+        "100.00",
+        "35900.00",
+        "9999999999.99"
+      ],
+      "taxRates": [
+        "0.00",
+        "0.08",
+        "0.19"
+      ],
       "precision": "Decimal(12,2)"
     },
     "steps": [
@@ -253,13 +294,15 @@
       "Verificar el invariante contable netAmount + taxAmount === grossAmount sin pérdida de centavos por coma flotante IEEE 754."
     ],
     "expectedResult": "Para todos los valores límite y tasas evaluadas, el desglose produce montos redondeados a 2 decimales exactos donde base gravable + impuesto suma exactamente el precio bruto.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/src/modules/catalog/domain/tax-breakdown.helper.spec.ts"
   },
   {
     "id": "CP-CAT-003",
     "number": 9,
-    "requirementIds": ["REQ-CAT-04"],
+    "requirementIds": [
+      "REQ-CAT-04"
+    ],
     "userStory": "HU-015 — Validación de fronteras min_selectable y max_selectable en grupos de modificadores",
     "module": "catalog",
     "title": "Validación de valores límite en grupos de modificadores (min_selectable, max_selectable, selección por debajo del mínimo y por encima del máximo -> HTTP 400)",
@@ -276,7 +319,12 @@
       "groupName": "Término de la carne y guarnición",
       "minSelectable": 1,
       "maxSelectable": 2,
-      "testedSelectionCounts": [0, 1, 2, 3]
+      "testedSelectionCounts": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     "steps": [
       "Intentar crear un grupo de modificadores inválido con min_selectable > max_selectable o valores negativos verificando rechazo HTTP 400.",
@@ -285,13 +333,15 @@
       "Probar la frontera superior inválida seleccionando 3 opciones (max + 1)."
     ],
     "expectedResult": "Las selecciones en frontera válida (1 y 2 opciones) son aceptadas sumando el sobreprecio exacto; las selecciones fuera de rango (0 y 3 opciones) son rechazadas con HTTP 400 Bad Request.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/catalog-modifier-groups.int-spec.ts"
   },
   {
     "id": "CP-CAT-004",
     "number": 10,
-    "requirementIds": ["REQ-CAT-03"],
+    "requirementIds": [
+      "REQ-CAT-03"
+    ],
     "userStory": "HU-014 — Cambio rápido de disponibilidad de producto (86ing) en turno activo",
     "module": "catalog",
     "title": "Cambio rápido de disponibilidad de producto (Agotado / Disponible) en turno activo y reflejo inmediato en toma de pedidos",
@@ -317,12 +367,14 @@
       "Restaurar el estado a Disponible (AVAILABLE) y comprobar que vuelve a permitir su captura."
     ],
     "expectedResult": "La transición AVAILABLE -> UNAVAILABLE bloquea de inmediato la captura del producto en nuevas tandas sin afectar órdenes previas, y la transición UNAVAILABLE -> AVAILABLE restablece su venta.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
+    "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
     "id": "CP-TAB-001",
     "number": 11,
-    "requirementIds": ["REQ-TAB-01"],
+    "requirementIds": [
+      "REQ-TAB-01"
+    ],
     "userStory": "HU-016 — Gestión de áreas del salón, mesas, capacidad límite y unicidad de código por restaurante",
     "module": "tables",
     "title": "Creación de áreas y mesas con validación de capacidad límite de comensales y unicidad de código por restaurante",
@@ -338,7 +390,13 @@
     "inputData": {
       "areaName": "Salón Principal",
       "tableCode": "M-01",
-      "capacityBoundaries": [0, 1, 12, 20, 21]
+      "capacityBoundaries": [
+        0,
+        1,
+        12,
+        20,
+        21
+      ]
     },
     "steps": [
       "Intentar registrar una mesa con capacidad 0 (frontera inferior inválida) verificando rechazo HTTP 400.",
@@ -347,13 +405,15 @@
       "Verificar que otro restaurante distinto (Tenant B) sí pueda registrar su propia mesa 'M-01'."
     ],
     "expectedResult": "Capacidad <= 0 es rechazada con HTTP 400; capacidades >= 1 se crean correctamente; códigos duplicados en el mismo tenant responden HTTP 409 mientras se permite el mismo código en otro tenant.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/tables-management.int-spec.ts"
   },
   {
     "id": "CP-TAB-002",
     "number": 12,
-    "requirementIds": ["REQ-TAB-02"],
+    "requirementIds": [
+      "REQ-TAB-02"
+    ],
     "userStory": "HU-017, HU-033 — Mapa operativo táctil de mesas en tablet 1024x768 y semántica visual FREE vs OCCUPIED",
     "module": "tables",
     "title": "Inspección táctil del mapa de salón en 1024x768 (tarjetas >= 104px, contraste semántico FREE vs OCCUPIED)",
@@ -369,7 +429,10 @@
     "inputData": {
       "viewport": "1024x768",
       "minCardHeightPx": 104,
-      "states": ["FREE", "OCCUPIED"]
+      "states": [
+        "FREE",
+        "OCCUPIED"
+      ]
     },
     "steps": [
       "Acceder a la vista del mapa de mesas (/tables) con usuario rol MESERO en resolución 1024x768.",
@@ -377,12 +440,14 @@
       "Verificar que las mesas FREE y OCCUPIED se diferencien simultáneamente por color semántico, etiqueta textual ('Libre' / 'Ocupada') e ícono de estado."
     ],
     "expectedResult": "La cuadrícula del salón renderiza tarjetas táctiles >= 104px sin desbordamiento horizontal y distingue claramente los estados FREE y OCCUPIED mediante triple codificación visual.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
+    "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
     "id": "CP-TAB-003",
     "number": 13,
-    "requirementIds": ["REQ-TAB-02"],
+    "requirementIds": [
+      "REQ-TAB-02"
+    ],
     "userStory": "HU-017 — Derivación dinámica del estado de ocupación de mesas a partir de órdenes activas",
     "module": "tables",
     "title": "Derivación dinámica del estado de ocupación de mesas (FREE -> OCCUPIED -> FREE) al abrir y cerrar órdenes sin estado duplicado persistido",
@@ -396,7 +461,11 @@
     ],
     "inputData": {
       "tableCode": "M-05",
-      "stateSequence": ["FREE", "OCCUPIED", "FREE"]
+      "stateSequence": [
+        "FREE",
+        "OCCUPIED",
+        "FREE"
+      ]
     },
     "steps": [
       "Consultar GET /api/v1/tables/overview y verificar que la mesa 'M-05' reporte estado derivado FREE.",
@@ -405,13 +474,16 @@
       "Cerrar/pagar completamente la orden activa y consultar nuevamente el overview verificando el retorno automático al estado FREE."
     ],
     "expectedResult": "El estado de la mesa transiciona exactamente FREE -> OCCUPIED -> FREE en función de la orden activa en base de datos, evitando estados huérfanos o desincronizados.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/tables-overview.int-spec.ts"
   },
   {
     "id": "CP-ORD-001",
     "number": 14,
-    "requirementIds": ["REQ-ORD-01", "REQ-ORD-02"],
+    "requirementIds": [
+      "REQ-ORD-01",
+      "REQ-ORD-02"
+    ],
     "userStory": "HU-018, HU-020, HU-033 — Guion M-01 de usabilidad táctil en salón (1024x768) y verificación de objetivos táctiles",
     "module": "orders",
     "title": "Guion M-01 de usabilidad táctil en salón (Tablet 1024x768): apertura de orden en mesa, selección de 4 ítems con modificadores y verificación de objetivos táctiles (44x44 px observados vs 48x48 px especificados en TESTING-PLAN.md -> DEF-006)",
@@ -443,7 +515,9 @@
   {
     "id": "CP-ORD-002",
     "number": 15,
-    "requirementIds": ["REQ-ORD-01"],
+    "requirementIds": [
+      "REQ-ORD-01"
+    ],
     "userStory": "HU-018, HU-019 — Apertura de órdenes DINE_IN y TAKEOUT con numeración secuencial diaria e invariante de mesa única",
     "module": "orders",
     "title": "Apertura de cuentas DINE_IN y TAKEOUT con numeración secuencial diaria por restaurante y rechazo de doble apertura sobre mesa ocupada (HTTP 409)",
@@ -457,7 +531,10 @@
       "Usuario autenticado con rol MESERO"
     ],
     "inputData": {
-      "orderTypes": ["DINE_IN", "TAKEOUT"],
+      "orderTypes": [
+        "DINE_IN",
+        "TAKEOUT"
+      ],
       "tableCode": "M-03",
       "dinersCount": 4,
       "customerName": "Cliente Mostrador"
@@ -474,7 +551,9 @@
   {
     "id": "CP-ORD-003",
     "number": 16,
-    "requirementIds": ["REQ-ORD-02"],
+    "requirementIds": [
+      "REQ-ORD-02"
+    ],
     "userStory": "HU-020, HU-021 — Despacho de tandas (OrderRound) con validación BVA de cantidades y concurrencia optimista (version)",
     "module": "orders",
     "title": "Despacho de tandas (OrderRound) con validación BVA de cantidad (quantity: 0, 1, 99, 100) y control de concurrencia optimista (version -> HTTP 409 ORDER_CONFLICT_VERSION)",
@@ -488,7 +567,12 @@
       "Productos activos con precios e impuestos configurados en catálogo"
     ],
     "inputData": {
-      "quantityBoundaries": [0, 1, 99, 100],
+      "quantityBoundaries": [
+        0,
+        1,
+        99,
+        100
+      ],
       "initialVersion": 1,
       "staleVersion": 1
     },
@@ -504,7 +588,9 @@
   {
     "id": "CP-ORD-004",
     "number": 17,
-    "requirementIds": ["REQ-ORD-03"],
+    "requirementIds": [
+      "REQ-ORD-03"
+    ],
     "userStory": "HU-022 — Cancelación manual de ítem en preparación con autorización de Gerente y motivo de auditoría",
     "module": "orders",
     "title": "Cancelación manual de ítem en estado PREPARING solicitando autorización/PIN de Gerente y motivo obligatorio de auditoría",
@@ -535,7 +621,9 @@
   {
     "id": "CP-ORD-005",
     "number": 18,
-    "requirementIds": ["REQ-ORD-03"],
+    "requirementIds": [
+      "REQ-ORD-03"
+    ],
     "userStory": "HU-022 — Reglas de negocio en backend para cancelación de ítems según estado (PENDING, PREPARING, READY, SERVED)",
     "module": "orders",
     "title": "Reglas de cancelación de ítems según estado (PENDING por Mesero vs PREPARING/READY restringido a Gerente/Admin y rechazo en SERVED)",
@@ -548,8 +636,16 @@
       "Orden activa con ítems en estados PENDING, PREPARING, READY y SERVED"
     ],
     "inputData": {
-      "states": ["PENDING", "PREPARING", "READY", "SERVED"],
-      "roles": ["MESERO", "GERENTE"],
+      "states": [
+        "PENDING",
+        "PREPARING",
+        "READY",
+        "SERVED"
+      ],
+      "roles": [
+        "MESERO",
+        "GERENTE"
+      ],
       "reason": "Error de digitación en comanda"
     },
     "steps": [
@@ -565,7 +661,10 @@
   {
     "id": "CP-ORD-006",
     "number": 19,
-    "requirementIds": ["REQ-ORD-01", "REQ-AUTH-06"],
+    "requirementIds": [
+      "REQ-ORD-01",
+      "REQ-AUTH-06"
+    ],
     "userStory": "HU-009, HU-019 — Verificación del permiso orders:create para el rol CAJERO en órdenes para llevar (TAKEOUT)",
     "module": "orders",
     "title": "Verificación del permiso de apertura de orden (orders:create) para el rol CAJERO según PRD.md (§2.1) frente a la política can.helper.ts (DEF-005)",
@@ -595,7 +694,9 @@
   {
     "id": "CP-KIT-001",
     "number": 20,
-    "requirementIds": ["REQ-KIT-01"],
+    "requirementIds": [
+      "REQ-KIT-01"
+    ],
     "userStory": "HU-023, HU-033 — Visualización de cola KDS en tablet (1024x768) e indicadores semafóricos de urgencia",
     "module": "kitchen",
     "title": "Visualización de cola KDS en tablet (1024x768) filtrada por estación (PARRILLA) y validación de alertas cromáticas de urgencia por tiempo de espera",
@@ -611,7 +712,11 @@
     "inputData": {
       "stationCode": "PARRILLA",
       "viewport": "1024x768",
-      "elapsedMinutesPartitions": [4, 12, 18]
+      "elapsedMinutesPartitions": [
+        4,
+        12,
+        18
+      ]
     },
     "steps": [
       "Abrir la pantalla KDS (/kitchen) en viewport 1024x768.",
@@ -620,12 +725,14 @@
       "Comprobar que cada tarjeta exhiba el badge cromático y textual correspondiente a su partición de tiempo (A tiempo / Alerta / Demorado)."
     ],
     "expectedResult": "El KDS muestra exclusivamente la cola FIFO de PARRILLA con tarjetas legibles a distancia de brazo y semáforo visual exacto según los umbrales de espera.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
+    "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
     "id": "CP-KIT-002",
     "number": 21,
-    "requirementIds": ["REQ-KIT-01"],
+    "requirementIds": [
+      "REQ-KIT-01"
+    ],
     "userStory": "HU-023 — Aislamiento de cola KDS por estación asignada y bloqueo fail-closed sin estación",
     "module": "kitchen",
     "title": "Consulta de cola KDS aislada por estación asignada al cocinero y bloqueo fail-closed cuando no posee estación asignada",
@@ -649,13 +756,15 @@
       "Consultar GET /api/v1/kitchen/queue con el token de COCINA_2 (sin estación asignada) o intentando filtrar otra estación distinta."
     ],
     "expectedResult": "El cocinero con estación recibe únicamente los ítems de su estación; el cocinero sin estación o que intenta acceder a otra estación es bloqueado en modo fail-closed (HTTP 403 Forbidden).",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/kitchen-queue.int-spec.ts"
   },
   {
     "id": "CP-KIT-003",
     "number": 22,
-    "requirementIds": ["REQ-KIT-02"],
+    "requirementIds": [
+      "REQ-KIT-02"
+    ],
     "userStory": "HU-024 — Máquina de estados de preparación en KDS e historial inmutable order_item_status_history",
     "module": "kitchen",
     "title": "Máquina de estados de preparación en KDS (PENDING -> PREPARING -> READY -> SERVED), rechazo de transiciones regresivas (400) y registro en order_item_status_history",
@@ -668,8 +777,16 @@
       "Ítem de comanda recién despachado en estado inicial PENDING para la estación PARRILLA"
     ],
     "inputData": {
-      "validTransitions": ["PENDING -> PREPARING", "PREPARING -> READY", "READY -> SERVED"],
-      "invalidTransitions": ["PENDING -> READY", "READY -> PREPARING", "SERVED -> PENDING"]
+      "validTransitions": [
+        "PENDING -> PREPARING",
+        "PREPARING -> READY",
+        "READY -> SERVED"
+      ],
+      "invalidTransitions": [
+        "PENDING -> READY",
+        "READY -> PREPARING",
+        "SERVED -> PENDING"
+      ]
     },
     "steps": [
       "Intentar saltar directamente de PENDING a READY verificando rechazo HTTP 400/422.",
@@ -684,7 +801,9 @@
   {
     "id": "CP-KIT-004",
     "number": 23,
-    "requirementIds": ["REQ-KIT-03"],
+    "requirementIds": [
+      "REQ-KIT-03"
+    ],
     "userStory": "HU-025 / ADR-0004 — Guion M-02 de reconexión reactiva SSE ante corte de red e invalidación de caché",
     "module": "kitchen",
     "title": "Guion M-02 de reconexión reactiva de Server-Sent Events (SSE) ante corte temporal de red Wi-Fi (30 s) e invalidación automática de caché TanStack Query sin recarga manual (F5)",
@@ -714,7 +833,9 @@
   {
     "id": "CP-CSH-001",
     "number": 24,
-    "requirementIds": ["REQ-CSH-01"],
+    "requirementIds": [
+      "REQ-CSH-01"
+    ],
     "userStory": "HU-026 — Restricción de sesión única abierta por caja registradora",
     "module": "cash",
     "title": "Restricción de sesión única abierta por caja registradora (uq_cash_register_open -> HTTP 409 CASH_REGISTER_ALREADY_OPEN)",
@@ -743,7 +864,9 @@
   {
     "id": "CP-CSH-002",
     "number": 25,
-    "requirementIds": ["REQ-CSH-01"],
+    "requirementIds": [
+      "REQ-CSH-01"
+    ],
     "userStory": "HU-026 — Apertura de turno de caja y cierre con arqueo ciego y conciliación de diferencias",
     "module": "cash",
     "title": "Apertura de turno de caja con fondo inicial y cierre de turno con arqueo ciego registrando diferencia sobrante/faltante y observación obligatoria",
@@ -775,7 +898,10 @@
   {
     "id": "CP-CSH-003",
     "number": 26,
-    "requirementIds": ["REQ-CSH-02", "REQ-RLS-02"],
+    "requirementIds": [
+      "REQ-CSH-02",
+      "REQ-RLS-02"
+    ],
     "userStory": "HU-027, HU-003 — Cobro dividido (Efectivo + Tarjeta) bajo rol PostgreSQL app_user sobre tabla append-only payment",
     "module": "cash",
     "title": "Procesamiento de cobro dividido (Efectivo + Tarjeta) bajo rol PostgreSQL app_user sin usar FOR UPDATE sobre la tabla append-only payment (regresión de DEF-001)",
@@ -791,8 +917,14 @@
     "inputData": {
       "orderTotal": "80000.00",
       "splitPayments": [
-        { "method": "CASH", "amount": "50000.00" },
-        { "method": "CARD", "amount": "30000.00" }
+        {
+          "method": "CASH",
+          "amount": "50000.00"
+        },
+        {
+          "method": "CARD",
+          "amount": "30000.00"
+        }
       ],
       "dbRole": "app_user"
     },
@@ -809,7 +941,9 @@
   {
     "id": "CP-CSH-004",
     "number": 27,
-    "requirementIds": ["REQ-CSH-02"],
+    "requirementIds": [
+      "REQ-CSH-02"
+    ],
     "userStory": "HU-027 — Cálculo de propina voluntaria en fronteras de porcentaje y exclusión de base gravable de IVA",
     "module": "cash",
     "title": "Análisis de valores límite en porcentaje y monto de propina voluntaria (-1%, 0%, 10%, 100%, 101%) verificando exclusión de IVA sobre propina",
@@ -825,7 +959,13 @@
     "inputData": {
       "orderGrossAmount": "100000.00",
       "orderTaxAmount": "15966.39",
-      "tipPercentageBoundaries": [-1, 0, 10, 100, 101]
+      "tipPercentageBoundaries": [
+        -1,
+        0,
+        10,
+        100,
+        101
+      ]
     },
     "steps": [
       "Evaluar porcentajes de propina en frontera inferior inválida (-1%) y frontera superior inválida (101%) verificando rechazo de validación.",
@@ -839,7 +979,10 @@
   {
     "id": "CP-CSH-005",
     "number": 28,
-    "requirementIds": ["REQ-CSH-02", "REQ-RLS-02"],
+    "requirementIds": [
+      "REQ-CSH-02",
+      "REQ-RLS-02"
+    ],
     "userStory": "HU-027, HU-034 — Presentación de errores RFC 7807 (detail) en interfaz de caja ante cobro excesivo",
     "module": "cash",
     "title": "Presentación de errores RFC 7807 (err.detail en AlertBanner) en la interfaz de caja al intentar cobrar un monto mayor al saldo pendiente (verificación de DEF-003)",
@@ -869,7 +1012,9 @@
   {
     "id": "CP-CSH-006",
     "number": 29,
-    "requirementIds": ["REQ-CSH-02"],
+    "requirementIds": [
+      "REQ-CSH-02"
+    ],
     "userStory": "HU-027 — Protección de idempotencia en cobros mediante encabezado Idempotency-Key",
     "module": "cash",
     "title": "Idempotencia en cobros concurrentes con idéntico encabezado Idempotency-Key evitando doble cobro y retornando respuesta cacheada o 409",
@@ -899,7 +1044,9 @@
   {
     "id": "CP-CSH-007",
     "number": 30,
-    "requirementIds": ["REQ-CSH-03"],
+    "requirementIds": [
+      "REQ-CSH-03"
+    ],
     "userStory": "HU-028 — Ejecución manual de reverso compensatorio de pago y ajuste de saldo con autorización de Gerente",
     "module": "cash",
     "title": "Ejecución manual de reverso compensatorio de pago y ajuste de saldo con autorización de Gerente y verificación de saldo recalculado",
@@ -930,7 +1077,9 @@
   {
     "id": "CP-CSH-008",
     "number": 31,
-    "requirementIds": ["REQ-CSH-03"],
+    "requirementIds": [
+      "REQ-CSH-03"
+    ],
     "userStory": "HU-028 — Validación en backend de reversos inmutables y restricción RBAC para Cajero",
     "module": "cash",
     "title": "Validación de reversos de pago inmutables y denegación (HTTP 403) cuando un Cajero intenta reversar sin rol Gerente/Admin",
@@ -959,7 +1108,9 @@
   {
     "id": "CP-INV-001",
     "number": 32,
-    "requirementIds": ["REQ-INV-01"],
+    "requirementIds": [
+      "REQ-INV-01"
+    ],
     "userStory": "HU-029 — Catálogo de insumos de inventario y alertas por umbral de stock mínimo (BVA)",
     "module": "inventory",
     "title": "Creación de insumos de inventario y activación de alerta de stock bajo cuando currentStock <= minThreshold",
@@ -975,7 +1126,11 @@
       "itemName": "Bife Chorizo Madurado (kg)",
       "unit": "KG",
       "minThreshold": 10,
-      "testedStockValues": [11, 10, 9]
+      "testedStockValues": [
+        11,
+        10,
+        9
+      ]
     },
     "steps": [
       "Crear el insumo 'Bife Chorizo Madurado (kg)' con minThreshold = 10 y stock inicial = 11 (frontera superior sin alerta).",
@@ -983,13 +1138,15 @@
       "Reducir el stock a 9 (por debajo de la frontera) y verificar el indicador lowStockAlert."
     ],
     "expectedResult": "Con stock = 11 el indicador lowStockAlert es false; al alcanzar los valores límite 10 y 9 (currentStock <= minThreshold), el sistema activa lowStockAlert = true.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/inventory-items.int-spec.ts"
   },
   {
     "id": "CP-INV-002",
     "number": 33,
-    "requirementIds": ["REQ-INV-02"],
+    "requirementIds": [
+      "REQ-INV-02"
+    ],
     "userStory": "HU-030 — Kardex append-only de movimientos manuales de inventario y tolerancia de stock negativo auditado",
     "module": "inventory",
     "title": "Registro inmutable de movimientos manuales (IN, OUT, ADJUSTMENT) con motivo obligatorio y auditoría de stock negativo permitido",
@@ -1021,7 +1178,9 @@
   {
     "id": "CP-REP-001",
     "number": 34,
-    "requirementIds": ["REQ-REP-01"],
+    "requirementIds": [
+      "REQ-REP-01"
+    ],
     "userStory": "HU-031 — Dashboard ejecutivo de KPIs diarios de ventas y caché Redis",
     "module": "reports",
     "title": "Consulta de KPIs ejecutivos de ventas diarias, métodos de pago y top productos con hidratación e invalidación de caché Redis",
@@ -1036,7 +1195,14 @@
     ],
     "inputData": {
       "dateRange": "2026-11-16",
-      "expectedMetrics": ["netSales", "taxTotal", "tipsTotal", "averageTicket", "byPaymentMethod", "topProducts"]
+      "expectedMetrics": [
+        "netSales",
+        "taxTotal",
+        "tipsTotal",
+        "averageTicket",
+        "byPaymentMethod",
+        "topProducts"
+      ]
     },
     "steps": [
       "Invocar GET /api/v1/reports/dashboard para la fecha operativa actual (cache miss inicial).",
@@ -1044,13 +1210,15 @@
       "Repetir la consulta verificando respuesta desde caché Redis (cache hit) y comprobar invalidación tras registrar una nueva venta pagada."
     ],
     "expectedResult": "El endpoint retorna los KPIs consolidados exactos del tenant activo, hidrata la clave en Redis y refresca los totales cuando ocurre un nuevo cierre de orden.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/reports-dashboard.int-spec.ts"
   },
   {
     "id": "CP-REP-002",
     "number": 35,
-    "requirementIds": ["REQ-REP-02"],
+    "requirementIds": [
+      "REQ-REP-02"
+    ],
     "userStory": "HU-032 — Reporte imprimible de recibo de orden y tirilla de cierre de caja en formato térmico 80mm",
     "module": "reports",
     "title": "Verificación manual de vista previa e impresión térmica de 80mm (@media print) para recibo de orden y tirilla de cierre de caja sin desbordamiento horizontal",
@@ -1066,7 +1234,13 @@
     "inputData": {
       "paperWidthMm": 80,
       "mediaQuery": "print",
-      "sections": ["Encabezado fiscal", "Ventas por método", "Propinas", "Arqueo esperado vs contado", "Firmas"]
+      "sections": [
+        "Encabezado fiscal",
+        "Ventas por método",
+        "Propinas",
+        "Arqueo esperado vs contado",
+        "Firmas"
+      ]
     },
     "steps": [
       "Abrir la vista del reporte de cierre de caja y activar el modo de vista previa de impresión (@media print).",
@@ -1074,12 +1248,14 @@
       "Comprobar que el contenedor del ticket se ajuste a 80mm con tipografía monoespaciada legible, sin truncamiento de montos ni scroll horizontal."
     ],
     "expectedResult": "La tirilla térmica de 80mm muestra todos los rubros del arqueo y del recibo de pago perfectamente alineados y listos para impresora POS sin elementos de interfaz sobrantes.",
-    "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
+    "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
     "id": "CP-REP-003",
     "number": 36,
-    "requirementIds": ["REQ-REP-03"],
+    "requirementIds": [
+      "REQ-REP-03"
+    ],
     "userStory": "HU-032, HU-034 — Exportación CSV con UTF-8 BOM, proyección correcta de columnas y sanitización contra CSV Formula Injection",
     "module": "reports",
     "title": "Exportación CSV en streaming con BOM UTF-8 (\\uFEFF), proyección firstName/lastName y cashierId (regresión de DEF-002) y sanitización contra CSV Formula Injection (=, +, -, @)",
@@ -1092,8 +1268,13 @@
       "Sesiones de caja y movimientos registrados que incluyen textos con tildes ('Canción', 'Bogotá') y cadenas maliciosas que inician con '=cmd|', '+SUM()', '-1+1', '@import'"
     ],
     "inputData": {
-      "maliciousPayloads": ["=1+1", "+cmd|' /C calc'!A0", "-2+3", "@SUM(A1:A2)"],
-      "expectedPrefix": "\uFEFF"
+      "maliciousPayloads": [
+        "=1+1",
+        "+cmd|' /C calc'!A0",
+        "-2+3",
+        "@SUM(A1:A2)"
+      ],
+      "expectedPrefix": "﻿"
     },
     "steps": [
       "Invocar GET /api/v1/reports/export/cash-sessions.csv con rol GERENTE.",
@@ -1108,7 +1289,9 @@
   {
     "id": "CP-RLS-001",
     "number": 37,
-    "requirementIds": ["REQ-RLS-01"],
+    "requirementIds": [
+      "REQ-RLS-01"
+    ],
     "userStory": "HU-001, HU-002 / ADR-0002 — Aislamiento negativo multi-tenant estricto con FORCE ROW LEVEL SECURITY",
     "module": "rls",
     "title": "Suite de aislamiento negativo multi-tenant entre Tenant A y Tenant B: lectura cruzada (GET -> 404), modificación cruzada (PATCH -> 404), inyección de FK compuesta y consulta SQL sin app.restaurant_id (0 rows)",
@@ -1139,7 +1322,10 @@
   {
     "id": "CP-RLS-002",
     "number": 38,
-    "requirementIds": ["REQ-RLS-01", "REQ-RLS-02"],
+    "requirementIds": [
+      "REQ-RLS-01",
+      "REQ-RLS-02"
+    ],
     "userStory": "HU-002, HU-003 / ADR-0006 — Mínimo privilegio en arranque (rolbypassrls = false) e inmutabilidad SQL en tablas append-only",
     "module": "rls",
     "title": "Verificación en arranque de rolbypassrls = false para app_user y rechazo de UPDATE/DELETE (permission denied) sobre tablas append-only (payment, audit_log, order_item_status_history, inventory_movement, order_balance_adjustment)",
@@ -1161,7 +1347,10 @@
         "inventory_movement",
         "order_balance_adjustment"
       ],
-      "forbiddenOperations": ["UPDATE", "DELETE"]
+      "forbiddenOperations": [
+        "UPDATE",
+        "DELETE"
+      ]
     },
     "steps": [
       "Consultar pg_roles para el usuario actual (current_user) verificando que rolsuper = false y rolbypassrls = false.",
@@ -1175,7 +1364,12 @@
   {
     "id": "CP-RLS-003",
     "number": 39,
-    "requirementIds": ["REQ-ORD-01", "REQ-KIT-02", "REQ-CSH-02", "REQ-KIT-03"],
+    "requirementIds": [
+      "REQ-ORD-01",
+      "REQ-KIT-02",
+      "REQ-CSH-02",
+      "REQ-KIT-03"
+    ],
     "userStory": "HU-018, HU-024, HU-025, HU-027, HU-033 — Flujo E2E Golden Path completo en tablet (1024x768) desde login hasta tirilla 80mm",
     "module": "rls",
     "title": "Flujo E2E Golden Path completo en Playwright (1024x768, Chromium & WebKit): login -> apertura de caja -> mapa de mesas -> comanda -> KDS (Pendiente -> En preparación -> Listo) -> cobro y tirilla 80mm",
@@ -1190,7 +1384,10 @@
     ],
     "inputData": {
       "viewport": "1024x768",
-      "browsers": ["chromium", "webkit"],
+      "browsers": [
+        "chromium",
+        "webkit"
+      ],
       "tableCode": "M-01",
       "paymentMethod": "CASH"
     },
@@ -1201,13 +1398,15 @@
       "Procesar el cobro total de la cuenta en Caja, verificar la generación del recibo térmico de 80mm y comprobar que la mesa M-01 retorne a estado FREE."
     ],
     "expectedResult": "El ciclo operativo punta a punta finaliza sin errores en Chromium y WebKit (1024x768), manteniendo consistencia transaccional entre Mesas, Órdenes, KDS y Caja.",
-    "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/web/e2e/specs/tablet-golden-path.e2e.spec.ts"
   },
   {
     "id": "CP-RLS-004",
     "number": 40,
-    "requirementIds": ["REQ-RLS-02"],
+    "requirementIds": [
+      "REQ-RLS-02"
+    ],
     "userStory": "HU-034 / ADR-0006 — Verificación de cabeceras Zero-Trust: CORS estricto, propagación de X-Request-Id y formato RFC 7807",
     "module": "rls",
     "title": "Verificación manual de cabeceras de seguridad Zero-Trust: rechazo CORS para Origin: null u orígenes no autorizados, propagación de X-Request-Id y formato estándar RFC 7807 (application/problem+json)",
@@ -1220,7 +1419,10 @@
       "Servidor API ejecutándose con lista blanca explícita de orígenes CORS configurada"
     ],
     "inputData": {
-      "unauthorizedOrigins": ["null", "https://evil-attacker.example.com"],
+      "unauthorizedOrigins": [
+        "null",
+        "https://evil-attacker.example.com"
+      ],
       "customRequestId": "req-qa-audit-0040",
       "expectedContentType": "application/problem+json"
     },

@@ -23,9 +23,10 @@ body:
     attributes:
       label: Bloque / Responsable
       options:
-        - Compartido (@JhonatanM2005 & @H3llz07)
+        - Compartido (@JhonatanM2005, @H3llz07 & @Christu12)
         - Bloque A (@JhonatanM2005)
         - Bloque B (@H3llz07)
+        - QA Analyst & Automatizador (@Christu12)
     validations:
       required: true
   - type: textarea

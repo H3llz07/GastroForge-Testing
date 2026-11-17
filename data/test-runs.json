@@ -141,7 +141,9 @@
     "executedAt": "2026-11-16T01:34:00-05:00",
     "status": "FAILED",
     "actualResult": "La suite unitaria de can.helper.spec.ts pasa sus aserciones internas, pero la inspección de tabla de decisión contra PRD.md (§2.1) y TESTING-PLAN.md (§2.2) revela que MESERO_ACTIONS en can.helper.ts (líneas 75-76) incluye 'kitchen:read' y 'kitchen:advance_status' sin validación de stationId.",
-    "defectIds": ["DEF-004"],
+    "defectIds": [
+      "DEF-004"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-006-1",
@@ -165,7 +167,7 @@
     "testCaseId": "CP-CAT-001",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T01:40:00-05:00",
     "status": "PASSED",
     "actualResult": "Las estaciones 'PARRILLA' y 'BARRA' y la categoría 'Cortes Madurados' (sort_order = 1) se crean y ordenan correctamente; al desactivar una categoría secundaria desaparece de inmediato de la vista POS de toma de pedidos.",
@@ -193,7 +195,7 @@
     "testCaseId": "CP-CAT-002",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T01:46:00-05:00",
     "status": "PASSED",
     "actualResult": "El helper calculateTaxBreakdown calcula base gravable e impuesto incluido con precisión exacta Decimal(12,2) en fronteras (0.01, 100.00, 35900.00, 9999999999.99) y tasas (0%, 8%, 19%) cumpliendo netAmount + taxAmount === grossAmount.",
@@ -214,7 +216,7 @@
     "testCaseId": "CP-CAT-003",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T01:52:00-05:00",
     "status": "PASSED",
     "actualResult": "En el grupo de modificadores con rango [1..2], las selecciones fuera de frontera (0 y 3 opciones) son rechazadas con HTTP 400 Bad Request, mientras que las fronteras válidas (1 y 2 opciones) son aceptadas sumando el price_delta exacto.",
@@ -242,7 +244,7 @@
     "testCaseId": "CP-CAT-004",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T01:58:00-05:00",
     "status": "PASSED",
     "actualResult": "Al cambiar el estado de 'Lomo al Trapo' a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura.",
@@ -270,7 +272,7 @@
     "testCaseId": "CP-TAB-001",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T02:04:00-05:00",
     "status": "PASSED",
     "actualResult": "La creación de mesa con capacidad 0 es rechazada con HTTP 400; capacidades válidas (1 y 12) se persisten con éxito; un código duplicado 'M-01' en el mismo restaurante retorna HTTP 409 mientras que el Tenant B puede registrar su propia mesa 'M-01'.",
@@ -298,7 +300,7 @@
     "testCaseId": "CP-TAB-002",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T02:10:00-05:00",
     "status": "PASSED",
     "actualResult": "En viewport 1024x768 la vista /tables renderiza tarjetas táctiles con altura medida de 108px (>= 104px requeridos), sin scroll horizontal y diferenciando mesas libres y ocupadas por color semántico, etiqueta textual e ícono.",
@@ -319,7 +321,7 @@
     "testCaseId": "CP-TAB-003",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T02:16:00-05:00",
     "status": "PASSED",
     "actualResult": "GET /api/v1/tables/overview reporta la mesa 'M-05' como FREE inicialmente, cambia automáticamente a OCCUPIED al abrir una orden DINE_IN activa y retorna a FREE tras liquidar y cerrar la orden.",
@@ -351,7 +353,9 @@
     "executedAt": "2026-11-16T02:22:00-05:00",
     "status": "PASSED",
     "actualResult": "El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M-02, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (< 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006).",
-    "defectIds": ["DEF-006"],
+    "defectIds": [
+      "DEF-006"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-014-1",
@@ -477,7 +481,9 @@
     "executedAt": "2026-11-16T02:52:00-05:00",
     "status": "FAILED",
     "actualResult": "La función can({ role: 'CAJERO' }, 'orders:create') retorna false en can.helper.ts (línea 47 de can.helper.spec.ts), contradiciendo la Matriz de Capacidades del PRD.md (§2.1, línea 86) que establece que Cajero sí puede abrir orden/cuenta.",
-    "defectIds": ["DEF-005"],
+    "defectIds": [
+      "DEF-005"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-019-1",
@@ -501,7 +507,7 @@
     "testCaseId": "CP-KIT-001",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T02:58:00-05:00",
     "status": "PASSED",
     "actualResult": "En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación 'PARRILLA' en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo).",
@@ -529,7 +535,7 @@
     "testCaseId": "CP-KIT-002",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T03:04:00-05:00",
     "status": "PASSED",
     "actualResult": "GET /api/v1/kitchen/queue retorna al cocinero asignado a PARRILLA únicamente los ítems de PARRILLA (excluyendo BARRA), y bloquea en modo fail-closed con HTTP 403 Forbidden al cocinero sin estación asignada o que solicita otra estación.",
@@ -659,7 +665,9 @@
     "executedAt": "2026-11-16T03:34:00-05:00",
     "status": "PASSED",
     "actualResult": "El cobro dividido ($50.000 CASH + $30.000 CARD) para liquidar la orden de $80.000 se ejecuta exitosamente bajo app_user (HTTP 201), verificando que la eliminación de FOR UPDATE sobre la tabla append-only payment corrigió el error SQL 42501 (DEF-001) y liberó la mesa a estado FREE.",
-    "defectIds": ["DEF-001"],
+    "defectIds": [
+      "DEF-001"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-026-1",
@@ -708,7 +716,9 @@
     "executedAt": "2026-11-16T03:46:00-05:00",
     "status": "PASSED",
     "actualResult": "Al intentar cobrar $60.000 sobre un saldo pendiente de $45.000, el backend responde HTTP 422 (application/problem+json) y el componente AlertBanner renderiza explícitamente el campo err.detail del problema RFC 7807, confirmando la corrección de DEF-003.",
-    "defectIds": ["DEF-003"],
+    "defectIds": [
+      "DEF-003"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-028-1",
@@ -795,7 +805,7 @@
     "testCaseId": "CP-INV-001",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T04:10:00-05:00",
     "status": "PASSED",
     "actualResult": "Para el insumo 'Bife Chorizo Madurado (kg)' con minThreshold = 10, el indicador de alerta permanece en false con stock = 11 y se activa exactamente en las fronteras BVA stock = 10 y stock = 9 (currentStock <= minThreshold).",
@@ -851,7 +861,7 @@
     "testCaseId": "CP-REP-001",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T04:22:00-05:00",
     "status": "PASSED",
     "actualResult": "GET /api/v1/reports/dashboard retorna con exactitud ventas netas, IVA, propinas, ticket promedio, desglose por medio de pago y top productos del tenant activo, hidratando la caché Redis en la primera consulta e invalidándola tras un nuevo cobro.",
@@ -879,7 +889,7 @@
     "testCaseId": "CP-REP-002",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T04:28:00-05:00",
     "status": "PASSED",
     "actualResult": "En vista previa de impresión (@media print) con ancho de papel de 80mm (~302px), la navegación lateral y botones quedan ocultos (display: none) y tanto el recibo de orden como la tirilla de cierre de caja se ajustan sin truncamiento ni scroll horizontal.",
@@ -904,7 +914,9 @@
     "executedAt": "2026-11-16T04:34:00-05:00",
     "status": "PASSED",
     "actualResult": "La exportación CSV responde HTTP 200 con prefijo UTF-8 BOM (\\uFEFF), proyecta correctamente firstName/lastName y cashierId sin error de esquema Prisma (verificando la corrección de DEF-002) y neutraliza payloads de CSV Formula Injection (=, +, -, @) prefijando comilla simple.",
-    "defectIds": ["DEF-002"],
+    "defectIds": [
+      "DEF-002"
+    ],
     "evidenceRefs": [
       {
         "id": "EVID-RUN-036-1",
@@ -984,7 +996,7 @@
     "testCaseId": "CP-RLS-003",
     "releaseCommit": "be9089e",
     "environment": "QA Local (PostgreSQL 16 app_user RLS + Redis 7 + Chromium/WebKit 1024x768)",
-    "executor": "Jhonatan A. Méndez R. (@JhonatanM2005)",
+    "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T04:50:00-05:00",
     "status": "PASSED",
     "actualResult": "La suite Playwright E2E (tablet-golden-path.e2e.spec.ts) completa sin errores el flujo login -> sesión de caja -> mapa de mesas -> apertura de pedido y envío de tanda -> avance KDS (Pendiente -> En preparación -> Listo) -> cobro y vista de reportes en Chromium y WebKit (1024x768).",

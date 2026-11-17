@@ -4,7 +4,7 @@
 
 <br>
 
-Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón
+Jhonatan A. Méndez R., Julián Santiago Pico Pinzón y Christian Urrego Issa
 
 Facultad de Ingeniería, Institución Universitaria Pascual Bravo
 

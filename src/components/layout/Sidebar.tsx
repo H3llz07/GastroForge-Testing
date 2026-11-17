@@ -224,9 +224,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <ExternalLink className="w-3 h-3 text-slate-400" />
           </a>
         </div>
-        <div className="text-[11px] text-slate-500 leading-snug">
+        <div className="text-[11px] text-slate-500 leading-snug space-y-0.5">
           <div className="truncate text-slate-400 font-medium">{metadata.institution}</div>
-          <div className="truncate">{metadata.elaboratedBy}</div>
+          <div className="text-slate-500 break-words">{metadata.elaboratedBy}</div>
         </div>
       </div>
     </div>

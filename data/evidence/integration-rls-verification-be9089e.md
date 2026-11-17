@@ -5,7 +5,7 @@
 - **Nivel Piramidal:** Nivel L4 — Pruebas de Integración Transaccional e Infraestructura Real
 - **Entorno de Ejecución:** `QA Local (PostgreSQL 16 app_user RLS + Redis 7 + NestJS TestingModule)`
 - **Fecha de Captura:** `2026-11-16T02:30:00-05:00`
-- **Responsables QA:** Julián Santiago Pico Pinzón (`@H3llz07`) & Jhonatan A. Méndez R. (`@JhonatanM2005`)
+- **Responsables QA:** Julián Santiago Pico Pinzón (`@H3llz07`), Jhonatan A. Méndez R. (`@JhonatanM2005`) y Christian Urrego Issa (`@Christu12`)
 
 ---
 

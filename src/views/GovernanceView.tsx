@@ -424,7 +424,7 @@ export const GovernanceView: React.FC<GovernanceViewProps> = ({ metadata }) => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 font-mono text-xs">
           <div className="p-4 rounded bg-slate-800 border border-slate-700">
             <div className="text-orange-400 font-bold">QA Lead — Bloque A</div>
             <div className="text-sm font-sans font-bold text-white mt-1">
@@ -445,6 +445,19 @@ export const GovernanceView: React.FC<GovernanceViewProps> = ({ metadata }) => {
             </div>
             <div className="text-slate-300 mt-1 text-[11px]">
               Caja, Pagos, Inventario, Reportes y Suite RLS (CP-024 a CP-040)
+            </div>
+            <div className="mt-3 pt-2 border-t border-slate-700 text-emerald-400 font-semibold">
+              Firma Digital Verificada — {metadata.date}
+            </div>
+          </div>
+
+          <div className="p-4 rounded bg-slate-800 border border-slate-700">
+            <div className="text-orange-400 font-bold">QA Analyst &amp; Automatizador</div>
+            <div className="text-sm font-sans font-bold text-white mt-1">
+              Christian Urrego Issa (@Christu12)
+            </div>
+            <div className="text-slate-300 mt-1 text-[11px]">
+              Casos Manuales L6, E2E Playwright L5 y Automatización L2–L4
             </div>
             <div className="mt-3 pt-2 border-t border-slate-700 text-emerald-400 font-semibold">
               Firma Digital Verificada — {metadata.date}
