@@ -7,3 +7,17 @@ dist/
 coverage/
 .vite/
 .superpowers/
+*.tsbuildinfo
+
+# LaTeX auxiliaries
+*.aux
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.xdv
+*.synctex.gz
+*.lof
+*.lot
+*.bbl
+*.blg

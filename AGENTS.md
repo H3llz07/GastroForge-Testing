@@ -28,7 +28,7 @@ Desde `data/*.json`, el script `scripts/generate-deliverables.ts` compila determ
 
 ## 3. Protocolo de Aislamiento de Contexto (1 Historia de Usuario a la vez)
 
-El desarrollo se divide en **8 Historias de Usuario (`[HU-QA-001]` a `[HU-QA-008]`)** mapeadas 1 a 1 con las Fases `0` a `7` de `PLAN-IMPLEMENTACION-QA-DASHBOARD.md`:
+El desarrollo se divide en **9 Historias de Usuario (`[HU-QA-001]` a `[HU-QA-009]`)** mapeadas 1 a 1 con las Fases `0` a `8` (`[HU-QA-009]` = Fase 8, conversión a PDF vía LaTeX, Issue #15) de `PLAN-IMPLEMENTACION-QA-DASHBOARD.md`:
 
 1. **Prohibido mezclar fases:** Cada subagente o sesión de implementación ejecuta **exactamente una `[HU-QA-XXX]`** a la vez.
 2. **Lectura acotada:** Antes de codificar una HU, leer únicamente el Issue correspondiente en GitHub (`gh issue view <N> -R H3llz07/GastroForge-Testing`) y los archivos listados en su alcance.

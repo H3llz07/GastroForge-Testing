@@ -1,0 +1,523 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[landscape,margin=1.8cm,headheight=14pt]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Arial}{\setmainfont{Arial}}{\setmainfont{Latin Modern Roman}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=MatchLowercase]}{%
+  \IfFontExistsTF{Courier New}{\setmonofont{Courier New}[Scale=MatchLowercase]}{\setmonofont{Latin Modern Mono}}}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}
+\definecolor{gfaccent}{HTML}{1F3A5F}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\usepackage{needspace}
+\usepackage{setspace}
+\newcounter{none}
+\usepackage{fvextra}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=3pt}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\emergencystretch}{3em}
+\rowcolors{2}{gray!10}{white}
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{2}
+\titleformat{\section}{\Large\bfseries\color{gfaccent}}{}{0pt}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{gfaccent}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{GastroForge QA --- commit be9089e}
+\fancyhead[R]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\usepackage[hidelinks,unicode,pdfusetitle=false]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=gfaccent,urlcolor=gfaccent,pdftitle={MATRIZ DE TRAZABILIDAD BIDIRECCIONAL DE REQUISITOS (RTM)},pdfauthor={Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón}}
+\urlstyle{same}
+\Urlmuskip=0mu plus 1mu
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{1.2cm}
+{\large\bfseries Institución Universitaria Pascual Bravo\par}
+\vspace{1.2cm}
+{\Huge\bfseries\color{gfaccent} MATRIZ DE TRAZABILIDAD BIDIRECCIONAL DE REQUISITOS (RTM)\par}
+\vspace{0.6cm}
+{\Large GastroForge --- Sistema ERP Multi-Restaurante Tablet-First\par}
+\vspace{1.0cm}
+\rule{0.6\linewidth}{0.6pt}\par
+\vspace{0.8cm}
+{\large Commit SUT congelado: \texttt{be9089e}\par}
+{\normalsize feat(web): add playwright tablet e2e suite and manual testing evidences (\#71)\par}
+\vspace{0.8cm}
+{\large Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón\par}
+\vspace{0.6cm}
+{\normalsize Versión 1.0 \quad|\quad Aprobado\par}
+{\normalsize 16 de noviembre de 2026\par}
+\end{titlepage}
+\pagestyle{fancy}
+{\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Contenido}
+\tableofcontents}
+\clearpage
+
+\textbf{Proyecto:} GastroForge --- Sistema ERP Multi-Restaurante Tablet-First\\
+\textbf{Commit SUT Evaluado:} \texttt{be9089e} (feat(web): add playwright tablet e2e suite and manual testing evidences (\#71))\\
+\textbf{Fecha de Compilación:} 16/11/2026\\
+\textbf{Responsables QA:} Jhonatan A. Méndez R. (@JhonatanM2005) \& Julián Santiago Pico Pinzón (@H3llz07)
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{1. Resumen Ejecutivo de Cobertura}\label{1-resumen-ejecutivo-de-cobertura}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2771}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1991}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5238}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Indicador de Trazabilidad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Valor
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Requisitos en Alcance (\texttt{IN\_\allowbreak{}SCOPE})} & \textbf{28/28 (100\%)} & 22 Casos de Uso MVP (\texttt{UC-{}\allowbreak{}*}), 34 Historias de Usuario (\texttt{HU-{}\allowbreak{}001.\allowbreak{}.\allowbreak{}034}) y 6 ADRs (\texttt{ADR-{}\allowbreak{}0001.\allowbreak{}.\allowbreak{}0006}) \\
+\textbf{Exclusiones Explícitas (\texttt{PHASE\_\allowbreak{}2})} & \textbf{2 excluidos} & \texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}01} (Reservas anticipadas) y \texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}02} (Permisos dinámicos / X-API-Key) según ADR-0005 y ADR-0006 \\
+\textbf{Total de Casos de Prueba Vinculados} & \textbf{40 casos} & 15 Manuales (L6) + 25 Automatizados (L2, L3, L4, L5) \\
+\textbf{Tasa de Ejecución y Aprobación} & \textbf{100\% ejecutados / 95\% aprobados} & 38 \texttt{PASSED}, 2 \texttt{FAILED}, 0 \texttt{BLOCKED}, 0 \texttt{NOT\_\allowbreak{}RUN} \\
+\textbf{Defectos Trazados} & \textbf{6 defectos} & 3 Cerrados (\texttt{DEF-{}\allowbreak{}001.\allowbreak{}.\allowbreak{}003}) y 3 Abiertos (\texttt{DEF-{}\allowbreak{}004.\allowbreak{}.\allowbreak{}006}) --- P1=0, P2=0 abiertos \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{2. Trazabilidad Hacia Adelante (Requisito → Casos de Prueba → Estado de Ejecución → Defectos)}\label{2-trazabilidad-hacia-adelante-requisito--casos-de-prueba--estado-de-ejecuciuxf3n--defectos}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0460}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1287}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0325}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.3253}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0638}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2402}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0715}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0921}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID Requisito
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Código (UC / HU / ADR)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Módulo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Título del Requisito
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Casos de Prueba Asociados
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado de Ejecución
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Defectos Asociados
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Cobertura
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}01} & UC-AUTH-01 / HU-004, HU-005 & \texttt{auth} & Inicio de sesión con credenciales, validación de estado de cuenta y bloqueo por rate-limit & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}002} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-AUTH-001: \textbf{PASSED}\\
+CP-AUTH-002: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}02} & UC-AUTH-02 / HU-006 & \texttt{auth} & Rotación segura de Refresh Token en cookie HttpOnly y detección de reuso (token\_version) & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}003} & CP-AUTH-003: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}03} & UC-AUTH-03 / HU-007 & \texttt{auth} & Cierre de sesión explícito e invalidación inmediata de sesión activa & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}003} & CP-AUTH-003: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}04} & UC-AUTH-04 / HU-008, HU-009, HU-010 & \texttt{auth} & Selección y cambio de restaurante activo multi-tenant, gestión de miembros y branding WCAG & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}004} & CP-AUTH-004: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}05} & UC-AUTH-05 / HU-011 & \texttt{auth} & Restablecimiento administrativo de contraseña con token de un solo uso (15 min) y revocación de sesiones & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}005} & CP-AUTH-005: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}06} & ADR-0005 / HU-009 & \texttt{auth} & Matriz de autorización pura deny-by-default can(actor, action, context) para los 5 roles MVP (Admin, Gerente, Mesero, Cocina, Cajero) & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006}, \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-AUTH-006: \textbf{FAILED}\\
+CP-ORD-006: \textbf{FAILED}\strut
+\end{minipage} & \texttt{DEF-{}\allowbreak{}004} (Asignado), \texttt{DEF-{}\allowbreak{}005} (Asignado) & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}01} & UC-CAT-01 / HU-012 & \texttt{catalog} & Gestión de estaciones de preparación de cocina (PARRILLA, COCINA\_FRIA, BARRA, etc.) & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}001} & CP-CAT-001: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}02} & UC-CAT-02 / HU-013 & \texttt{catalog} & Gestión de categorías del menú con ordenamiento visual y estado activo/inactivo & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}001} & CP-CAT-001: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}03} & UC-CAT-03 / HU-014 & \texttt{catalog} & Gestión de productos, disponibilidad rápida y desglose exacto de IVA incluido (Decimal(12,2)) & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}002}, \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}004} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-CAT-002: \textbf{PASSED}\\
+CP-CAT-004: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}04} & UC-CAT-04 / HU-015 & \texttt{catalog} & Grupos de modificadores con cotas min\_selectable y max\_selectable (BVA) & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}003} & CP-CAT-003: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}01} & UC-TAB-01 / HU-016 & \texttt{tables} & Gestión de áreas del salón, mesas, capacidad de comensales y unicidad de código por restaurante & \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}001} & CP-TAB-001: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}02} & UC-TAB-02 / HU-017 & \texttt{tables} & Mapa operativo de mesas con estado de ocupación derivado dinámicamente de órdenes activas (FREE / OCCUPIED) & \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}002}, \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-TAB-002: \textbf{PASSED}\\
+CP-TAB-003: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01} & UC-ORD-01 / HU-018, HU-019 & \texttt{orders} & Apertura de cuentas DINE\_IN y TAKEOUT con numeración secuencial diaria por tenant y control de mesa ocupada & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}002}, \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-ORD-001: \textbf{PASSED}\\
+CP-ORD-002: \textbf{PASSED}\\
+CP-ORD-006: \textbf{FAILED}\\
+CP-RLS-003: \textbf{PASSED}\strut
+\end{minipage} & \texttt{DEF-{}\allowbreak{}006} (Asignado), \texttt{DEF-{}\allowbreak{}005} (Asignado) & \textbf{100\% Cubierto} (4 CP) \\
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}02} & UC-ORD-02 / HU-020, HU-021 & \texttt{orders} & Captura y despacho de tandas (OrderRound), recálculo de totales e incremento de versión por concurrencia optimista (version) & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-ORD-001: \textbf{PASSED}\\
+CP-ORD-003: \textbf{PASSED}\strut
+\end{minipage} & \texttt{DEF-{}\allowbreak{}006} (Asignado) & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}03} & UC-ORD-03 / HU-022 & \texttt{orders} & Cancelación de ítems de orden según estado (PENDING libre para mesero; PREPARING/READY exige autorización/PIN de Gerente o Admin y motivo obligatorio) & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}004}, \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}005} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-ORD-004: \textbf{PASSED}\\
+CP-ORD-005: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}01} & UC-KIT-01 / HU-023 & \texttt{kitchen} & Cola KDS en tiempo real filtrada por estación asignada e indicadores semafóricos de urgencia por tiempo transcurrido & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}002} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-KIT-001: \textbf{PASSED}\\
+CP-KIT-002: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}02} & UC-KIT-02 / HU-024 & \texttt{kitchen} & Máquina de estados de preparación de ítems (PENDING -\textgreater{} PREPARING -\textgreater{} READY -\textgreater{} SERVED) e historial de auditoría inmutable & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}003}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-KIT-003: \textbf{PASSED}\\
+CP-RLS-003: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}03} & ADR-0004 / HU-025, HU-033 & \texttt{kitchen} & Despacho Transactional Outbox (FOR UPDATE SKIP LOCKED), canal Server-Sent Events (SSE) y reconexión reactiva en tablet (1024x768) & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}004}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-KIT-004: \textbf{PASSED}\\
+CP-RLS-003: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}01} & UC-CSH-01 / HU-026 & \texttt{cash} & Apertura de turno único por caja registradora (OPEN) y cierre con arqueo ciego e inmutabilidad (CLOSED) & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}002} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-CSH-001: \textbf{PASSED}\\
+CP-CSH-002: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} & UC-CSH-02 / HU-027 & \texttt{cash} & Cobro de órdenes con pagos parciales/divididos, propinas sin IVA, protección Idempotency-Key y recibo térmico 80mm & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}004}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}006}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-CSH-003: \textbf{PASSED}\\
+CP-CSH-004: \textbf{PASSED}\\
+CP-CSH-005: \textbf{PASSED}\\
+CP-CSH-006: \textbf{PASSED}\\
+CP-RLS-003: \textbf{PASSED}\strut
+\end{minipage} & \texttt{DEF-{}\allowbreak{}001} (Cerrado), \texttt{DEF-{}\allowbreak{}003} (Cerrado) & \textbf{100\% Cubierto} (5 CP) \\
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}03} & UC-CSH-03 / HU-028 & \texttt{cash} & Reversos compensatorios de pago y ajustes administrativos de saldo autorizados por Gerente/Admin & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}007}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}008} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-CSH-007: \textbf{PASSED}\\
+CP-CSH-008: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}INV-{}\allowbreak{}01} & UC-INV-01 / HU-029 & \texttt{inventory} & Catálogo de insumos de inventario con unidad de medida y alertas visuales por umbral de stock mínimo & \texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}001} & CP-INV-001: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}INV-{}\allowbreak{}02} & UC-INV-02 / HU-030 & \texttt{inventory} & Movimientos manuales de stock (IN, OUT, ADJUSTMENT) inmutables con motivo obligatorio y tolerancia de stock negativo auditado & \texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}002} & CP-INV-002: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}01} & UC-REP-01 / HU-031 & \texttt{reports} & Dashboard ejecutivo de ventas diarias, ticket promedio, desglose por medio de pago y top productos con caché Redis & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}001} & CP-REP-001: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}02} & UC-REP-02 / HU-032 & \texttt{reports} & Reporte imprimible de cierre y conciliación de caja en formato térmico 80mm (@media print) & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}002} & CP-REP-002: \textbf{PASSED} & N/A & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}03} & UC-REP-03 / HU-032 & \texttt{reports} & Exportación CSV en streaming con cabecera UTF-8 BOM y prevención de inyección de fórmulas de hoja de cálculo & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003} & CP-REP-003: \textbf{PASSED} & \texttt{DEF-{}\allowbreak{}002} (Cerrado) & \textbf{100\% Cubierto} (1 CP) \\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}01} & ADR-0002 / HU-001, HU-002 & \texttt{rls} & Aislamiento multi-tenant estricto en PostgreSQL mediante FORCE ROW LEVEL SECURITY, rol app\_user (rolbypassrls = false) y tenantTx & \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}001}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}002} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-RLS-001: \textbf{PASSED}\\
+CP-RLS-002: \textbf{PASSED}\strut
+\end{minipage} & N/A & \textbf{100\% Cubierto} (2 CP) \\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} & ADR-0006 / HU-003, HU-034 & \texttt{rls} & Mínimo privilegio en tablas append-only (UPDATE/DELETE revocados para app\_user), CORS estricto, Rate Limiting L1/L2 y trazabilidad RFC 7807 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}002}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003}, \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}002}, \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}004} & \begin{minipage}[t]{\linewidth}\raggedright
+CP-AUTH-002: \textbf{PASSED}\\
+CP-CSH-003: \textbf{PASSED}\\
+CP-CSH-005: \textbf{PASSED}\\
+CP-RLS-002: \textbf{PASSED}\\
+CP-RLS-004: \textbf{PASSED}\strut
+\end{minipage} & \texttt{DEF-{}\allowbreak{}001} (Cerrado), \texttt{DEF-{}\allowbreak{}003} (Cerrado) & \textbf{100\% Cubierto} (5 CP) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{\texorpdfstring{2.1 Requisitos Fuera de Alcance (\texttt{PHASE\_\allowbreak{}2} --- Excluidos del Denominador MVP)}{2.1 Requisitos Fuera de Alcance ( --- Excluidos del Denominador MVP)}}\label{21-requisitos-fuera-de-alcance-phase_2--excluidos-del-denominador-mvp}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0738}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1813}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0521}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.5215}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0795}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0919}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID Requisito
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Código
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Módulo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Título
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Fuente Normativa
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado en MVP
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}01} & UC-PH2-01 / ADR-0005 & \texttt{tables} & Gestión de reservas anticipadas de mesas con bloqueo horario (Excluido del MVP --- Fase 2) & \texttt{docs/\allowbreak{}use-{}\allowbreak{}cases/\allowbreak{}phase2-{}\allowbreak{}reservations-{}\allowbreak{}employees/\allowbreak{}UC-{}\allowbreak{}PH2-{}\allowbreak{}01-{}\allowbreak{}table-{}\allowbreak{}reservations.\allowbreak{}md} & \textbf{Excluido (\texttt{PHASE\_\allowbreak{}2})} \\
+\texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}02} & UC-PH2-02 / ADR-0005, ADR-0006 & \texttt{auth} & Permisos granulares editables en base de datos, gestión de turnos de empleados y X-API-Key externas (Excluido del MVP --- Fase 2) & \texttt{docs/\allowbreak{}use-{}\allowbreak{}cases/\allowbreak{}phase2-{}\allowbreak{}reservations-{}\allowbreak{}employees/\allowbreak{}UC-{}\allowbreak{}PH2-{}\allowbreak{}02-{}\allowbreak{}advanced-{}\allowbreak{}permissions-{}\allowbreak{}and-{}\allowbreak{}shifts.\allowbreak{}md} & \textbf{Excluido (\texttt{PHASE\_\allowbreak{}2})} \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{3. Trazabilidad Hacia Atrás (Caso de Prueba → Requisitos → Nivel Piramidal → Técnica → Estado → Evidencia)}\label{3-trazabilidad-hacia-atruxe1s-caso-de-prueba--requisitos--nivel-piramidal--tuxe9cnica--estado--evidencia}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0321}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0321}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0321}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.2307}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.3215}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0455}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0606}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0710}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0321}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0404}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1018}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\#
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ID Caso
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Módulo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Requisitos Cubiertos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Historia de Usuario
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Nivel Piramidal
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modalidad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Técnica
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Defectos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Evidencia Verificable / Spec
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+01 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}001} & \texttt{auth} & \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}01} (UC-AUTH-01 / HU-004, HU-005) & HU-004, HU-005 --- Inicio de sesión con credenciales y redirección operativa por rol & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+02 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}002} & \texttt{auth} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}01} (UC-AUTH-01 / HU-004, HU-005)\\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} (ADR-0006 / HU-003, HU-034)\strut
+\end{minipage} & HU-004, HU-005, HU-034 --- Protección contra fuerza bruta (HTTP 429) y rechazo sin enumeración de cuentas & \texttt{L4} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}auth-{}\allowbreak{}login.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+03 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}003} & \texttt{auth} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}02} (UC-AUTH-02 / HU-006)\\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}03} (UC-AUTH-03 / HU-007)\strut
+\end{minipage} & HU-006, HU-007 --- Rotación de Refresh Token en cookie HttpOnly, detección de reuso e invalidación en logout & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}auth-{}\allowbreak{}refresh-{}\allowbreak{}logout.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+04 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}004} & \texttt{auth} & \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}04} (UC-AUTH-04 / HU-008, HU-009, HU-010) & HU-008, HU-009, HU-010 --- Selección de restaurante activo multi-tenant y contraste de marca WCAG AA & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+05 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}005} & \texttt{auth} & \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}05} (UC-AUTH-05 / HU-011) & HU-011 --- Restablecimiento administrativo de contraseña con token de un solo uso y revocación de sesiones & \texttt{L6} & Manual & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+06 & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006} & \texttt{auth} & \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}06} (ADR-0005 / HU-009) & HU-009 / ADR-0005 --- Matriz de autorización pura deny-by-default can(actor, action, context) para los 5 roles MVP & \texttt{L2} & Automatizada & Tabla de decisión & \textbf{FAILED} & \texttt{DEF-{}\allowbreak{}004} & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}src/\allowbreak{}modules/\allowbreak{}auth/\allowbreak{}domain/\allowbreak{}can.\allowbreak{}helper.\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+07 & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}001} & \texttt{catalog} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}01} (UC-CAT-01 / HU-012)\\
+\texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}02} (UC-CAT-02 / HU-013)\strut
+\end{minipage} & HU-012, HU-013 --- Gestión de estaciones de preparación y categorías del menú con ordenamiento visual & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+08 & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}002} & \texttt{catalog} & \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}03} (UC-CAT-03 / HU-014) & HU-014 --- Cálculo aritmético exacto de desglose de IVA incluido en Decimal(12,2) & \texttt{L2} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}src/\allowbreak{}modules/\allowbreak{}catalog/\allowbreak{}domain/\allowbreak{}tax-{}\allowbreak{}breakdown.\allowbreak{}helper.\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+09 & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}003} & \texttt{catalog} & \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}04} (UC-CAT-04 / HU-015) & HU-015 --- Validación de fronteras min\_selectable y max\_selectable en grupos de modificadores & \texttt{L4} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}catalog-{}\allowbreak{}modifier-{}\allowbreak{}groups.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+10 & \texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}004} & \texttt{catalog} & \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}03} (UC-CAT-03 / HU-014) & HU-014 --- Cambio rápido de disponibilidad de producto (86ing) en turno activo & \texttt{L6} & Manual & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+11 & \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}001} & \texttt{tables} & \texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}01} (UC-TAB-01 / HU-016) & HU-016 --- Gestión de áreas del salón, mesas, capacidad límite y unicidad de código por restaurante & \texttt{L4} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}tables-{}\allowbreak{}management.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+12 & \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}002} & \texttt{tables} & \texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}02} (UC-TAB-02 / HU-017) & HU-017, HU-033 --- Mapa operativo táctil de mesas en tablet 1024x768 y semántica visual FREE vs OCCUPIED & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+13 & \texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}003} & \texttt{tables} & \texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}02} (UC-TAB-02 / HU-017) & HU-017 --- Derivación dinámica del estado de ocupación de mesas a partir de órdenes activas & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}tables-{}\allowbreak{}overview.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+14 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001} & \texttt{orders} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01} (UC-ORD-01 / HU-018, HU-019)\\
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}02} (UC-ORD-02 / HU-020, HU-021)\strut
+\end{minipage} & HU-018, HU-020, HU-033 --- Guion M-01 de usabilidad táctil en salón (1024x768) y verificación de objetivos táctiles & \texttt{L6} & Manual & BVA & \textbf{PASSED} & \texttt{DEF-{}\allowbreak{}006} & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+15 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}002} & \texttt{orders} & \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01} (UC-ORD-01 / HU-018, HU-019) & HU-018, HU-019 --- Apertura de órdenes DINE\_IN y TAKEOUT con numeración secuencial diaria e invariante de mesa única & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}orders-{}\allowbreak{}open.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+16 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}003} & \texttt{orders} & \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}02} (UC-ORD-02 / HU-020, HU-021) & HU-020, HU-021 --- Despacho de tandas (OrderRound) con validación BVA de cantidades y concurrencia optimista (version) & \texttt{L4} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}orders-{}\allowbreak{}rounds.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+17 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}004} & \texttt{orders} & \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}03} (UC-ORD-03 / HU-022) & HU-022 --- Cancelación manual de ítem en preparación con autorización de Gerente y motivo de auditoría & \texttt{L6} & Manual & Tabla de decisión & \textbf{PASSED} & N/A & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+18 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}005} & \texttt{orders} & \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}03} (UC-ORD-03 / HU-022) & HU-022 --- Reglas de negocio en backend para cancelación de ítems según estado (PENDING, PREPARING, READY, SERVED) & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}orders-{}\allowbreak{}item-{}\allowbreak{}cancellation.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+19 & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} & \texttt{orders} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01} (UC-ORD-01 / HU-018, HU-019)\\
+\texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}06} (ADR-0005 / HU-009)\strut
+\end{minipage} & HU-009, HU-019 --- Verificación del permiso orders:create para el rol CAJERO en órdenes para llevar (TAKEOUT) & \texttt{L3} & Automatizada & Tabla de decisión & \textbf{FAILED} & \texttt{DEF-{}\allowbreak{}005} & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}web/\allowbreak{}app/\allowbreak{}features/\allowbreak{}auth/\allowbreak{}domain/\allowbreak{}can.\allowbreak{}test.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+20 & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}001} & \texttt{kitchen} & \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}01} (UC-KIT-01 / HU-023) & HU-023, HU-033 --- Visualización de cola KDS en tablet (1024x768) e indicadores semafóricos de urgencia & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+21 & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}002} & \texttt{kitchen} & \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}01} (UC-KIT-01 / HU-023) & HU-023 --- Aislamiento de cola KDS por estación asignada y bloqueo fail-closed sin estación & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}kitchen-{}\allowbreak{}queue.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+22 & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}003} & \texttt{kitchen} & \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}02} (UC-KIT-02 / HU-024) & HU-024 --- Máquina de estados de preparación en KDS e historial inmutable order\_item\_status\_history & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}kitchen-{}\allowbreak{}status.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+23 & \texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}004} & \texttt{kitchen} & \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}03} (ADR-0004 / HU-025, HU-033) & HU-025 / ADR-0004 --- Guion M-02 de reconexión reactiva SSE ante corte de red e invalidación de caché & \texttt{L6} & Manual & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+24 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}001} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}01} (UC-CSH-01 / HU-026) & HU-026 --- Restricción de sesión única abierta por caja registradora & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}cash-{}\allowbreak{}session.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+25 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}002} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}01} (UC-CSH-01 / HU-026) & HU-026 --- Apertura de turno de caja y cierre con arqueo ciego y conciliación de diferencias & \texttt{L6} & Manual & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+26 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003} & \texttt{cash} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} (UC-CSH-02 / HU-027)\\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} (ADR-0006 / HU-003, HU-034)\strut
+\end{minipage} & HU-027, HU-003 --- Cobro dividido (Efectivo + Tarjeta) bajo rol PostgreSQL app\_user sobre tabla append-only payment & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & \texttt{DEF-{}\allowbreak{}001} & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}cash-{}\allowbreak{}payments.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+27 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}004} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} (UC-CSH-02 / HU-027) & HU-027 --- Cálculo de propina voluntaria en fronteras de porcentaje y exclusión de base gravable de IVA & \texttt{L2} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}src/\allowbreak{}modules/\allowbreak{}cash/\allowbreak{}domain/\allowbreak{}payment-{}\allowbreak{}balance.\allowbreak{}helper.\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+28 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005} & \texttt{cash} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} (UC-CSH-02 / HU-027)\\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} (ADR-0006 / HU-003, HU-034)\strut
+\end{minipage} & HU-027, HU-034 --- Presentación de errores RFC 7807 (detail) en interfaz de caja ante cobro excesivo & \texttt{L6} & Manual & EP & \textbf{PASSED} & \texttt{DEF-{}\allowbreak{}003} & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+29 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}006} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} (UC-CSH-02 / HU-027) & HU-027 --- Protección de idempotencia en cobros mediante encabezado Idempotency-Key & \texttt{L4} & Automatizada & Tabla de decisión & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}cash-{}\allowbreak{}payments.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+30 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}007} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}03} (UC-CSH-03 / HU-028) & HU-028 --- Ejecución manual de reverso compensatorio de pago y ajuste de saldo con autorización de Gerente & \texttt{L6} & Manual & Tabla de decisión & \textbf{PASSED} & N/A & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+31 & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}008} & \texttt{cash} & \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}03} (UC-CSH-03 / HU-028) & HU-028 --- Validación en backend de reversos inmutables y restricción RBAC para Cajero & \texttt{L4} & Automatizada & Tabla de decisión & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}cash-{}\allowbreak{}reversals.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+32 & \texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}001} & \texttt{inventory} & \texttt{REQ-{}\allowbreak{}INV-{}\allowbreak{}01} (UC-INV-01 / HU-029) & HU-029 --- Catálogo de insumos de inventario y alertas por umbral de stock mínimo (BVA) & \texttt{L4} & Automatizada & BVA & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}inventory-{}\allowbreak{}items.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+33 & \texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}002} & \texttt{inventory} & \texttt{REQ-{}\allowbreak{}INV-{}\allowbreak{}02} (UC-INV-02 / HU-030) & HU-030 --- Kardex append-only de movimientos manuales de inventario y tolerancia de stock negativo auditado & \texttt{L4} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}inventory-{}\allowbreak{}movements.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+34 & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}001} & \texttt{reports} & \texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}01} (UC-REP-01 / HU-031) & HU-031 --- Dashboard ejecutivo de KPIs diarios de ventas y caché Redis & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}reports-{}\allowbreak{}dashboard.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+35 & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}002} & \texttt{reports} & \texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}02} (UC-REP-02 / HU-032) & HU-032 --- Reporte imprimible de recibo de orden y tirilla de cierre de caja en formato térmico 80mm & \texttt{L6} & Manual & EP & \textbf{PASSED} & N/A & Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} \\
+36 & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003} & \texttt{reports} & \texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}03} (UC-REP-03 / HU-032) & HU-032, HU-034 --- Exportación CSV con UTF-8 BOM, proyección correcta de columnas y sanitización contra CSV Formula Injection & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & \texttt{DEF-{}\allowbreak{}002} & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}reports-{}\allowbreak{}export.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+37 & \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}001} & \texttt{rls} & \texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}01} (ADR-0002 / HU-001, HU-002) & HU-001, HU-002 / ADR-0002 --- Aislamiento negativo multi-tenant estricto con FORCE ROW LEVEL SECURITY & \texttt{L4} & Automatizada & EP & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}rls-{}\allowbreak{}negative-{}\allowbreak{}hardening.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+38 & \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}002} & \texttt{rls} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}01} (ADR-0002 / HU-001, HU-002)\\
+\texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} (ADR-0006 / HU-003, HU-034)\strut
+\end{minipage} & HU-002, HU-003 / ADR-0006 --- Mínimo privilegio en arranque (rolbypassrls = false) e inmutabilidad SQL en tablas append-only & \texttt{L4} & Automatizada & Tabla de decisión & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}api/\allowbreak{}test/\allowbreak{}rls-{}\allowbreak{}least-{}\allowbreak{}privilege.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+39 & \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003} & \texttt{rls} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01} (UC-ORD-01 / HU-018, HU-019)\\
+\texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}02} (UC-KIT-02 / HU-024)\\
+\texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02} (UC-CSH-02 / HU-027)\\
+\texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}03} (ADR-0004 / HU-025, HU-033)\strut
+\end{minipage} & HU-018, HU-024, HU-025, HU-027, HU-033 --- Flujo E2E Golden Path completo en tablet (1024x768) desde login hasta tirilla 80mm & \texttt{L5} & Automatizada & Transición de estados & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Spec: \texttt{apps/\allowbreak{}web/\allowbreak{}e2e/\allowbreak{}specs/\allowbreak{}tablet-{}\allowbreak{}golden-{}\allowbreak{}path.\allowbreak{}e2e.\allowbreak{}spec.\allowbreak{}ts}\\
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\strut
+\end{minipage} \\
+40 & \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}004} & \texttt{rls} & \texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02} (ADR-0006 / HU-003, HU-034) & HU-034 / ADR-0006 --- Verificación de cabeceras Zero-Trust: CORS estricto, propagación de X-Request-Id y formato RFC 7807 & \texttt{L6} & Manual & Tabla de decisión & \textbf{PASSED} & N/A & \begin{minipage}[t]{\linewidth}\raggedright
+Evidencia: \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md}\\
+\texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt}\strut
+\end{minipage} \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\end{document}

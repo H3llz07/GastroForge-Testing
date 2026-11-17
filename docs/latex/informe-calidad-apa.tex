@@ -1,0 +1,328 @@
+\documentclass[stu,12pt,a4paper]{apa7}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{%
+  \IfFontExistsTF{Liberation Serif}{\setmainfont{Liberation Serif}}{%
+    \IfFontExistsTF{Tinos}{\setmainfont{Tinos}}{\setmainfont{TeX Gyre Termes}}}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=MatchLowercase]}{%
+  \IfFontExistsTF{Courier New}{\setmonofont{Courier New}[Scale=MatchLowercase]}{\setmonofont{Latin Modern Mono}}}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath,amssymb}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\usepackage{needspace}
+\usepackage{setspace}
+\newcounter{none}
+\usepackage{fvextra}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\urlstyle{same}
+\AtBeginDocument{\hypersetup{hidelinks}}
+\Urlmuskip=0mu plus 1mu
+
+\title{Evaluación Empírica de Calidad, Trazabilidad y Aislamiento Multi-Tenant del Sistema ERP GastroForge (Commit be9089e)}
+\shorttitle{GastroForge QA}
+\authorsnames{Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón}
+\authorsaffiliations{{Facultad de Ingeniería, Institución Universitaria Pascual Bravo}}
+\course{Ingeniería de Software / Aseguramiento de Calidad y Pruebas de Software}
+\duedate{16 de noviembre de 2026}
+\professor{\mbox{}}
+
+\begin{document}
+\maketitle
+
+\begin{center}\textbf{Evaluación Empírica de Calidad, Trazabilidad y Aislamiento Multi-Tenant del Sistema ERP GastroForge (Commit \texttt{be9089e})}\end{center}
+
+Los sistemas de planificación de recursos empresariales (ERP) orientados a la operación gastronómica multi-restaurante procesan transacciones financieras concurrentes, comandas de preparación en tiempo real y consultas multi-inquilino (\emph{multi-tenant}) bajo alta presión operativa. En este dominio, un fallo en las políticas de control de acceso o una condición de carrera durante el cobro en caja compromete tanto la contabilidad del establecimiento como la confidencialidad de los datos entre organizaciones independientes. Por consiguiente, la evaluación de calidad de este tipo de plataformas exige verificaciones empíricas reproducibles sobre una línea base de código inmutable, evitando cualquier alteración del sistema durante la medición.
+
+El presente estudio evalúa la calidad funcional, transaccional y de seguridad del sistema \textbf{GastroForge --- Sistema ERP Multi-Restaurante Tablet-First}, alojado en el repositorio \texttt{JhonatanM2005/\allowbreak{}GastroForge} y congelado en el commit \texttt{be9089e} (\texttt{feat(\allowbreak{}web)\allowbreak{}:\allowbreak{} add playwright ta\allowbreak{}blet e2e suite and\allowbreak{} manual testing ev\allowbreak{}idences (\allowbreak{}\#71)\allowbreak{}}). Para preservar la independencia metodológica entre la construcción del producto y su auditoría, toda la infraestructura de trazabilidad, catálogos normalizados (\texttt{data/\allowbreak{}*.\allowbreak{}json}), generación determinista de entregables y visualización de métricas se aisló en el repositorio de aseguramiento de calidad \texttt{H3llz07/\allowbreak{}GastroForge-{}\allowbreak{}Testing}. Esta frontera arquitectónica garantiza que el entorno de pruebas jamás modifica el código fuente del sistema bajo prueba (SUT) ni accede a bases de datos productivas.
+
+El marco metodológico adoptado integra cuatro referentes normativos internacionales (American Psychological Association {[}APA{]}, 2020). La estructura documental del plan de pruebas, la matriz de trazabilidad bidireccional y los informes de defectos se rigen por el estándar ISO/IEC/IEEE 29119-3 (International Organization for Standardization {[}ISO{]}, 2021). El diseño sistemático de casos de prueba aplica las técnicas de caja negra definidas en el programa \emph{Foundation Level} del International Software Testing Qualifications Board (ISTQB, 2023) y formalizadas por Myers et al. (2011). Asimismo, la verificación del aislamiento \emph{multi-tenant}, el control de acceso basado en roles (RBAC) y la estandarización de respuestas de error HTTP siguen los lineamientos del \emph{Application Security Verification Standard} (OWASP Foundation, 2021), la especificación de políticas de seguridad a nivel de fila de PostgreSQL 16 (PostgreSQL Global Development Group, 2024) y el contrato \texttt{application/\allowbreak{}problem+json} de la RFC 7807 (Nottingham \& Wilde, 2016). Finalmente, la ergonomía de los controles táctiles en el viewport objetivo de tablet (\texttt{1024x768} píxeles) se contrastó con el criterio de conformidad 2.5.5 (\emph{Target Size}) de las pautas de accesibilidad web WCAG 2.1 (World Wide Web Consortium {[}W3C{]}, 2018).
+
+\section{Método y Estrategia Piramidal de Evaluación}\label{muxe9todo-y-estrategia-piramidal-de-evaluaciuxf3n}
+
+\subsection{\texorpdfstring{Diseño de la Pirámide de Seis Niveles (\texttt{L1}--\texttt{L6})}{Diseño de la Pirámide de Seis Niveles (--)}}\label{diseuxf1o-de-la-piruxe1mide-de-seis-niveles-l1l6}
+
+La evaluación del commit \texttt{be9089e} se estructuró mediante una arquitectura piramidal de seis niveles complementarios que combinan verificación estática, pruebas automatizadas deterministas e inspección manual en interfaz táctil:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Nivel L1 --- Análisis estático y de contratos:} Verificación de tipos estrictos con TypeScript 5.7 (\texttt{tsc -{}\allowbreak{}-{}\allowbreak{}noEmit}), reglas de análisis estático con ESLint 9 y validación estructural de esquemas OpenAPI antes de la ejecución de las suites dinámicas.
+\item
+  \textbf{Nivel L2 --- Pruebas unitarias de dominio puro (3 casos directos en catálogo):} Ejecución en memoria mediante Jest y Vitest sin dependencias de entrada/salida, enfocada en invariantes de negocio: la función pura de autorización \texttt{can(\allowbreak{}actor,\allowbreak{} action,\allowbreak{} stationId)\allowbreak{}}, el cálculo aritmético \texttt{Decimal(\allowbreak{}12,\allowbreak{}2)\allowbreak{}} con desglose de IVA incluido y el cálculo de porcentajes de propina.
+\item
+  \textbf{Nivel L3 --- Pruebas de servicios de aplicación en memoria (1 caso directo en catálogo):} Evaluación de casos de uso orquestados sobre repositorios simulados (\emph{fakes}) y unidades de trabajo (\texttt{UnitOfWork}) en memoria, validando reglas de apertura de órdenes y control de versiones optimistas.
+\item
+  \textbf{Nivel L4 --- Pruebas de integración transaccional e infraestructura multi-tenant (20 casos directos en catálogo):} Ejecución con Jest, Supertest y contenedores Docker reales de PostgreSQL 16 y Redis 7. Todas las conexiones de prueba operan bajo el rol de base de datos no privilegiado \texttt{app\_\allowbreak{}user} (\texttt{rolbypassrls =\allowbreak{} false}) con políticas \texttt{FORCE ROW LEVEL SE\allowbreak{}CURITY} activas e inyección transaccional del identificador de inquilino mediante \texttt{set\_\allowbreak{}config(\allowbreak{}\textquotesingle{}app.\allowbreak{}restaurant\_\allowbreak{}id\textquotesingle{},\allowbreak{} tenantId,\allowbreak{} true)\allowbreak{}}.
+\item
+  \textbf{Nivel L5 --- Pruebas de sistema End-to-End en Tablet (1 caso directo en catálogo):} Automatización del flujo operativo completo (\emph{Golden Path}) mediante Playwright sobre motores Chromium y WebKit configurados en resolución \texttt{1024x768}, encadenando la toma de comanda en salón, la preparación en el \emph{Kitchen Display System} (KDS), el cobro dividido en caja y la verificación de no contaminación cruzada hacia un segundo restaurante.
+\item
+  \textbf{Nivel L6 --- Pruebas manuales exploratorias y de aceptación en Tablet (15 casos directos en catálogo):} Ejecución interactiva guiada sobre el navegador en viewport \texttt{1024x768} y cliente HTTP para evaluar la ergonomía táctil, la reconexión automática del canal \emph{Server-Sent Events} (SSE) respaldado por el patrón \emph{Transactional Outbox}, la visualización de errores RFC 7807, el arqueo ciego de caja y el formato de impresión de tirilla térmica de 80 mm.
+\end{enumerate}
+
+\subsection{Técnicas Formales de Diseño de Casos de Prueba}\label{tuxe9cnicas-formales-de-diseuxf1o-de-casos-de-prueba}
+
+Para maximizar la probabilidad de detección de defectos evitando la redundancia de pruebas (Myers et al., 2011; ISTQB, 2023), el catálogo de 40 casos (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}001} a \texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}004}) se diseñó aplicando cuatro técnicas formales:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Partición de equivalencia (\texttt{EP}, 13 casos):} División del dominio de entrada en clases válidas e inválidas para credenciales JWT, cabeceras de origen CORS, consultas cruzadas entre \emph{Tenant A} (Restaurante Central) y \emph{Tenant B} (Restaurante Norte), filtros de estación KDS y sanitización de caracteres peligrosos (\texttt{=\allowbreak{}}, \texttt{+}, \texttt{-{}\allowbreak{}}, \texttt{@}) contra inyección de fórmulas en exportaciones CSV.
+\item
+  \textbf{Análisis de valores límite (\texttt{BVA}, 9 casos):} Evaluación en las fronteras numéricas exactas del sistema: umbral de limitación de tasa en inicio de sesión (\texttt{intentos 1.\allowbreak{}.\allowbreak{}5 -{}\allowbreak{}\textgreater{} HTTP 401}, \texttt{intento 6 -{}\allowbreak{}\textgreater{} HTTP 429}), cardinalidad de grupos de modificadores (\texttt{min\_\allowbreak{}selectable =\allowbreak{} 1}, \texttt{max\_\allowbreak{}selectable =\allowbreak{} 2}), cantidades de ítems por tanda (\texttt{0,\allowbreak{} 1,\allowbreak{} 99,\allowbreak{} 100}), límites de propina (\texttt{-{}\allowbreak{}1\%,\allowbreak{} 0\%,\allowbreak{} 10\%,\allowbreak{} 100\%,\allowbreak{} 101\%}), umbral de alerta de inventario (\texttt{stock =\allowbreak{} 11,\allowbreak{} 10,\allowbreak{} 9} frente a \texttt{minStock =\allowbreak{} 10}) y dimensiones mínimas de objetivos táctiles (\texttt{44x44 px} frente a \texttt{48x48 px}).
+\item
+  \textbf{Tabla de decisión (8 casos):} Modelado combinatorio de reglas de negocio multicriterio: matriz de permisos RBAC \texttt{can(\allowbreak{}role,\allowbreak{} action,\allowbreak{} stationId)\allowbreak{}} para los cinco roles del MVP (\texttt{ADMIN}, \texttt{GERENTE}, \texttt{MESERO}, \texttt{COCINA}, \texttt{CAJERO}), reglas de cancelación supervisada con PIN gerencial según el estado de la orden, comportamiento del interceptor de idempotencia (\texttt{Idempotency-{}\allowbreak{}Key} nueva, repetida con idéntico \emph{payload} o repetida con \emph{payload} mutado) y verificación de privilegios SQL (\texttt{SELECT}, \texttt{INSERT}, \texttt{UPDATE}, \texttt{DELETE}) sobre las cinco tablas inmutables (\emph{append-only}).
+\item
+  \textbf{Transición de estados (10 casos):} Verificación de máquinas de estados finitos y sus transiciones inválidas: rotación y detección de reúso de \emph{refresh tokens}, conmutación rápida de disponibilidad de catálogo (\texttt{AVAILABLE \textless{}-{}\allowbreak{}\textgreater{} UNAVAILABLE}), estado de ocupación derivada de mesas (\texttt{FREE -{}\allowbreak{}\textgreater{} OCCUPIED -{}\allowbreak{}\textgreater{} FREE}), ciclo de preparación de ítems en cocina (\texttt{PENDING -{}\allowbreak{}\textgreater{} PREPARING -{}\allowbreak{}\textgreater{} READY -{}\allowbreak{}\textgreater{} SERVED /\allowbreak{} CANCELLED}), reconexión del flujo SSE y ciclo de vida de sesiones de caja (\texttt{OPEN -{}\allowbreak{}\textgreater{} CLOSED}).
+\end{itemize}
+
+La Tabla 1 presenta la distribución completa de los 40 casos de prueba diseñados según su módulo funcional, modalidad de ejecución, nivel en la pirámide de pruebas y técnica de diseño aplicada.
+
+\Needspace{12\baselineskip}\noindent\textbf{Tabla 1}\par\nopagebreak\noindent\textit{Distribución de los 40 Casos de Prueba por Módulo Funcional, Nivel Piramidal y Técnica de Diseño}\par\nopagebreak\vspace{0.3em}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.3229}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0676}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0676}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1274}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1987}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2158}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Módulo funcional
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Total CP
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Manual (\texttt{L6})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Automatizada (\texttt{L2}--\texttt{L5})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Desglose por nivel piramidal
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Desglose por técnica de diseño
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{auth} (Autenticación y RBAC) & 6 & 3 & 3 & \texttt{L2}: 1, \texttt{L4}: 2, \texttt{L6}: 3 & \texttt{EP}: 2, \texttt{BVA}: 1, \texttt{Tabla de decisión}: 1, \texttt{Transición de esta\allowbreak{}dos}: 2 \\
+\texttt{catalog} (Catálogo y modificadores) & 4 & 2 & 2 & \texttt{L2}: 1, \texttt{L4}: 1, \texttt{L6}: 2 & \texttt{EP}: 1, \texttt{BVA}: 2, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\texttt{tables} (Plano de mesas y zonas) & 3 & 1 & 2 & \texttt{L4}: 2, \texttt{L6}: 1 & \texttt{EP}: 1, \texttt{BVA}: 1, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\texttt{orders} (Órdenes y concurrencia) & 6 & 2 & 4 & \texttt{L3}: 1, \texttt{L4}: 3, \texttt{L6}: 2 & \texttt{EP}: 1, \texttt{BVA}: 2, \texttt{Tabla de decisión}: 2, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\texttt{kitchen} (KDS y eventos SSE) & 4 & 2 & 2 & \texttt{L4}: 2, \texttt{L6}: 2 & \texttt{EP}: 2, \texttt{Transición de esta\allowbreak{}dos}: 2 \\
+\texttt{cash} (Caja, pagos e idempotencia) & 8 & 3 & 5 & \texttt{L2}: 1, \texttt{L4}: 4, \texttt{L6}: 3 & \texttt{EP}: 2, \texttt{BVA}: 2, \texttt{Tabla de decisión}: 3, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\texttt{inventory} (Stock y ajustes manuales) & 2 & 0 & 2 & \texttt{L4}: 2 & \texttt{BVA}: 1, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\texttt{reports} (KPIs, tirilla 80 mm y CSV) & 3 & 1 & 2 & \texttt{L4}: 2, \texttt{L6}: 1 & \texttt{EP}: 3 \\
+\texttt{rls} (Seguridad multi-tenant y endurecimiento) & 4 & 1 & 3 & \texttt{L4}: 2, \texttt{L5}: 1, \texttt{L6}: 1 & \texttt{EP}: 1, \texttt{Tabla de decisión}: 2, \texttt{Transición de esta\allowbreak{}dos}: 1 \\
+\textbf{Total global} & \textbf{40} & \textbf{15} & \textbf{25} & \textbf{\texttt{L2}: 3, \texttt{L3}: 1, \texttt{L4}: 20, \texttt{L5}: 1, \texttt{L6}: 15} & \textbf{\texttt{EP}: 13, \texttt{BVA}: 9, \texttt{Tabla de decisión}: 8, \texttt{Transición de esta\allowbreak{}dos}: 10} \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begingroup\singlespacing\small\noindent\emph{Nota.} El nivel \texttt{L1} (compilación estática TypeScript, ESLint y validación de esquemas OpenAPI) actúa como compuerta transversal previa sobre el 100\% de los módulos del repositorio \texttt{JhonatanM2005/\allowbreak{}GastroForge} en el commit \texttt{be9089e}.\par\endgroup\medskip
+
+\section{Resultados Empíricos y Análisis de Métricas de Calidad}\label{resultados-empuxedricos-y-anuxe1lisis-de-muxe9tricas-de-calidad}
+
+El motor determinista \texttt{calculateQaMetrics\allowbreak{}(\allowbreak{})\allowbreak{}} procesó las 40 ejecuciones registradas en \texttt{data/\allowbreak{}test-{}\allowbreak{}runs.\allowbreak{}json} junto con el catálogo de requisitos (\texttt{data/\allowbreak{}requirements.\allowbreak{}json}) y defectos (\texttt{data/\allowbreak{}defects.\allowbreak{}json}). Para evitar distorsiones metodológicas en las tasas de éxito, el algoritmo excluye estrictamente los estados no ejecutados (\texttt{NOT\_\allowbreak{}RUN}, \texttt{BLOCKED}, \texttt{SKIPPED}) del denominador de la tasa de aprobación y separa las exclusiones explícitas de Fase 2 (\texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}01} y \texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}02}) del denominador de cobertura de requisitos del MVP. La Tabla 2 sintetiza los indicadores cuantitativos obtenidos al cierre del ciclo de evaluación.
+
+\Needspace{12\baselineskip}\noindent\textbf{Tabla 2}\par\nopagebreak\noindent\textit{Indicadores Empíricos de Calidad Calculados sobre el Commit Congelado \texttt{be9089e}}\par\nopagebreak\vspace{0.3em}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2339}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.4579}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0909}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1512}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0661}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Indicador de calidad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Fórmula matemática aplicada
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meta / Umbral
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Valor empírico obtenido
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Tasa de ejecución de casos & \((\text{Casos ejecutados} / \text{Total casos}) \times 100\) & \(\ge 95.00\%\) & \(100.00\%\) (\(40 / 40\)) & Cumplido \\
+Tasa de aprobación global & \((\text{Casos aprobados} / \text{Casos ejecutados}) \times 100\) & \(\ge 90.00\%\) & \(95.00\%\) (\(38 / 40\)) & Cumplido \\
+Cobertura de requisitos en alcance & \((\text{Requisitos cubiertos} / \text{Requisitos IN\_SCOPE}) \times 100\) & \(= 100.00\%\) & \(100.00\%\) (\(28 / 28\)) & Cumplido \\
+Densidad de defectos abiertos & \(\text{Defectos abiertos} / \text{Casos ejecutados}\) & \(< 0.1000\) & \(0.0750\) (\(3 / 40\)) & Cumplido \\
+Densidad histórica acumulada & \(\text{Defectos totales} / \text{Casos ejecutados}\) & Informativo & \(0.1500\) (\(6 / 40\)) & Auditado \\
+Defectos críticos o altos abiertos & \(\text{Abiertos } P1 + \text{Abiertos } P2\) & \(= 0\) & \(0\) (\(P1 = 0, P2 = 0\)) & Cumplido \\
+Tasa de reapertura de defectos & \((\text{Reabiertos} / \text{Resueltos o cerrados}) \times 100\) & \(< 5.00\%\) & \(0.00\%\) (\(0 / 3\)) & Cumplido \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begingroup\singlespacing\small\noindent\emph{Nota.} De los 30 requisitos documentados en \texttt{data/\allowbreak{}requirements.\allowbreak{}json}, 28 pertenecen al alcance del MVP (\texttt{IN\_\allowbreak{}SCOPE}, agrupando los 22 casos de uso \texttt{UC-{}\allowbreak{}*}, las 34 historias de usuario \texttt{HU-{}\allowbreak{}001.\allowbreak{}.\allowbreak{}034} y los registros \texttt{ADR-{}\allowbreak{}0001.\allowbreak{}.\allowbreak{}0006}) y 2 corresponden a exclusiones normativas de Fase 2 (\texttt{PHASE\_\allowbreak{}2}).\par\endgroup\medskip
+
+\subsection{Interpretación Técnica por Área Funcional}\label{interpretaciuxf3n-tuxe9cnica-por-uxe1rea-funcional}
+
+El análisis desglosado por los nueve módulos evaluados evidencia el comportamiento específico de cada componente arquitectónico:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Autenticación y control de acceso (\texttt{auth}, 5/6 aprobados, \(83.33\%\)):} Se verificó satisfactoriamente la emisión de credenciales JWT, la rotación de \emph{refresh tokens} con revocación inmediata de toda la familia de sesión ante intentos de reúso (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}003}), la expiración de contraseñas temporales de un solo uso (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}004}), la limitación de tasa en el sexto intento fallido con respuesta \texttt{HTTP 429 Too Many \allowbreak{}Requests} (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}002}) y el aislamiento de estación en el rol \texttt{COCINA} (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}005}). El único caso fallido (\texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006}) detectó en \texttt{can.\allowbreak{}helper.\allowbreak{}ts} la concesión de permisos de lectura y avance de cocina al rol \texttt{MESERO} (\texttt{DEF-{}\allowbreak{}004}).
+\item
+  \textbf{Catálogo (\texttt{catalog}, 4/4 aprobados, \(100.00\%\)):} Se comprobó la precisión del desglose tributario de IVA incluido mediante aritmética \texttt{Decimal(\allowbreak{}12,\allowbreak{}2)\allowbreak{}} sin errores de coma flotante (\texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}002}), el cumplimiento estricto de las cotas \texttt{min\_\allowbreak{}selectable} y \texttt{max\_\allowbreak{}selectable} en grupos de modificadores (\texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}003}) y la propagación instantánea del cambio de disponibilidad de productos hacia la vista de toma de comandas (\texttt{CP-{}\allowbreak{}CAT-{}\allowbreak{}004}).
+\item
+  \textbf{Plano de mesas (\texttt{tables}, 3/3 aprobados, \(100.00\%\)):} Se validó que la ocupación de cada mesa (\texttt{FREE} frente a \texttt{OCCUPIED}) no depende de una bandera estática propensa a desincronización, sino que se deriva transaccionalmente de la existencia de una orden activa vinculada (\texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}002}), impidiendo la eliminación de mesas con cuentas abiertas mediante rechazo \texttt{HTTP 409 Conflict} (\texttt{CP-{}\allowbreak{}TAB-{}\allowbreak{}003}).
+\item
+  \textbf{Órdenes y concurrencia (\texttt{orders}, 5/6 aprobados, \(83.33\%\)):} El motor transaccional superó las pruebas de adición de tandas con cantidades límite (\texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}002}), bloqueo optimista mediante columna \texttt{version} ante ediciones concurrentes de dos meseros (\texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}003}, retornando \texttt{HTTP 409 Conflict} al segundo escritor) y cancelación autorizada con PIN gerencial y registro de auditoría (\texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}004}). El caso \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001} aprobó las aserciones de flujo E2E dejando registrada una observación cosmética menor sobre el umbral táctil (\texttt{DEF-{}\allowbreak{}006}), mientras que el caso \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} falló al evidenciar una contradicción normativa entre el documento de requisitos y la matriz de código respecto a si el rol \texttt{CAJERO} puede crear órdenes (\texttt{DEF-{}\allowbreak{}005}).
+\item
+  \textbf{Cocina y eventos en tiempo real (\texttt{kitchen}, 4/4 aprobados, \(100.00\%\)):} Se confirmó la segmentación de comandas por estación (\texttt{PARRILLA}, \texttt{BAR}, \texttt{FRIOS}), la validez de las transiciones \texttt{PENDING -{}\allowbreak{}\textgreater{} PREPARING -{}\allowbreak{}\textgreater{} READY -{}\allowbreak{}\textgreater{} SERVED} y la resiliencia del canal SSE alimentado por la tabla \texttt{outbox\_\allowbreak{}event}, el cual recupera eventos pendientes tras desconexiones temporales de red sin pérdida ni duplicación de mensajes (\texttt{CP-{}\allowbreak{}KIT-{}\allowbreak{}004}).
+\item
+  \textbf{Caja, pagos e idempotencia (\texttt{cash}, 8/8 aprobados en regresión, \(100.00\%\)):} El índice único parcial \texttt{uq\_\allowbreak{}cash\_\allowbreak{}register\_\allowbreak{}open} garantizó que solo pueda existir una sesión abierta por caja (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}001}). Asimismo, se certificó la exactitud de pagos divididos (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003}, tras la corrección del defecto histórico \texttt{DEF-{}\allowbreak{}001}), la validación de bordes de propina (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}004}), la visualización de detalles de error RFC 7807 (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005}, tras resolver \texttt{DEF-{}\allowbreak{}003}), la protección contra cobros duplicados mediante \texttt{Idempotency-{}\allowbreak{}Key} y hash SHA-256 del cuerpo de la petición (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}006}), la reversión supervisada de pagos (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}007}) y el arqueo ciego de cierre de turno (\texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}008}), donde el cajero declara el efectivo contado sin conocer el saldo esperado hasta que el registro queda sellado de forma inmutable.
+\item
+  \textbf{Inventario (\texttt{inventory}, 2/2 aprobados, \(100.00\%\)):} Se comprobó la obligatoriedad del motivo en ajustes manuales de existencias con generación de trazas en \texttt{inventory\_\allowbreak{}movement} (\texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}001}) y la activación exacta de alertas de stock bajo cuando la cantidad disponible iguala o desciende del umbral \texttt{minStock} (\texttt{CP-{}\allowbreak{}INV-{}\allowbreak{}002}).
+\item
+  \textbf{Reportes (\texttt{reports}, 3/3 aprobados en regresión, \(100.00\%\)):} Se verificó el cálculo de indicadores clave (KPIs) con almacenamiento en caché Redis (\texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}001}), la maquetación de la tirilla térmica de 80 mm sin desbordamiento horizontal (\texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}002}) y la exportación de ventas en formato CSV con marca de orden de bytes UTF-8 (\texttt{\textbackslash{}uFEFF}) y neutralización de fórmulas maliciosas (\texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003}, validando el cierre de \texttt{DEF-{}\allowbreak{}002}).
+\item
+  \textbf{Seguridad multi-tenant y endurecimiento (\texttt{rls}, 4/4 aprobados, \(100.00\%\)):} Las pruebas de intrusión controlada demostraron que un token válido del \emph{Tenant A} recibe \texttt{HTTP 404 Not Found\allowbreak{}} (sin revelar la existencia del recurso) al intentar leer o mutar órdenes del \emph{Tenant B} (\texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}001}), que las claves foráneas compuestas \texttt{(\allowbreak{}restaurant\_\allowbreak{}id,\allowbreak{} id)\allowbreak{}} bloquean a nivel de motor SQL cualquier asociación inter-restaurante (\texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}002}) y que el rol \texttt{app\_\allowbreak{}user} carece de privilegios \texttt{UPDATE} y \texttt{DELETE} sobre las cinco tablas de auditoría financiera y operativa (\texttt{CP-{}\allowbreak{}RLS-{}\allowbreak{}003}).
+\end{itemize}
+
+\section{Análisis de Defectos, Causa Raíz y Riesgo Residual}\label{anuxe1lisis-de-defectos-causa-rauxedz-y-riesgo-residual}
+
+Durante el ciclo completo de aseguramiento de calidad sobre el commit \texttt{be9089e} se documentaron y auditaron seis defectos bajo una taxonomía dual que vincula el identificador académico (\texttt{DEF-{}\allowbreak{}001} a \texttt{DEF-{}\allowbreak{}006}) con su código operativo de seguimiento (\texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}001} a \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}006}, registrados en los GitHub Issues \texttt{\#9} a \texttt{\#14} de \texttt{H3llz07/\allowbreak{}GastroForge-{}\allowbreak{}Testing}). La Tabla 3 detalla el catálogo consolidado de hallazgos.
+
+\Needspace{12\baselineskip}\noindent\textbf{Tabla 3}\par\nopagebreak\noindent\textit{Catálogo Consolidado de Defectos Registrados y Trazados en el Commit \texttt{be9089e}}\par\nopagebreak\vspace{0.3em}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0718}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1482}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0580}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0508}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0985}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0648}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.5079}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID académico
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Código externo (GitHub Issue)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Caso de prueba
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Módulo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Severidad (Código)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado en \texttt{be9089e}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Síntesis técnica del hallazgo
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{DEF-{}\allowbreak{}001} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}001} (Issue \texttt{\#9}) & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003} & \texttt{cash} & Alta (\texttt{P2}) & Cerrado & Fallo de bloqueo pesimista \texttt{SELECT .\allowbreak{}.\allowbreak{}.\allowbreak{} FOR UPDATE} sobre la tabla \emph{append-only} \texttt{payment} bajo el rol \texttt{app\_\allowbreak{}user} (error SQL \texttt{42501}). \\
+\texttt{DEF-{}\allowbreak{}002} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}002} (Issue \texttt{\#10}) & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003} & \texttt{reports} & Media (\texttt{P3}) & Cerrado & Desajuste de proyección de campos \texttt{firstName}/\texttt{lastName} y \texttt{cashierId} en \texttt{ReportsExportServi\allowbreak{}ce} al generar el flujo CSV. \\
+\texttt{DEF-{}\allowbreak{}003} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}003} (Issue \texttt{\#11}) & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005} & \texttt{cash} & Media (\texttt{P3}) & Cerrado & Lectura de la propiedad inexistente \texttt{err.\allowbreak{}problem} en lugar de \texttt{err.\allowbreak{}detail} (RFC 7807) en el componente \texttt{AlertBanner}. \\
+\texttt{DEF-{}\allowbreak{}004} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}004} (Issue \texttt{\#12}) & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006} & \texttt{auth} & Media (\texttt{P3}) & Asignado & Inclusión de \texttt{kitchen:\allowbreak{}read} y \texttt{kitchen:\allowbreak{}advance\_\allowbreak{}status} en \texttt{MESERO\_\allowbreak{}ACTIONS} (\texttt{can.\allowbreak{}helper.\allowbreak{}ts}) sin filtro de estación. \\
+\texttt{DEF-{}\allowbreak{}005} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}005} (Issue \texttt{\#13}) & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} & \texttt{orders} & Media (\texttt{P3}) & Asignado & Discrepancia normativa entre \texttt{PRD.\allowbreak{}md} (§2.1) y \texttt{can.\allowbreak{}helper.\allowbreak{}ts} sobre el permiso \texttt{orders:\allowbreak{}create} para el rol \texttt{CAJERO}. \\
+\texttt{DEF-{}\allowbreak{}006} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}006} (Issue \texttt{\#14}) & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001} & \texttt{orders} & Baja (\texttt{P4}) & Asignado & Inconsistencia documental en el umbral mínimo de objetivos táctiles (\texttt{44x44 px} implementado frente a \texttt{48x48 px} citado en el plan del SUT). \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begingroup\singlespacing\small\noindent\emph{Nota.} Los defectos \texttt{DEF-{}\allowbreak{}001}, \texttt{DEF-{}\allowbreak{}002} y \texttt{DEF-{}\allowbreak{}003} fueron detectados durante la validación previa del MVP, corregidos en el repositorio del SUT y verificados mediante pruebas de regresión sobre el commit congelado \texttt{be9089e} con tasa de reapertura del \(0.00\%\) (\(0/3\)).\par\endgroup\medskip
+
+\subsection{\texorpdfstring{Defectos Resueltos y Verificados en Regresión (\texttt{DEF-{}\allowbreak{}001} a \texttt{DEF-{}\allowbreak{}003})}{Defectos Resueltos y Verificados en Regresión ( a )}}\label{defectos-resueltos-y-verificados-en-regresiuxf3n-def-001-a-def-003}
+
+El hallazgo de mayor criticidad histórica fue \texttt{DEF-{}\allowbreak{}001} (\texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}001}, severidad Alta \texttt{P2}). En cumplimiento del registro arquitectónico \texttt{ADR-{}\allowbreak{}0006}, las tablas financieras e históricas (\texttt{payment}, \texttt{order\_\allowbreak{}status\_\allowbreak{}history}, \texttt{cash\_\allowbreak{}movement}, \texttt{inventory\_\allowbreak{}movement} y \texttt{audit\_\allowbreak{}log}) tienen revocados los privilegios \texttt{UPDATE} y \texttt{DELETE} para el rol \texttt{app\_\allowbreak{}user} con el fin de garantizar su inmutabilidad contable (PostgreSQL Global Development Group, 2024). Sin embargo, durante el procesamiento de cobros en caja, la consulta adquiría un bloqueo pesimista \texttt{SELECT .\allowbreak{}.\allowbreak{}.\allowbreak{} FOR UPDATE} no solo sobre el agregado raíz mutable \texttt{restaurant\_\allowbreak{}order}, sino también sobre la tabla \texttt{payment}. Dado que el motor PostgreSQL exige poseer el privilegio \texttt{UPDATE} para conceder un bloqueo de fila \texttt{FOR UPDATE}, la transacción abortaba con el código SQL \texttt{42501} (\emph{permission denied for table payment}). La causa raíz se resolvió restringiendo la cláusula \texttt{FOR UPDATE} exclusivamente a la fila de \texttt{restaurant\_\allowbreak{}order}, serializando así los cobros concurrentes sin violar la política de mínimo privilegio sobre \texttt{payment}. La suite de integración \texttt{cash-{}\allowbreak{}payments.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts} confirmó la eficacia de la corrección en el commit \texttt{be9089e}.
+
+Por su parte, \texttt{DEF-{}\allowbreak{}002} (\texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}002}, severidad Media \texttt{P3}) se originó en un desajuste de esquema dentro de \texttt{ReportsExportServi\allowbreak{}ce}, donde la consulta de exportación CSV intentaba proyectar un atributo nominal unificado en lugar de concatenar \texttt{User.\allowbreak{}firstName} y \texttt{User.\allowbreak{}lastName} a través de la relación \texttt{Payment.\allowbreak{}cashierId}. Tras corregir el mapeo en el servicio de aplicación, la prueba de integración \texttt{reports-{}\allowbreak{}export.\allowbreak{}int-{}\allowbreak{}spec.\allowbreak{}ts} verificó la emisión correcta del flujo CSV con cabecera BOM UTF-8. Finalmente, \texttt{DEF-{}\allowbreak{}003} (\texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}003}, severidad Media \texttt{P3}) radicaba en el cliente web: ante errores de negocio HTTP \texttt{400}, \texttt{409} o \texttt{422} formateados bajo el estándar RFC 7807 (Nottingham \& Wilde, 2016), los componentes de caja y reportes invocaban \texttt{err.\allowbreak{}problem} sobre la instancia de \texttt{ApiProblemError}, obteniendo \texttt{undefined} en lugar del mensaje descriptivo alojado en \texttt{err.\allowbreak{}detail}. La estandarización de la lectura de \texttt{err.\allowbreak{}detail} restableció la retroalimentación visual en el componente \texttt{AlertBanner}.
+
+\subsection{\texorpdfstring{Defectos Abiertos en el Commit \texttt{be9089e} (\texttt{DEF-{}\allowbreak{}004} a \texttt{DEF-{}\allowbreak{}006})}{Defectos Abiertos en el Commit  ( a )}}\label{defectos-abiertos-en-el-commit-be9089e-def-004-a-def-006}
+
+La aplicación de tablas de decisión sobre la función de dominio \texttt{can(\allowbreak{})\allowbreak{}} (\texttt{apps/\allowbreak{}api/\allowbreak{}src/\allowbreak{}modules/\allowbreak{}auth/\allowbreak{}domain/\allowbreak{}can.\allowbreak{}helper.\allowbreak{}ts}) permitió descubrir dos discrepancias normativas de severidad Media (\texttt{P3}) que permanecen abiertas en el commit congelado \texttt{be9089e}:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Exceso de permisos de cocina en el rol \texttt{MESERO} (\texttt{DEF-{}\allowbreak{}004} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}004}, Issue \texttt{\#12}):} En las líneas 68--77 de \texttt{can.\allowbreak{}helper.\allowbreak{}ts}, el conjunto constante \texttt{MESERO\_\allowbreak{}ACTIONS} incluye las acciones \texttt{\textquotesingle{}kitchen:\allowbreak{}read\textquotesingle{}} y \texttt{\textquotesingle{}kitchen:\allowbreak{}advance\_\allowbreak{}status\textquotesingle{}} sin aplicar restricción de estación (\texttt{stationId}). No obstante, tanto la matriz de capacidades del documento de requisitos (\texttt{PRD.\allowbreak{}md}, §2.1) como la tabla de decisión del plan de pruebas del SUT (\texttt{TESTING-{}\allowbreak{}PLAN.\allowbreak{}md}, §2.2) establecen explícitamente que el mesero no debe visualizar la cola del KDS ni avanzar estados internos de preparación (\texttt{PREPARING} o \texttt{READY}), sino únicamente marcar como entregados (\texttt{SERVED}) los ítems ya terminados por cocina. La causa raíz obedece a que durante el desarrollo del MVP se reutilizó la acción \texttt{\textquotesingle{}kitchen:\allowbreak{}advance\_\allowbreak{}status\textquotesingle{}} para habilitar el botón de entrega en salón, en lugar de segregar una acción de dominio independiente (\texttt{\textquotesingle{}orders:\allowbreak{}mark\_\allowbreak{}served\textquotesingle{}}).
+\item
+  \textbf{Contradicción documental-implementación sobre \texttt{orders:\allowbreak{}create} para \texttt{CAJERO} (\texttt{DEF-{}\allowbreak{}005} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}005}, Issue \texttt{\#13}):} El documento \texttt{PRD.\allowbreak{}md} (§2.1, línea 86) declara que el rol \texttt{Cajero} está facultado para abrir órdenes de mesa o para llevar (\emph{takeout}). En contraposición, tanto \texttt{TESTING-{}\allowbreak{}PLAN.\allowbreak{}md} (§2.2) como la implementación en \texttt{CAJERO\_\allowbreak{}ACTIONS} (\texttt{can.\allowbreak{}helper.\allowbreak{}ts}, líneas 79--86) y sus pruebas unitarias (\texttt{can.\allowbreak{}helper.\allowbreak{}spec.\allowbreak{}ts}, línea 47) deniegan \texttt{\textquotesingle{}orders:\allowbreak{}create\textquotesingle{}} al rol \texttt{CAJERO}, restringiéndolo a funciones de facturación, cobro y cierre de turno.
+\item
+  \textbf{Diferencia en el umbral documental de objetivos táctiles (\texttt{DEF-{}\allowbreak{}006} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}006}, severidad Baja \texttt{P4}, Issue \texttt{\#14}):} Mientras que \texttt{TESTING-{}\allowbreak{}PLAN.\allowbreak{}md} (§1 y §5.1) menciona un tamaño mínimo de \texttt{48x48 px} para controles interactivos en tablet, el requisito original en \texttt{PRD.\allowbreak{}md} (§1.2), las clases utilitarias de la interfaz (\texttt{min-{}\allowbreak{}h-{}\allowbreak{}[\allowbreak{}44px]\allowbreak{}}) y la suite automatizada \texttt{tablet-{}\allowbreak{}golden-{}\allowbreak{}path.\allowbreak{}e2e.\allowbreak{}spec.\allowbreak{}ts} implementan y verifican el umbral de \texttt{44x44 px} definido por el criterio 2.5.5 de WCAG 2.1 (W3C, 2018).
+\end{enumerate}
+
+\subsection{Evaluación Formal del Riesgo Residual y Dictamen de Calidad}\label{evaluaciuxf3n-formal-del-riesgo-residual-y-dictamen-de-calidad}
+
+Desde la perspectiva de ingeniería de calidad y seguridad de aplicaciones (OWASP Foundation, 2021), los tres hallazgos abiertos (\texttt{DEF-{}\allowbreak{}004}, \texttt{DEF-{}\allowbreak{}005} y \texttt{DEF-{}\allowbreak{}006}) presentan un \textbf{riesgo residual acotado y controlado} que no compromete la viabilidad operativa ni la seguridad estructural del sistema:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Integridad del aislamiento multi-tenant intacta:} Ninguno de los defectos abiertos afecta las políticas \texttt{FORCE ROW LEVEL SE\allowbreak{}CURITY} de PostgreSQL ni la propagación de \texttt{app.\allowbreak{}restaurant\_\allowbreak{}id}. En el caso de \texttt{DEF-{}\allowbreak{}004}, incluso si un usuario con rol \texttt{MESERO} invoca el endpoint de avance de estado de cocina, su alcance permanece confinado estrictamente a las órdenes de su propio restaurante (\texttt{restaurant\_\allowbreak{}id} firmado en el JWT y validado por RLS) y toda transición queda registrada con su \texttt{userId} en la tabla inmutable \texttt{order\_\allowbreak{}status\_\allowbreak{}history}.
+\item
+  \textbf{Integridad financiera y contable preservada:} En \texttt{DEF-{}\allowbreak{}005}, la divergencia entre \texttt{PRD.\allowbreak{}md} y \texttt{can.\allowbreak{}helper.\allowbreak{}ts} opera hacia el lado seguro del principio de mínimo privilegio (\emph{fail-safe / deny-by-default}): el código restringe una capacidad operativa al cajero en lugar de exponer funciones administrativas o de anulación no autorizadas. En restaurantes donde el cajero de mostrador requiera abrir pedidos para llevar sin cambiar de usuario, existe la alternativa operativa inmediata de emplear un perfil con rol \texttt{MESERO} o \texttt{GERENTE} mientras se unifica el criterio funcional.
+\item
+  \textbf{Conformidad ergonómica estándar:} Respecto a \texttt{DEF-{}\allowbreak{}006}, el 100\% de los botones evaluados en el viewport \texttt{1024x768} cumple el estándar internacional WCAG 2.1 Nivel AAA de \texttt{44x44} píxeles CSS (W3C, 2018), por lo que la discrepancia frente a los \texttt{48x48 px} citados en un documento secundario carece de impacto funcional.
+\end{itemize}
+
+En consecuencia, al haberse verificado empíricamente una tasa de ejecución del \(100.00\%\) (\(40/40\)), una tasa de aprobación del \(95.00\%\) (\(38/40\), superando el umbral mínimo del \(90.00\%\)), una cobertura del \(100.00\%\) de los requisitos en alcance (\(28/28\)) y la ausencia total de defectos abiertos de severidad Crítica o Alta (\(\text{Abiertos } P1 = 0, \text{Abiertos } P2 = 0\)), se emite el dictamen técnico de \textbf{Apto con Observaciones Menores Controladas} para la versión congelada \texttt{be9089e} de GastroForge.
+
+\section{Limitaciones del Estudio y Trabajo Futuro (Fase 2)}\label{limitaciones-del-estudio-y-trabajo-futuro-fase-2}
+
+De conformidad con las buenas prácticas de integridad científica y reporte empírico en ingeniería de software, se declaran tres limitaciones metodológicas que acotan la generalización de los resultados obtenidos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Entorno de ejecución contenedorizado local frente a redes distribuidas:} Las pruebas de integración transaccional (\texttt{L4}) y de sistema End-to-End (\texttt{L5}) se ejecutaron sobre contenedores Docker locales de PostgreSQL 16 y Redis 7 en la misma máquina anfitriona. Aunque este diseño elimina la variabilidad externa y garantiza la reproducibilidad determinista de las pruebas de concurrencia e idempotencia, no modela la latencia de red de área amplia (WAN), la pérdida intermitente de paquetes en conexiones Wi-Fi saturadas de salones comerciales ni el comportamiento del \emph{pool} de conexiones sin servidor (\emph{serverless}) bajo picos masivos de tráfico.
+\item
+  \textbf{Emulación de viewport táctil frente a hardware físico heterogéneo:} La validación de los niveles \texttt{L5} y \texttt{L6} se realizó mediante emulación de navegador en resolución estándar de tablet (\texttt{1024x768} píxeles) sobre motores Chromium y WebKit. No se evaluaron empíricamente dispositivos físicos con pantallas capacitivas sometidas a condiciones ambientales adversas de cocina (humedad, grasa o uso de guantes térmicos) ni impresoras térmicas físicas ESC/POS conectadas por puerto USB o Bluetooth.
+\item
+  \textbf{Exclusiones normativas diferidas a la Fase 2:} Siguiendo las decisiones arquitectónicas \texttt{ADR-{}\allowbreak{}0005} y \texttt{ADR-{}\allowbreak{}0006}, el presente estudio excluyó deliberadamente dos épicas planificadas para la Fase 2 del producto: el módulo de reservas anticipadas de mesas con bloqueo temporal de franjas horarias (\texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}01} / \texttt{UC-{}\allowbreak{}PH2-{}\allowbreak{}01}) y el sistema de permisos granulares editables en base de datos por usuario junto con la autenticación mediante cabeceras \texttt{X-{}\allowbreak{}API-{}\allowbreak{}Key} para integraciones externas (\texttt{REQ-{}\allowbreak{}PH2-{}\allowbreak{}02} / \texttt{UC-{}\allowbreak{}PH2-{}\allowbreak{}02}).
+\end{enumerate}
+
+Como trabajo futuro para el ciclo de mantenimiento posterior a la sustentación e inicio de la Fase 2, se recomienda: (a) corregir \texttt{DEF-{}\allowbreak{}004} introduciendo la acción específica \texttt{\textquotesingle{}orders:\allowbreak{}mark\_\allowbreak{}served\textquotesingle{}} en \texttt{can.\allowbreak{}helper.\allowbreak{}ts} para desacoplar la entrega en mesa del avance de preparación en el KDS; (b) formalizar con el dueño de producto la resolución de \texttt{DEF-{}\allowbreak{}005} alineando \texttt{PRD.\allowbreak{}md} y \texttt{can.\allowbreak{}helper.\allowbreak{}ts}; (c) unificar documentalmente el umbral táctil de \texttt{DEF-{}\allowbreak{}006}; y (d) incorporar pruebas de carga distribuida (mediante herramientas como k6) que evalúen el rendimiento del despachador \emph{Transactional Outbox} con múltiples instancias concurrentes de la API.
+
+\section{Referencias}\label{referencias}
+
+\noindent\hangindent=0.5in\hangafter=1 American Psychological Association. (2020). \emph{Publication manual of the American Psychological Association} (7th ed.). \url{https://doi.org/10.1037/0000165-000}
+
+\noindent\hangindent=0.5in\hangafter=1 International Organization for Standardization. (2021). \emph{Software and systems engineering --- Software testing --- Part 3: Test documentation} (ISO/IEC/IEEE Standard No. 29119-3:2021). \url{https://www.iso.org/standard/79429.html}
+
+\noindent\hangindent=0.5in\hangafter=1 International Software Testing Qualifications Board. (2023). \emph{Certified Tester Foundation Level (CTFL) syllabus} (Version 4.0). \url{https://www.istqb.org/certifications/certified-tester-foundation-level}
+
+\noindent\hangindent=0.5in\hangafter=1 Myers, G. J., Sandler, C., \& Badgett, T. (2011). \emph{The art of software testing} (3rd ed.). John Wiley \& Sons.
+
+\noindent\hangindent=0.5in\hangafter=1 Nottingham, M., \& Wilde, E. (2016). \emph{Problem details for HTTP APIs} (RFC 7807). Internet Engineering Task Force. \url{https://www.rfc-editor.org/rfc/rfc7807}
+
+\noindent\hangindent=0.5in\hangafter=1 OWASP Foundation. (2021). \emph{OWASP Application Security Verification Standard (ASVS)} (Version 4.0.3). \url{https://owasp.org/www-project-application-security-verification-standard/}
+
+\noindent\hangindent=0.5in\hangafter=1 PostgreSQL Global Development Group. (2024). \emph{PostgreSQL 16 documentation: Section 5.8. Row security policies}. \url{https://www.postgresql.org/docs/16/ddl-rowsecurity.html}
+
+\noindent\hangindent=0.5in\hangafter=1 World Wide Web Consortium. (2018). \emph{Web Content Accessibility Guidelines (WCAG) 2.1} (W3C Recommendation). \url{https://www.w3.org/TR/WCAG21/}
+
+\end{document}

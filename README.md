@@ -63,6 +63,8 @@ El ciclo de ingeniería de calidad se encuentra íntegramente trazado en los Iss
 | [Issue #7](https://github.com/H3llz07/GastroForge-Testing/issues/7) | `[HU-QA-007]` | Fase 6 | Dashboard Web Interactivo de Métricas QA, grabador de ejecuciones manuales y vista de impresión |
 | [Issue #8](https://github.com/H3llz07/GastroForge-Testing/issues/8) | `[HU-QA-008]` | Fase 7 | Redacción del Informe de Análisis de Calidad en norma APA 7 y paquete de sustentación |
 
+| [Issue #15](https://github.com/H3llz07/GastroForge-Testing/issues/15) | `[HU-QA-009]` | Fase 8 | Conversión de entregables Markdown a PDF vía LaTeX (Pandoc + XeLaTeX, `npm run build:pdf`) |
+
 ### 4.2 Catálogo de Defectos (`#9`–`#14`)
 
 | Issue | ID Académico | Código Externo | Caso Asociado | Severidad | Estado en `be9089e` | Resumen Técnico |
@@ -133,6 +135,14 @@ Compila `docs/plan-de-pruebas-gastroforge.md`, `docs/matriz-trazabilidad.md` y `
 
 ```bash
 npm run generate:docs
+```
+
+### 6.3.1 Generar los PDF vía LaTeX (`docs/pdf/*.pdf`)
+
+Requiere Pandoc y una distribución TeX con XeLaTeX (MiKTeX o TeX Live). Flujo: `data/*.json` -> `docs/*.md` -> `docs/latex/*.tex` -> `docs/pdf/*.pdf`. Plantillas en `docs/latex/` (`technical.tex` apaisada para plan, matriz y bugs; `apa7-report.tex` para el informe) y filtro `filters.lua`:
+
+```bash
+npm run build:pdf
 ```
 
 ### 6.4 Ejecutar la suite de pruebas unitarias y de verificación documental (Vitest)

@@ -1,0 +1,41 @@
+\documentclass[stu,12pt,a4paper]{apa7}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{%
+  \IfFontExistsTF{Liberation Serif}{\setmainfont{Liberation Serif}}{%
+    \IfFontExistsTF{Tinos}{\setmainfont{Tinos}}{\setmainfont{TeX Gyre Termes}}}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=MatchLowercase]}{%
+  \IfFontExistsTF{Courier New}{\setmonofont{Courier New}[Scale=MatchLowercase]}{\setmonofont{Latin Modern Mono}}}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath,amssymb}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\usepackage{needspace}
+\usepackage{setspace}
+\newcounter{none}
+\usepackage{fvextra}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\urlstyle{same}
+\AtBeginDocument{\hypersetup{hidelinks}}
+\Urlmuskip=0mu plus 1mu
+
+\title{$title$}
+\shorttitle{GastroForge QA}
+\authorsnames{$authors$}
+\authorsaffiliations{{$affiliation$}}
+\course{$course$}
+\duedate{$date$}
+\professor{\mbox{}}
+
+\begin{document}
+\maketitle
+
+$body$
+
+\end{document}

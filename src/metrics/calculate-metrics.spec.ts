@@ -676,3 +676,20 @@ describe('calculateQaMetrics', () => {
     expect(readmeContent).toContain('be9089e');
   });
 });
+
+describe('PDF deliverables (HU-QA-009)', () => {
+  const pdfNames = [
+    'plan-de-pruebas-gastroforge',
+    'matriz-trazabilidad',
+    'reporte-bugs',
+    'informe-calidad-apa',
+  ];
+
+  it.each(pdfNames)('docs/pdf/%s.pdf exists, is larger than 10 KB and starts with %PDF-', (name) => {
+    const pdfPath = path.resolve(process.cwd(), 'docs', 'pdf', `${name}.pdf`);
+    expect(fs.existsSync(pdfPath)).toBe(true);
+    const buffer = fs.readFileSync(pdfPath);
+    expect(buffer.byteLength).toBeGreaterThan(10 * 1024);
+    expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+  });
+});

@@ -1,0 +1,519 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[landscape,margin=1.8cm,headheight=14pt]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Arial}{\setmainfont{Arial}}{\setmainfont{Latin Modern Roman}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=MatchLowercase]}{%
+  \IfFontExistsTF{Courier New}{\setmonofont{Courier New}[Scale=MatchLowercase]}{\setmonofont{Latin Modern Mono}}}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}
+\definecolor{gfaccent}{HTML}{1F3A5F}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\usepackage{needspace}
+\usepackage{setspace}
+\newcounter{none}
+\usepackage{fvextra}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=3pt}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\emergencystretch}{3em}
+\rowcolors{2}{gray!10}{white}
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{2}
+\titleformat{\section}{\Large\bfseries\color{gfaccent}}{}{0pt}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{gfaccent}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{GastroForge QA --- commit be9089e}
+\fancyhead[R]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\usepackage[hidelinks,unicode,pdfusetitle=false]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=gfaccent,urlcolor=gfaccent,pdftitle={REPORTE CONSOLIDADO DE DEFECTOS Y HALLAZGOS QA},pdfauthor={Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón}}
+\urlstyle{same}
+\Urlmuskip=0mu plus 1mu
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{1.2cm}
+{\large\bfseries Institución Universitaria Pascual Bravo\par}
+\vspace{1.2cm}
+{\Huge\bfseries\color{gfaccent} REPORTE CONSOLIDADO DE DEFECTOS Y HALLAZGOS QA\par}
+\vspace{0.6cm}
+{\Large GastroForge --- Sistema ERP Multi-Restaurante Tablet-First\par}
+\vspace{1.0cm}
+\rule{0.6\linewidth}{0.6pt}\par
+\vspace{0.8cm}
+{\large Commit SUT congelado: \texttt{be9089e}\par}
+{\normalsize feat(web): add playwright tablet e2e suite and manual testing evidences (\#71)\par}
+\vspace{0.8cm}
+{\large Jhonatan A. Méndez R. y Julián Santiago Pico Pinzón\par}
+\vspace{0.6cm}
+{\normalsize Versión 1.0 \quad|\quad Aprobado\par}
+{\normalsize 16 de noviembre de 2026\par}
+\end{titlepage}
+\pagestyle{fancy}
+{\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Contenido}
+\tableofcontents}
+\clearpage
+
+\textbf{Proyecto:} GastroForge --- Sistema ERP Multi-Restaurante Tablet-First\\
+\textbf{Commit SUT Evaluado:} \texttt{be9089e} (feat(web): add playwright tablet e2e suite and manual testing evidences (\#71))\\
+\textbf{Repositorio QA:} \href{https://github.com/H3llz07/GastroForge-Testing}{\texttt{H3llz07/\allowbreak{}GastroForge-{}\allowbreak{}Testing}}\\
+\textbf{Fecha de Corte:} 16/11/2026
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{1. Resumen Ejecutivo de Indicadores de Defectos}\label{1-resumen-ejecutivo-de-indicadores-de-defectos}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4503}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1264}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3074}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1159}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Métrica de Defectos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Valor Actual
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meta / Umbral
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Total de Defectos Registrados (Históricos + Activos)} & \textbf{6} (\texttt{DEF-{}\allowbreak{}001} a \texttt{DEF-{}\allowbreak{}006}) & Trazabilidad 100\% en GitHub Issues & Auditado \\
+\textbf{Defectos Resueltos y Cerrados en \texttt{be9089e}} & \textbf{3} (\texttt{DEF-{}\allowbreak{}001}, \texttt{DEF-{}\allowbreak{}002}, \texttt{DEF-{}\allowbreak{}003}) & 100\% de regresiones MVP cerradas & Cumplido \\
+\textbf{Defectos Abiertos (Asignados en \texttt{be9089e})} & \textbf{3} (\texttt{DEF-{}\allowbreak{}004}, \texttt{DEF-{}\allowbreak{}005}, \texttt{DEF-{}\allowbreak{}006}) & Documentados con riesgo residual & Controlado \\
+\textbf{Defectos Críticos (P1) y Altos (P2) Abiertos} & \textbf{0 (P1=0, P2=0)} & = 0 para liberación & \textbf{Cumplido} \\
+\textbf{Densidad de Defectos Abiertos} & \textbf{0.075 (3/40)} & \textless{} 0.10 defectos abiertos / caso & \textbf{Cumplido} \\
+\textbf{Densidad Histórica Acumulada} & \textbf{0.15 (6/40)} & Métrica informativa de campaña & Registrado \\
+\textbf{Tasa de Reapertura de Defectos} & \textbf{0\% (0/3)} & \textless{} 5\% & \textbf{Cumplido} \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\section{\texorpdfstring{2. Distribución por Severidad (\texttt{P1} a \texttt{P4}) y Estado}{2. Distribución por Severidad ( a ) y Estado}}\label{2-distribuciuxf3n-por-severidad-p1-a-p4-y-estado}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0871}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1231}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0871}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1095}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1095}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.4838}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Código
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Severidad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Total
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Abiertos (\texttt{Asignado})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Cerrados (\texttt{Cerrado})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Defectos
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{P1} & Crítica & 0 & 0 & 0 & Ninguno \\
+\textbf{P2} & Alta & 1 & 0 & 1 & \texttt{DEF-{}\allowbreak{}001} (GF-BUG-001) \\
+\textbf{P3} & Media & 4 & 2 & 2 & \texttt{DEF-{}\allowbreak{}002} (GF-BUG-002), \texttt{DEF-{}\allowbreak{}003} (GF-BUG-003), \texttt{DEF-{}\allowbreak{}004} (GF-BUG-004), \texttt{DEF-{}\allowbreak{}005} (GF-BUG-005) \\
+\textbf{P4} & Baja & 1 & 1 & 0 & \texttt{DEF-{}\allowbreak{}006} (GF-BUG-006) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{3. Catálogo Maestro de Defectos y Trazabilidad a GitHub Issues}\label{3-catuxe1logo-maestro-de-defectos-y-trazabilidad-a-github-issues}
+
+\begingroup\singlespacing\scriptsize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0696}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0563}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0749}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0563}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0492}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0696}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0696}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0619}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.4925}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID Académico
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Código Externo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+GitHub Issue
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Caso de Prueba
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Módulo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Severidad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Prioridad
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Estado
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Título
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{DEF-{}\allowbreak{}001} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}001} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/9}{Issue \#9} & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003} & \texttt{cash} & Alta (P2) & Alta & \textbf{Cerrado} & Fallo de bloqueo pesimista SELECT FOR UPDATE sobre tabla append-only payment bajo rol app\_user \\
+\texttt{DEF-{}\allowbreak{}002} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}002} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/10}{Issue \#10} & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003} & \texttt{reports} & Media (P3) & Media & \textbf{Cerrado} & Desajuste de proyección de campos firstName/lastName y cashierId en exportación CSV de reportes \\
+\texttt{DEF-{}\allowbreak{}003} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}003} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/11}{Issue \#11} & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005} & \texttt{cash} & Media (P3) & Media & \textbf{Cerrado} & Lectura de propiedad err.problem en lugar de err.detail (RFC 7807) en componentes de caja y reportes \\
+\texttt{DEF-{}\allowbreak{}004} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}004} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/12}{Issue \#12} & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006} & \texttt{auth} & Media (P3) & Media & \textbf{Asignado} & Rol MESERO posee permisos kitchen:read y kitchen:advance\_status sin filtro de estación en can.helper.ts \\
+\texttt{DEF-{}\allowbreak{}005} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}005} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/13}{Issue \#13} & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} & \texttt{orders} & Media (P3) & Media & \textbf{Asignado} & Discrepancia entre PRD.md y can.helper.ts sobre el permiso del rol CAJERO para abrir órdenes (orders:create) \\
+\texttt{DEF-{}\allowbreak{}006} & \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}006} & \href{https://github.com/H3llz07/GastroForge-Testing/issues/14}{Issue \#14} & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001} & \texttt{orders} & Baja (P4) & Baja & \textbf{Asignado} & Inconsistencia documental en el umbral mínimo de objetivos táctiles (48x48 px vs 44x44 px) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\Needspace{10\baselineskip}
+
+\section{4. Fichas Técnicas Detalladas (DEF-001 a DEF-006)}\label{4-fichas-tuxe9cnicas-detalladas-def-001-a-def-006}
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-001 (GF-BUG-001) --- Fallo de bloqueo pesimista SELECT FOR UPDATE sobre tabla append-only payment bajo rol app\_user}\label{def-001-gf-bug-001--fallo-de-bloqueo-pesimista-select-for-update-sobre-tabla-append-only-payment-bajo-rol-app_user}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}001} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}001} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/9}{GitHub Issue \#9} \\
+\textbf{Título} & Fallo de bloqueo pesimista SELECT FOR UPDATE sobre tabla append-only payment bajo rol app\_user \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}003} \\
+\textbf{Módulo afectado} & \texttt{cash} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\boxtimes} Alta (P2) \ensuremath{\square} Media (P3) \ensuremath{\square} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\square} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\boxtimes} Cerrado \\
+\textbf{Descripción} & Al procesar un cobro de orden bajo el rol PostgreSQL no privilegiado app\_user (ADR-0002 / ADR-0006), la consulta ejecutaba SELECT ... FOR UPDATE sobre la tabla append-only payment. Dado que PostgreSQL exige privilegio UPDATE para adquirir bloqueos de fila FOR UPDATE y dicho privilegio está revocado por política de inmutabilidad financiera, la transacción abortaba con error SQL 42501 (permission denied for table payment). \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Conectar la suite de integración con el rol PostgreSQL app\_user (rolbypassrls = false, sin privilegios UPDATE/DELETE sobre tablas append-only).\\
+2. Abrir una sesión de caja en CAJA-PRINCIPAL y una orden DINE\_IN activa con saldo pendiente de \$80.000.\\
+3. Emitir POST /api/v1/orders/:orderId/payments con monto válido (\$50.000 CASH) y cabecera Idempotency-Key.\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & El cobro debe adquirir bloqueo pesimista únicamente sobre el agregado raíz mutable restaurant\_order, insertar el registro inmutable en payment y retornar HTTP 201 Created. \\
+\textbf{Resultado obtenido} & En la validación previa a la corrección, PostgreSQL rechazaba la sentencia FOR UPDATE sobre payment con error 42501 (permission denied for table payment). Corregido y verificado en el commit be9089e manteniendo el bloqueo FOR UPDATE exclusivamente sobre restaurant\_order. \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}001-{}\allowbreak{}1} (SPEC): \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md} --- Verificación de regresión de DEF-001 en apps/api/test/cash-payments.int-spec.ts bajo rol app\_user.\\
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}001-{}\allowbreak{}2} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} --- Evidencia documentada en docs/testing/EVIDENCIAS-PRUEBAS-MANUALES.md (DEF-01) y verificada en commit be9089e.\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/9}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/9}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de reporte} & 15/11/2026 \\
+\textbf{Asignado a} & Jhonatan A. Méndez R. (@JhonatanM2005) \\
+\textbf{Fecha de resolución} & 15/11/2026 \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-002 (GF-BUG-002) --- Desajuste de proyección de campos firstName/lastName y cashierId en exportación CSV de reportes}\label{def-002-gf-bug-002--desajuste-de-proyecciuxf3n-de-campos-firstnamelastname-y-cashierid-en-exportaciuxf3n-csv-de-reportes}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}002} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}002} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/10}{GitHub Issue \#10} \\
+\textbf{Título} & Desajuste de proyección de campos firstName/lastName y cashierId en exportación CSV de reportes \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}REP-{}\allowbreak{}003} \\
+\textbf{Módulo afectado} & \texttt{reports} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\square} Alta (P2) \ensuremath{\boxtimes} Media (P3) \ensuremath{\square} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\square} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\boxtimes} Cerrado \\
+\textbf{Descripción} & En ReportsExportService, la consulta de exportación CSV intentaba proyectar un campo compuesto inexistente en el modelo User de Prisma en lugar de firstName + lastName y referenciaba un alias distinto para cashierId en Payment, provocando error al generar el stream CSV de ventas. \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Autenticarse como usuario con rol ADMIN o GERENTE en un tenant con órdenes cobradas.\\
+2. Invocar GET /api/v1/reports/sales/export.csv con un rango de fechas válido (from y to).\\
+3. Inspeccionar la proyección de columnas del cajero en el stream CSV generado.\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & El servicio debe concatenar User.firstName y User.lastName y vincular Payment.cashierId correctamente, emitiendo el archivo CSV con BOM UTF-8 (\textbackslash uFEFF) y mitigación de CSV Formula Injection. \\
+\textbf{Resultado obtenido} & Fallaba la proyección Prisma antes de la corrección. Resuelto y validado en commit be9089e en ReportsExportService y reports-export.int-spec.ts. \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}002-{}\allowbreak{}1} (SPEC): \texttt{data/\allowbreak{}evidence/\allowbreak{}integration-{}\allowbreak{}rls-{}\allowbreak{}verification-{}\allowbreak{}be9089e.\allowbreak{}md} --- Verificación de regresión de DEF-002 en apps/api/test/reports-export.int-spec.ts sobre commit be9089e.\\
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}002-{}\allowbreak{}2} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt} --- Ejecución exitosa de src/modules/reports/domain/reports-export.helper.spec.ts.\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/10}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/10}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de reporte} & 15/11/2026 \\
+\textbf{Asignado a} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de resolución} & 15/11/2026 \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-003 (GF-BUG-003) --- Lectura de propiedad err.problem en lugar de err.detail (RFC 7807) en componentes de caja y reportes}\label{def-003-gf-bug-003--lectura-de-propiedad-errproblem-en-lugar-de-errdetail-rfc-7807-en-componentes-de-caja-y-reportes}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}003} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}003} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/11}{GitHub Issue \#11} \\
+\textbf{Título} & Lectura de propiedad err.problem en lugar de err.detail (RFC 7807) en componentes de caja y reportes \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}CSH-{}\allowbreak{}005} \\
+\textbf{Módulo afectado} & \texttt{cash} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\square} Alta (P2) \ensuremath{\boxtimes} Media (P3) \ensuremath{\square} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\square} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\boxtimes} Cerrado \\
+\textbf{Descripción} & Los componentes frontend de los módulos cash y reports accedían a err.problem sobre instancias de ApiProblemError cuando el contrato estándar RFC 7807 expone el mensaje legible para el usuario en err.detail, mostrando un banner vacío o genérico ante rechazos de negocio (400/409/422). \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Abrir la vista /cashier en viewport tablet 1024x768 con una orden activa de saldo pendiente \$45.000.\\
+2. Intentar registrar un pago con tarjeta por monto superior (\$60.000) para provocar un rechazo HTTP 422.\\
+3. Observar el mensaje de error renderizado en el componente AlertBanner.\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & AlertBanner debe mostrar el texto exacto de err.detail devuelto por el backend en formato application/problem+json (RFC 7807). \\
+\textbf{Resultado obtenido} & Antes de la corrección se leía err.problem (undefined). Estandarizado con err.detail y verificado en commit be9089e tanto en pruebas unitarias frontend como en validación manual. \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}003-{}\allowbreak{}1} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} --- Verificación manual en /cashier de renderizado de err.detail en AlertBanner (DEF-03 en EVIDENCIAS-PRUEBAS-MANUALES.md).\\
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}003-{}\allowbreak{}2} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt} --- Ejecución exitosa de app/lib/api/problem-details.test.ts y app/lib/api/client.test.ts.\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/11}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/11}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de reporte} & 15/11/2026 \\
+\textbf{Asignado a} & Jhonatan A. Méndez R. (@JhonatanM2005) \\
+\textbf{Fecha de resolución} & 15/11/2026 \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-004 (GF-BUG-004) --- Rol MESERO posee permisos kitchen:read y kitchen:advance\_status sin filtro de estación en can.helper.ts}\label{def-004-gf-bug-004--rol-mesero-posee-permisos-kitchenread-y-kitchenadvance_status-sin-filtro-de-estaciuxf3n-en-canhelperts}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}004} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}004} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/12}{GitHub Issue \#12} \\
+\textbf{Título} & Rol MESERO posee permisos kitchen:read y kitchen:advance\_status sin filtro de estación en can.helper.ts \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}AUTH-{}\allowbreak{}006} \\
+\textbf{Módulo afectado} & \texttt{auth} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\square} Alta (P2) \ensuremath{\boxtimes} Media (P3) \ensuremath{\square} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\boxtimes} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\square} Cerrado \\
+\textbf{Descripción} & En apps/api/src/modules/auth/domain/can.helper.ts (líneas 68-77) del commit be9089e, el conjunto MESERO\_ACTIONS incluye las acciones \textquotesingle kitchen:read\textquotesingle{} y \textquotesingle kitchen:advance\_status\textquotesingle{} sin exigir validación de stationId, mientras que la Matriz de Capacidades de PRD.md (§2.1, líneas 89-90) y la Tabla de Decisión de TESTING-PLAN.md (§2.2, línea 120) establecen que Mesero NO tiene permiso para ver la cola KDS ni avanzar estados de preparación (Preparing/Ready). \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Inspeccionar apps/api/src/modules/auth/domain/can.helper.ts líneas 68-77 en el commit be9089e.\\
+2. Evaluar can(\{ userId: \textquotesingle u-4\textquotesingle, memberId: \textquotesingle m-4\textquotesingle, role: \textquotesingle MESERO\textquotesingle{} \}, \textquotesingle kitchen:advance\_status\textquotesingle).\\
+3. Comparar el resultado booleano contra la tabla de decisión de TESTING-PLAN.md (§2.2) y PRD.md (§2.1).\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & can(mesero, \textquotesingle kitchen:advance\_status\textquotesingle) debe retornar false (o existir una acción separada \textquotesingle orders:mark\_served\textquotesingle{} exclusiva para pasar de READY a SERVED sin permitir avanzar estados internos de cocina). \\
+\textbf{Resultado obtenido} & can(mesero, \textquotesingle kitchen:advance\_status\textquotesingle) retorna true para cualquier estación sin restricción de stationId. \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}004-{}\allowbreak{}1} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} --- Auditoría de código en apps/api/src/modules/auth/domain/can.helper.ts\#L68-L77 frente a PRD.md §2.1 y TESTING-PLAN.md §2.2.\\
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}004-{}\allowbreak{}2} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt} --- Ejecución de src/modules/auth/domain/can.helper.spec.ts y hallazgo de exceso de permisos en MESERO\_ACTIONS.\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/12}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/12}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Jhonatan A. Méndez R. (@JhonatanM2005) \\
+\textbf{Fecha de reporte} & 16/11/2026 \\
+\textbf{Asignado a} & Jhonatan A. Méndez R. (@JhonatanM2005) \\
+\textbf{Fecha de resolución} & Pendiente (Abierto en commit be9089e) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-005 (GF-BUG-005) --- Discrepancia entre PRD.md y can.helper.ts sobre el permiso del rol CAJERO para abrir órdenes (orders:create)}\label{def-005-gf-bug-005--discrepancia-entre-prdmd-y-canhelperts-sobre-el-permiso-del-rol-cajero-para-abrir-uxf3rdenes-orderscreate}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}005} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}005} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/13}{GitHub Issue \#13} \\
+\textbf{Título} & Discrepancia entre PRD.md y can.helper.ts sobre el permiso del rol CAJERO para abrir órdenes (orders:create) \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}006} \\
+\textbf{Módulo afectado} & \texttt{orders} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\square} Alta (P2) \ensuremath{\boxtimes} Media (P3) \ensuremath{\square} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\boxtimes} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\square} Cerrado \\
+\textbf{Descripción} & Existe una contradicción entre la especificación de requisitos de producto y la implementación de dominio en el commit be9089e: PRD.md (§2.1, línea 86) especifica que el rol Cajero SÍ puede \textquotesingle Abrir orden / cuenta (Mesa o Para Llevar)\textquotesingle, pero CAJERO\_ACTIONS en apps/api/src/modules/auth/domain/can.helper.ts (líneas 79-86) y can.helper.spec.ts (línea 47) deniegan \textquotesingle orders:create\textquotesingle{} al rol CAJERO. \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Revisar docs/prd/PRD.md §2.1 (Matriz de capacidades por rol en MVP, fila \textquotesingle Abrir orden / cuenta\textquotesingle).\\
+2. Ejecutar o inspeccionar apps/api/src/modules/auth/domain/can.helper.spec.ts línea 47: expect(can(cajero, \textquotesingle orders:create\textquotesingle)).toBe(false).\\
+3. Verificar el mismo comportamiento en el cliente web en apps/web/app/features/auth/domain/can.test.ts.\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & Alineación unívoca entre PRD.md, TESTING-PLAN.md y can.helper.ts respecto a si el Cajero puede crear órdenes TAKEOUT/mostrador o si dicha capacidad es exclusiva de Mesero/Gerente/Admin. \\
+\textbf{Resultado obtenido} & PRD.md declara Sí para Cajero mientras que can.helper.ts y TESTING-PLAN.md retornan false (No). \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}005-{}\allowbreak{}1} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} --- Inspección normativa de CAJERO\_ACTIONS en can.helper.ts y can.test.ts frente a PRD.md §2.1.\\
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}005-{}\allowbreak{}2} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}unit-{}\allowbreak{}tests-{}\allowbreak{}execution-{}\allowbreak{}be9089e.\allowbreak{}txt} --- Ejecución de apps/web/app/features/auth/domain/can.test.ts y apps/api/src/modules/auth/domain/can.helper.spec.ts.\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/13}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/13}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de reporte} & 16/11/2026 \\
+\textbf{Asignado a} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de resolución} & Pendiente (Abierto en commit be9089e) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\Needspace{10\baselineskip}
+
+\subsection{DEF-006 (GF-BUG-006) --- Inconsistencia documental en el umbral mínimo de objetivos táctiles (48x48 px vs 44x44 px)}\label{def-006-gf-bug-006--inconsistencia-documental-en-el-umbral-muxednimo-de-objetivos-tuxe1ctiles-48x48-px-vs-44x44-px}
+
+\begingroup\singlespacing\footnotesize\setlength{\parskip}{0pt}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7826}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Campo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{ID del defecto} & \texttt{DEF-{}\allowbreak{}006} / \texttt{GF-{}\allowbreak{}BUG-{}\allowbreak{}006} --- \href{https://github.com/H3llz07/GastroForge-Testing/issues/14}{GitHub Issue \#14} \\
+\textbf{Título} & Inconsistencia documental en el umbral mínimo de objetivos táctiles (48x48 px vs 44x44 px) \\
+\textbf{Caso de prueba relacionado} & \texttt{CP-{}\allowbreak{}ORD-{}\allowbreak{}001} \\
+\textbf{Módulo afectado} & \texttt{orders} \\
+\textbf{Severidad} & \ensuremath{\square} Crítica (P1) \ensuremath{\square} Alta (P2) \ensuremath{\square} Media (P3) \ensuremath{\boxtimes} Baja (P4) \\
+\textbf{Prioridad} & \ensuremath{\square} Alta \ensuremath{\square} Media \ensuremath{\boxtimes} Baja \\
+\textbf{Estado} & \ensuremath{\square} Nuevo \ensuremath{\boxtimes} Asignado \ensuremath{\square} En progreso \ensuremath{\square} Resuelto \ensuremath{\square} Cerrado \\
+\textbf{Descripción} & El plan maestro de pruebas del SUT (docs/testing/TESTING-PLAN.md §1 Nivel 6 y §5.1 Guion M-01) exige botones y selectores táctiles con dimensiones mínimas de 48x48 px (min-h-{[}48px{]} min-w-{[}48px{]}), mientras que PRD.md (§1.2), EVIDENCIAS-PRUEBAS-MANUALES.md y la suite E2E tablet-golden-path.e2e.spec.ts implementan y validan el umbral WCAG 2.5.5 AAA de 44x44 px (min-h-{[}44px{]}). \\
+\textbf{Pasos para reproducir} & \begin{minipage}[t]{\linewidth}\raggedright
+1. Comparar docs/testing/TESTING-PLAN.md líneas 87 y 264 (48x48 px) contra docs/prd/PRD.md línea 35 y docs/testing/EVIDENCIAS-PRUEBAS-MANUALES.md líneas 22 y 33-35 (44px).\\
+2. Inspeccionar las clases Tailwind min-h-{[}44px{]} en los componentes táctiles de apps/web en viewport 1024x768.\strut
+\end{minipage} \\
+\textbf{Resultado esperado} & Criterio único de ergonomía táctil (44x44 px o 48x48 px) armonizado entre PRD.md, TESTING-PLAN.md y las aserciones automatizadas de Playwright. \\
+\textbf{Resultado obtenido} & Los componentes cumplen \textgreater= 44x44 px (aprobando las aserciones de Playwright), pero algunos controles secundarios están entre 44px y 47px, por debajo de los 48px citados en TESTING-PLAN.md. \\
+\textbf{Evidencia} & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{EVID-{}\allowbreak{}DEF-{}\allowbreak{}006-{}\allowbreak{}1} (LOG): \texttt{data/\allowbreak{}evidence/\allowbreak{}playwright-{}\allowbreak{}e2e-{}\allowbreak{}and-{}\allowbreak{}manual-{}\allowbreak{}tablet-{}\allowbreak{}be9089e.\allowbreak{}md} --- Ejecución del Guion M-01 en 1024x768 y registro de la discrepancia documental menor DEF-006 (44x44 px vs 48x48 px).\\
+GitHub Issue: \href{https://github.com/H3llz07/GastroForge-Testing/issues/14}{\url{https://github.com/H3llz07/GastroForge-Testing/issues/14}}\strut
+\end{minipage} \\
+\textbf{Entorno} & QA Local (PostgreSQL 16 app\_user RLS + Redis 7 + Chromium/WebKit 1024x768) (Commit \texttt{be9089e}) \\
+\textbf{Reportado por} & Julián Santiago Pico Pinzón (@H3llz07) \\
+\textbf{Fecha de reporte} & 16/11/2026 \\
+\textbf{Asignado a} & Jhonatan A. Méndez R. (@JhonatanM2005) \\
+\textbf{Fecha de resolución} & Pendiente (Abierto en commit be9089e) \\
+\end{longtable}
+}
+
+\endgroup\medskip
+
+\end{document}

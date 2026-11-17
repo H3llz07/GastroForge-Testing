@@ -1,0 +1,77 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[landscape,margin=1.8cm,headheight=14pt]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Arial}{\setmainfont{Arial}}{\setmainfont{Latin Modern Roman}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=MatchLowercase]}{%
+  \IfFontExistsTF{Courier New}{\setmonofont{Courier New}[Scale=MatchLowercase]}{\setmonofont{Latin Modern Mono}}}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}
+\definecolor{gfaccent}{HTML}{1F3A5F}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\usepackage{needspace}
+\usepackage{setspace}
+\newcounter{none}
+\usepackage{fvextra}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=3pt}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\emergencystretch}{3em}
+\rowcolors{2}{gray!10}{white}
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{2}
+\titleformat{\section}{\Large\bfseries\color{gfaccent}}{}{0pt}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{gfaccent}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{GastroForge QA --- commit be9089e}
+\fancyhead[R]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\usepackage[hidelinks,unicode,pdfusetitle=false]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=gfaccent,urlcolor=gfaccent,pdftitle={$title$},pdfauthor={$authors$}}
+\urlstyle{same}
+\Urlmuskip=0mu plus 1mu
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{1.2cm}
+{\large\bfseries $institution$\par}
+\vspace{1.2cm}
+{\Huge\bfseries\color{gfaccent} $title$\par}
+\vspace{0.6cm}
+{\Large $project$\par}
+\vspace{1.0cm}
+\rule{0.6\linewidth}{0.6pt}\par
+\vspace{0.8cm}
+{\large Commit SUT congelado: \texttt{$commit$}\par}
+{\normalsize $commitTitle$\par}
+\vspace{0.8cm}
+{\large $authors$\par}
+\vspace{0.6cm}
+{\normalsize Versión $version$ \quad|\quad $status$\par}
+{\normalsize $date$\par}
+\end{titlepage}
+\pagestyle{fancy}
+{\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Contenido}
+\tableofcontents}
+\clearpage
+
+$body$
+
+\end{document}
