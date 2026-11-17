@@ -25,14 +25,14 @@ export const GovernanceView: React.FC<GovernanceViewProps> = ({ metadata }) => {
 
   return (
     <div className="space-y-8">
-      {/* Cabecera de Gobernanza y Botón de Sustentación / Impresión PDF */}
-      <section className="bg-white border border-slate-200 rounded-md p-6 print-break-inside-avoid">
+      {/* Cabecera de Gobernanza */}
+      <section className="bg-white border border-slate-200 rounded-xl p-6 print-break-inside-avoid">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">
-              Gobernanza QA, Matriz RACI, Cronograma, Riesgos y Sustentación (§4, §5.4, §6, §9–§15)
+            <h2 className="font-display text-lg font-bold text-slate-900">
+              Gobernanza QA, Matriz RACI, Cronograma y Sustentación
             </h2>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Estructura organizacional del equipo QA (Bloque A y Bloque B), criterios formales de entrada/salida/suspensión, ambientes reproducibles y firmas de aprobación sobre <code className="font-mono">{metadata.frozenCommit}</code>.
             </p>
           </div>
@@ -41,18 +41,18 @@ export const GovernanceView: React.FC<GovernanceViewProps> = ({ metadata }) => {
             <button
               type="button"
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-orange-700 hover:bg-orange-800 text-white text-xs font-mono font-semibold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-700 hover:bg-orange-800 text-white text-xs font-semibold transition-colors cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              Imprimir / Exportar PDF para Sustentación
+              Imprimir / Exportar PDF
             </button>
           </div>
         </div>
       </section>
 
       {/* Equipo QA & Responsabilidades (§4 / §10.1) */}
-      <section className="bg-white border border-slate-200 rounded-md p-6 print-break-inside-avoid">
-        <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-200 pb-3 mb-4">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 print-break-inside-avoid">
+        <h3 className="font-display text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
           <Users className="w-4 h-4 text-orange-700" />
           Equipo de Aseguramiento de Calidad y Recursos Humanos (§4 / §10.1)
         </h3>
@@ -60,7 +60,7 @@ export const GovernanceView: React.FC<GovernanceViewProps> = ({ metadata }) => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-300 bg-slate-100 text-slate-700 font-mono uppercase">
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-medium">
                 <th className="py-2.5 px-3">Rol</th>
                 <th className="py-2.5 px-3">Nombre y Usuario GitHub</th>
                 <th className="py-2.5 px-3">Bloque Asignado</th>

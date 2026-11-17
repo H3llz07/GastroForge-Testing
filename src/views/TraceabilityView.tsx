@@ -95,46 +95,46 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Resumen de Trazabilidad Bidireccional */}
-      <section className="bg-white border border-slate-200 rounded-md p-5 print-break-inside-avoid">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 print-break-inside-avoid">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
               <GitBranch className="w-5 h-5 text-orange-700" />
-              Matriz de Trazabilidad Bidireccional (Requisitos ↔ Casos de Prueba ↔ Ejecuciones ↔ Defectos)
+              Matriz de Trazabilidad Bidireccional
             </h2>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Vinculación completa de los {inScopeCount} requisitos en alcance (22 Casos de Uso MVP, 34 Historias de Usuario HU-001..034 y ADR-0001..0006) más las {phase2Count} exclusiones normativas de Fase 2.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-            <span className="px-3 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold">
-              IN_SCOPE Cubiertos: {inScopeCount} / {inScopeCount} (100%)
+            <span className="px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold">
+              IN_SCOPE: {inScopeCount} / {inScopeCount} (100%)
             </span>
-            <span className="px-3 py-1 rounded bg-slate-100 border border-slate-300 text-slate-700 font-semibold">
-              Excluidos PHASE_2: {phase2Count}
+            <span className="px-3 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-semibold">
+              PHASE_2: {phase2Count}
             </span>
           </div>
         </div>
 
         {/* Barra de Filtros */}
-        <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 no-print">
+        <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-3 no-print">
           <div>
             <label
               htmlFor="trace-search"
-              className="block text-[11px] font-mono text-slate-600 mb-1"
+              className="block text-xs font-medium text-slate-600 mb-1"
             >
               Buscar por ID, UC, HU, ADR o Título
             </label>
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 id="trace-search"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ej: REQ-RLS-01, UC-CSH-02, HU-024, ADR-0006..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded focus:outline-none focus:border-orange-700 font-mono"
+                placeholder="Ej: REQ-RLS-01, UC-CSH-02, HU-024..."
+                className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:bg-white focus:border-orange-600"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
           <div>
             <label
               htmlFor="trace-scope"
-              className="block text-[11px] font-mono text-slate-600 mb-1"
+              className="block text-xs font-medium text-slate-600 mb-1"
             >
               Alcance Normativo
             </label>
@@ -152,7 +152,7 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
               onChange={(e) =>
                 setScopeFilter(e.target.value as 'ALL' | RequirementScopeStatus)
               }
-              className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded focus:outline-none focus:border-orange-700 font-mono"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:bg-white focus:border-orange-600"
             >
               <option value="ALL">Todos ({requirements.length})</option>
               <option value="IN_SCOPE">En Alcance MVP — IN_SCOPE ({inScopeCount})</option>
@@ -163,7 +163,7 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
           <div>
             <label
               htmlFor="trace-module"
-              className="block text-[11px] font-mono text-slate-600 mb-1"
+              className="block text-xs font-medium text-slate-600 mb-1"
             >
               Módulo
             </label>
@@ -171,7 +171,7 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
               id="trace-module"
               value={moduleFilter}
               onChange={(e) => setModuleFilter(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded focus:outline-none focus:border-orange-700 font-mono"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:bg-white focus:border-orange-600"
             >
               <option value="ALL">Todos los módulos</option>
               <option value="auth">auth</option>
@@ -189,11 +189,11 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
       </section>
 
       {/* Tabla de Trazabilidad Bidireccional */}
-      <section className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-2xs">
+      <section className="bg-white border border-slate-200 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-300 bg-slate-100 text-slate-700 font-mono uppercase">
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-medium">
                 <th className="py-3 px-3">ID Requisito</th>
                 <th className="py-3 px-3">Código (UC / HU / ADR)</th>
                 <th className="py-3 px-3">Módulo</th>
@@ -343,20 +343,20 @@ export const TraceabilityView: React.FC<TraceabilityViewProps> = ({
       </section>
 
       {/* Nota Metodológica de Exclusiones de Fase 2 */}
-      <section className="bg-slate-900 text-slate-100 rounded-md p-5 print-break-inside-avoid">
+      <section className="bg-orange-50/50 border border-orange-200/80 rounded-xl p-5 print-break-inside-avoid">
         <div className="flex items-start gap-3">
-          <Layers className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
+          <Layers className="w-5 h-5 text-orange-700 shrink-0 mt-0.5" />
           <div className="text-xs space-y-1">
-            <h3 className="font-bold text-sm text-white">
+            <h3 className="font-display font-bold text-sm text-slate-900">
               Trazabilidad de Alcance y Separación de Fase 2 (ADR-0005 y ADR-0006)
             </h3>
-            <p className="text-slate-300 leading-relaxed">
+            <p className="text-slate-600 leading-relaxed">
               El denominador de cobertura de requisitos del ciclo QA evalúa exclusivamente los{' '}
-              <strong className="text-white">{inScopeCount} requisitos IN_SCOPE</strong> del MVP congelado en el commit{' '}
-              <code className="text-orange-300">be9089e</code>. Los módulos de reservaciones de mesas (
-              <code className="text-orange-300">REQ-PH2-01</code>) y permisos dinámicos/turnos/X-API-Key (
-              <code className="text-orange-300">REQ-PH2-02</code>) se mantienen registrados con estado{' '}
-              <code className="text-orange-300">PHASE_2</code> para garantizar trazabilidad arquitectónica completa sin distorsionar los indicadores de cumplimiento del MVP.
+              <strong className="text-slate-900">{inScopeCount} requisitos IN_SCOPE</strong> del MVP congelado en el commit{' '}
+              <code className="font-mono text-orange-800 bg-orange-100/70 px-1 py-0.5 rounded">be9089e</code>. Los módulos de reservaciones de mesas (
+              <code className="font-mono text-slate-800">REQ-PH2-01</code>) y permisos dinámicos/turnos/X-API-Key (
+              <code className="font-mono text-slate-800">REQ-PH2-02</code>) se mantienen registrados con estado{' '}
+              <code className="font-mono text-slate-800">PHASE_2</code> para garantizar trazabilidad arquitectónica completa sin distorsionar los indicadores de cumplimiento del MVP.
             </p>
           </div>
         </div>

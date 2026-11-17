@@ -66,23 +66,23 @@ export const DefectsView: React.FC<DefectsViewProps> = ({ defects }) => {
   return (
     <div className="space-y-6">
       {/* Cabecera y Escala de Severidades (§8.1) */}
-      <section className="bg-white border border-slate-200 rounded-md p-6 print-break-inside-avoid">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200 pb-4">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 print-break-inside-avoid">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
               <Bug className="w-5 h-5 text-orange-700" />
-              Gestión de Defectos, Clasificación P1–P4 y GitHub Issues (§8.1 / §8.2)
+              Gestión de Defectos, Severidades P1–P4 y GitHub Issues
             </h2>
-            <p className="text-xs text-slate-600 mt-1">
-              Taxonomía dual académica (<code className="font-mono">DEF-001..006</code>) e industrial (<code className="font-mono">GF-BUG-001..006</code>) sincronizada con GitHub Issues #9 a #14 en <code className="font-mono">H3llz07/GastroForge-Testing</code>.
+            <p className="text-xs text-slate-500 mt-1">
+              Taxonomía dual académica (<code className="font-mono">DEF-001..006</code>) e industrial (<code className="font-mono">GF-BUG-001..006</code>) sincronizada con GitHub Issues #9 a #14.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-            <span className="px-3 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold">
-              Cerrados / Verificados: {closedCount} (DEF-001..003)
+            <span className="px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold">
+              Cerrados: {closedCount} (DEF-001..003)
             </span>
-            <span className="px-3 py-1 rounded bg-amber-50 border border-amber-300 text-amber-900 font-semibold">
+            <span className="px-3 py-1 rounded-md bg-amber-50 border border-amber-200 text-amber-900 font-semibold">
               Asignados (P3/P4): {openCount} (DEF-004..006)
             </span>
           </div>
@@ -92,7 +92,7 @@ export const DefectsView: React.FC<DefectsViewProps> = ({ defects }) => {
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-300 bg-slate-100 text-slate-700 font-mono uppercase">
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-medium">
                 <th className="py-2 px-3">Severidad (§8.1)</th>
                 <th className="py-2 px-3">Descripción Normativa</th>
                 <th className="py-2 px-3">SLA Respuesta</th>
@@ -396,15 +396,15 @@ export const DefectsView: React.FC<DefectsViewProps> = ({ defects }) => {
       </div>
 
       {/* Dictamen de Riesgo Residual sobre Defectos Abiertos P3/P4 */}
-      <section className="bg-slate-900 text-slate-100 rounded-md p-5 print-break-inside-avoid">
+      <section className="bg-orange-50/50 border border-orange-200/80 rounded-xl p-5 print-break-inside-avoid">
         <div className="flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
+          <ShieldAlert className="w-5 h-5 text-orange-700 shrink-0 mt-0.5" />
           <div className="text-xs space-y-1">
-            <h3 className="font-bold text-sm text-white">
+            <h3 className="font-display font-bold text-sm text-slate-900">
               Evaluación de Riesgo Residual al Cierre del Ciclo QA (Commit be9089e)
             </h3>
-            <p className="text-slate-300 leading-relaxed">
-              Los 3 defectos históricos detectados durante la validación MVP (<strong className="text-white">DEF-001 [P2], DEF-002 [P3] y DEF-003 [P3]</strong>) fueron corregidos y verificados mediante pruebas de regresión con 0 reaperturas. Los 3 hallazgos abiertos (<strong className="text-white">DEF-004 [P3], DEF-005 [P3] y DEF-006 [P4]</strong>) corresponden a discrepancias de granularidad RBAC y documentación ergonómica menor (44px vs 48px) que no comprometen el aislamiento multi-tenant RLS ni la integridad transaccional financiera, cumpliendo estrictamente el criterio de salida de <strong className="text-emerald-400">0 defectos P1/P2 abiertos</strong>.
+            <p className="text-slate-600 leading-relaxed">
+              Los 3 defectos históricos detectados durante la validación MVP (<strong className="text-slate-900">DEF-001 [P2], DEF-002 [P3] y DEF-003 [P3]</strong>) fueron corregidos y verificados mediante pruebas de regresión con 0 reaperturas. Los 3 hallazgos abiertos (<strong className="text-slate-900">DEF-004 [P3], DEF-005 [P3] y DEF-006 [P4]</strong>) corresponden a discrepancias de granularidad RBAC y documentación ergonómica menor (44px vs 48px) que no comprometen el aislamiento multi-tenant RLS ni la integridad transaccional financiera, cumpliendo estrictamente el criterio de salida de <strong className="text-emerald-700">0 defectos P1/P2 abiertos</strong>.
             </p>
           </div>
         </div>

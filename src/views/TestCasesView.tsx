@@ -209,46 +209,28 @@ export const TestCasesView: React.FC<TestCasesViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Cabecera y Acciones del Grabador / Exportador JSON */}
-      <section className="bg-white border border-slate-200 rounded-md p-5 print-break-inside-avoid">
+      {/* Cabecera y Filtros */}
+      <section className="bg-white border border-slate-200 rounded-xl p-6 print-break-inside-avoid">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">
-              Catálogo de 40 Casos de Prueba &amp; Grabador de Ejecuciones (§7.1 / §7.2)
+            <h2 className="font-display text-lg font-bold text-slate-900">
+              Catálogo de 40 Casos de Prueba &amp; Grabador de Ejecuciones
             </h2>
-            <p className="text-xs text-slate-600 mt-1">
-              Explora las 40 fichas detalladas (15 manuales + 25 automatizadas), filtra por criterios múltiples y simula o actualiza resultados de ejecución en tiempo real con recálculo automático de KPIs.
+            <p className="text-xs text-slate-500 mt-1">
+              Explora las 40 fichas detalladas (15 manuales + 25 automatizadas), filtra por criterios múltiples y actualiza resultados en tiempo real.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 no-print">
+          <div className="flex flex-wrap items-center gap-2 no-print">
             {hasLocalOverrides ? (
-              <span className="px-2.5 py-1 rounded bg-amber-50 border border-amber-300 text-amber-900 text-xs font-mono font-semibold">
+              <span className="px-2.5 py-1 rounded-md bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono font-semibold">
                 Simulación Local Activa (localStorage)
               </span>
             ) : (
-              <span className="px-2.5 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
+              <span className="px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
                 Snapshot Oficial be9089e Activo
               </span>
             )}
-
-            <button
-              type="button"
-              onClick={onResetSnapshot}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 text-xs font-mono font-medium transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-600" />
-              Restaurar snapshot oficial be9089e
-            </button>
-
-            <button
-              type="button"
-              onClick={onExportTestRunsJson}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white text-xs font-mono font-medium transition-colors cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5 text-orange-400" />
-              Descargar test-runs.json
-            </button>
           </div>
         </div>
 
@@ -443,11 +425,11 @@ export const TestCasesView: React.FC<TestCasesViewProps> = ({
       </section>
 
       {/* Tabla Resumen de Casos de Prueba (§7.2) */}
-      <section className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-2xs">
+      <section className="bg-white border border-slate-200 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-300 bg-slate-100 text-slate-700 font-mono uppercase">
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-medium">
                 <th className="py-3 px-3 text-center">#</th>
                 <th className="py-3 px-3">ID Caso</th>
                 <th className="py-3 px-3">Módulo / Requisito</th>
