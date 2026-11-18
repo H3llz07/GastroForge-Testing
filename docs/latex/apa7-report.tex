@@ -26,6 +26,7 @@
 \urlstyle{same}
 \AtBeginDocument{\hypersetup{hidelinks}}
 \Urlmuskip=0mu plus 1mu
+\setcounter{tocdepth}{2}
 
 \title{$title$}
 \shorttitle{GastroForge QA}
@@ -55,6 +56,10 @@
 {\normalsize $date$\par}
 \end{center}
 \newpage
+{\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Contenido}
+\tableofcontents}
+\clearpage
 
 $body$
 

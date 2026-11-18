@@ -549,23 +549,24 @@ ID del caso & CP-AUTH-001 \\
 Nombre & Inicio de sesión interactivo en tablet (1024x768) con credenciales válidas y redirección contextual por rol \\
 Historia de usuario & HU-004, HU-005 --- Inicio de sesión con credenciales y redirección operativa por rol (Requisitos: \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}01}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Servidor backend y aplicación web ejecutándose sobre el commit be9089e\\
+• Servidor backend (http://localhost:3000) y aplicación web (http://localhost:5173) ejecutándose sobre el commit be9089e con seed.ts cargado\\
 • Viewport configurado en resolución tablet horizontal (1024x768 px)\\
-• Usuario activo registrado con membresía activa en el restaurante \textquotesingle La Brasa Dorada\textquotesingle{} con rol MESERO\strut
+• Usuario activo \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} registrado con membresía activa en el restaurante "La Forja Grill \& Bar" con rol MESERO\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{email}: \texttt{\textquotedbl{}mesero@labrasa.\allowbreak{}co\textquotedbl{}}\\
+\texttt{email}: \texttt{\textquotedbl{}mesero.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
 \texttt{password}: \texttt{\textquotedbl{}Password123!\textquotedbl{}}\\
+\texttt{restaurant}: \texttt{\textquotedbl{}La Forja Grill \&\allowbreak{} Bar\textquotedbl{}}\\
 \texttt{viewport}: \texttt{\textquotedbl{}1024x768\textquotedbl{}}\\
 \texttt{expectedRole}: \texttt{\textquotedbl{}MESERO\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Abrir la ruta /login en el navegador con viewport 1024x768.\\
-2. Ingresar el correo electrónico válido y la contraseña correspondiente al rol MESERO.\\
-3. Tocar el botón \textquotesingle Iniciar sesión\textquotesingle{} (objetivo táctil \textgreater= 48x48 px).\\
-4. Verificar el almacenamiento en memoria del Access Token, la emisión de la cookie HttpOnly de Refresh Token y la redirección automática a la vista operativa del rol.\strut
+1. Abrir la ruta /login en el navegador con viewport 1024x768 y abrir DevTools (pestañas Network y Application).\\
+2. Ingresar el correo \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} y la contraseña Password123!.\\
+3. Tocar el botón "Ingresar al sistema".\\
+4. Verificar que Application -\textgreater{} Local Storage NO contenga tokens (el Access Token vive en memoria JS en session-store.ts), que Network -\textgreater{} POST /api/v1/auth/login retorne accessToken con HTTP 200, que Application -\textgreater{} Cookies contenga la cookie HttpOnly de Refresh Token y que la app redirija a /dashboard (con acceso a /tables).\strut
 \end{minipage} \\
-Resultado esperado & El sistema autentica al usuario (HTTP 200), establece la sesión multi-tenant del restaurante activo y redirige automáticamente al mapa de salón (/tables) mostrando el encabezado con el nombre del restaurante y rol Mesero. \\
+Resultado esperado & El sistema autentica al usuario (HTTP 200), mantiene el Access Token exclusivamente en memoria JS (enviado como Bearer en peticiones siguientes), emite la cookie HttpOnly de Refresh Token y redirige a /dashboard mostrando "La Forja Grill \& Bar" y rol MESERO. \\
 Resultado obtenido & El usuario con rol MESERO inicia sesión en /login (HTTP 200 OK), recibe Access Token en memoria y cookie HttpOnly de Refresh Token, y es redirigido automáticamente a /tables con encabezado de restaurante activo en viewport 1024x768. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -611,7 +612,7 @@ Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
 • Rate limiter configurado en el endpoint POST /api/v1/auth/login (umbral de frontera: intentos 1..5 permitidos, intento 6 bloqueado)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{email}: \texttt{\textquotedbl{}admin@gastroforge\allowbreak{}.\allowbreak{}io\textquotedbl{}}\\
+\texttt{email}: \texttt{\textquotedbl{}admin.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
 \texttt{wrongPassword}: \texttt{\textquotedbl{}WrongPassword999!\allowbreak{}\textquotedbl{}}\\
 \texttt{attemptBoundaries}: \texttt{[\allowbreak{}1,\allowbreak{} 5,\allowbreak{} 6]\allowbreak{}}\\
 \texttt{expectedStatusBefo\allowbreak{}reLimit}: \texttt{401}\\
@@ -724,23 +725,25 @@ ID del caso & CP-AUTH-004 \\
 Nombre & Selección y cambio de restaurante activo multi-tenant y verificación de contraste de marca WCAG (\textgreater= 4.5:1) \\
 Historia de usuario & HU-008, HU-009, HU-010 --- Selección de restaurante activo multi-tenant y contraste de marca WCAG AA (Requisitos: \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}04}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Usuario autenticado con membresía activa en dos restaurantes (Tenant A: \textquotesingle La Brasa Dorada\textquotesingle{} y Tenant B: \textquotesingle Pizzería Napoli\textquotesingle)\\
-• Ambos restaurantes configurados con paleta de marca primaria en el panel de administración\strut
+• Servidor backend y aplicación web ejecutándose sobre el commit be9089e con seed.ts cargado\\
+• Usuario \href{mailto:multi.owner@gastroforge.dev}{\nolinkurl{multi.owner@gastroforge.dev}} con membresía ADMIN en "La Forja Grill \& Bar" y GERENTE en "Trattoria del Puerto"\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{tenantA}: \texttt{\textquotedbl{}La Brasa Dorada\textquotedbl{}}\\
-\texttt{tenantB}: \texttt{\textquotedbl{}Pizzería Napoli\textquotedbl{}}\\
+\texttt{email}: \texttt{\textquotedbl{}multi.\allowbreak{}owner@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{password}: \texttt{\textquotedbl{}Password123!\textquotedbl{}}\\
+\texttt{tenantA}: \texttt{\textquotedbl{}La Forja Grill \&\allowbreak{} Bar\textquotedbl{}}\\
+\texttt{tenantB}: \texttt{\textquotedbl{}Trattoria del Pue\allowbreak{}rto\textquotedbl{}}\\
 \texttt{primaryColorHex}: \texttt{\textquotedbl{}\#9A3412\textquotedbl{}}\\
 \texttt{foregroundHex}: \texttt{\textquotedbl{}\#FFFFFF\textquotedbl{}}\\
 \texttt{minWcagContrastRat\allowbreak{}io}: \texttt{4.\allowbreak{}5}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Abrir el selector de restaurante activo en la barra superior de la aplicación.\\
-2. Cambiar del restaurante \textquotesingle La Brasa Dorada\textquotesingle{} (rol ADMIN) a \textquotesingle Pizzería Napoli\textquotesingle{} (rol GERENTE).\\
-3. Confirmar la reemisión del token de contexto con el nuevo restaurant\_id y la recarga de datos aislados del nuevo tenant.\\
+1. Iniciar sesión en /login con \href{mailto:multi.owner@gastroforge.dev}{\nolinkurl{multi.owner@gastroforge.dev}} / Password123!.\\
+2. Abrir el selector de restaurante activo en la barra superior de la aplicación y cambiar de "La Forja Grill \& Bar" (rol ADMIN) a "Trattoria del Puerto" (rol GERENTE).\\
+3. Confirmar en Network la llamada a POST /api/v1/auth/switch-restaurant con el nuevo token de contexto y la recarga de datos aislados del nuevo tenant.\\
 4. Inspeccionar el contraste cromático del encabezado y botones primarios verificando que cumpla ratio \textgreater= 4.5:1 (WCAG 2.1 AA).\strut
 \end{minipage} \\
-Resultado esperado & El contexto de sesión cambia al segundo restaurante sin requerir nuevo login, se aplican los permisos del rol correspondiente en ese tenant y el contraste de color verificado supera 4.5:1. \\
+Resultado esperado & El contexto de sesión cambia a "Trattoria del Puerto" sin requerir nuevo login, se aplican los permisos de GERENTE en ese tenant y el contraste de color verificado supera 4.5:1. \\
 Resultado obtenido & El cambio de restaurante activo desde el selector superior reemite el JWT con el nuevo restaurant\_id y rol, recarga datos aislados del segundo tenant y mantiene ratio de contraste de marca de 7.42:1 (\textgreater= 4.5:1 WCAG AA). \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -783,21 +786,25 @@ ID del caso & CP-AUTH-005 \\
 Nombre & Restablecimiento administrativo de contraseña con token temporal de un solo uso (15 min) y revocación inmediata de sesiones activas \\
 Historia de usuario & HU-011 --- Restablecimiento administrativo de contraseña con token de un solo uso y revocación de sesiones (Requisitos: \texttt{REQ-{}\allowbreak{}AUTH-{}\allowbreak{}05}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Administrador autenticado en el panel de gestión de personal del restaurante\\
-• Usuario objetivo (\textquotesingle{}\href{mailto:cajero@labrasa.co}{\nolinkurl{cajero@labrasa.co}}\textquotesingle) con una sesión activa abierta en otro navegador/dispositivo\strut
+• Servidor backend ejecutándose en http://localhost:3000 sobre el commit be9089e con seed.ts cargado\\
+• Nota: En be9089e el restablecimiento administrativo de contraseña no tiene pantalla en apps/web; se ejecuta manualmente vía API (Swagger /api/docs o curl)\\
+• Usuario objetivo \href{mailto:cajero.forja@gastroforge.dev}{\nolinkurl{cajero.forja@gastroforge.dev}} (memberId: ea111111-0000-0000-0000-000000000005) y administrador \href{mailto:admin.forja@gastroforge.dev}{\nolinkurl{admin.forja@gastroforge.dev}}\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{targetUserEmail}: \texttt{\textquotedbl{}cajero@labrasa.\allowbreak{}co\textquotedbl{}}\\
+\texttt{adminEmail}: \texttt{\textquotedbl{}admin.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{adminPassword}: \texttt{\textquotedbl{}Password123!\textquotedbl{}}\\
+\texttt{targetUserEmail}: \texttt{\textquotedbl{}cajero.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{targetMemberId}: \texttt{\textquotedbl{}ea111111-{}\allowbreak{}0000-{}\allowbreak{}0000-{}\allowbreak{}0000-{}\allowbreak{}000000000005\textquotedbl{}}\\
 \texttt{tokenTtlMinutes}: \texttt{15}\\
 \texttt{newPassword}: \texttt{\textquotedbl{}NuevaPasswordSegu\allowbreak{}ra2026!\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Como Administrador, generar un token temporal de restablecimiento de contraseña para \textquotesingle{}\href{mailto:cajero@labrasa.co}{\nolinkurl{cajero@labrasa.co}}\textquotesingle.\\
-2. Consumir el token dentro de la ventana de 15 minutos estableciendo la nueva contraseña.\\
-3. Verificar que la sesión previamente abierta del cajero sea invalidada al instante (token\_version incrementado).\\
-4. Intentar reutilizar el mismo token de restablecimiento por segunda vez.\strut
+1. Autenticarse como \href{mailto:admin.forja@gastroforge.dev}{\nolinkurl{admin.forja@gastroforge.dev}} vía POST /api/v1/auth/login para obtener su Bearer accessToken.\\
+2. Emitir un token temporal de un solo uso invocando POST /api/v1/members/ea111111-0000-0000-0000-000000000005/reset-password con el Bearer del Admin.\\
+3. Consumir el token en POST /api/v1/auth/reset-password enviando \{ token, newPassword \} dentro de la ventana de 15 minutos y verificar que la sesión previa del cajero quede invalidada.\\
+4. Reenviar la misma petición POST /api/v1/auth/reset-password con el token ya consumido.\strut
 \end{minipage} \\
-Resultado esperado & La contraseña se actualiza exitosamente en el primer uso, todas las sesiones previas quedan revocadas de inmediato y el segundo intento con el mismo token es rechazado con HTTP 400/401 por tratarse de un token consumido. \\
+Resultado esperado & La contraseña se actualiza exitosamente en el primer uso, las sesiones previas quedan revocadas (token\_version incrementado) y el segundo intento con el mismo token es rechazado con HTTP 401. \\
 Resultado obtenido & El Administrador genera el token temporal de restablecimiento (TTL 15 min); al consumirse por primera vez actualiza el hash Argon2id, incrementa token\_version revocando la sesión previa del cajero y rechaza el segundo intento de uso con HTTP 400/401. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -897,22 +904,24 @@ ID del caso & CP-CAT-001 \\
 Nombre & Creación y ordenamiento visual de estaciones de cocina (PARRILLA, BARRA) y categorías de menú desde panel administrativo \\
 Historia de usuario & HU-012, HU-013 --- Gestión de estaciones de preparación y categorías del menú con ordenamiento visual (Requisitos: \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}01}, \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}02}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Usuario autenticado con rol ADMIN en el restaurante activo\\
-• Acceso al módulo administrativo de Catálogo (/admin/catalog)\strut
+• Sesión iniciada en http://localhost:5173 con \href{mailto:admin.forja@gastroforge.dev}{\nolinkurl{admin.forja@gastroforge.dev}} / Password123! (rol ADMIN en La Forja Grill \& Bar)\\
+• El seed inicial ya incluye "Parrilla y Calientes" y "Bar y Bebidas"; se crearán estaciones y categorías adicionales desde /catalog\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{email}: \texttt{\textquotedbl{}admin.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{route}: \texttt{\textquotedbl{}/\allowbreak{}catalog\textquotedbl{}}\\
 \texttt{stations}: \texttt{[\allowbreak{}PARRILLA,\allowbreak{} BARRA]\allowbreak{}}\\
 \texttt{categoryName}: \texttt{\textquotedbl{}Cortes Madurados\textquotedbl{}\allowbreak{}}\\
 \texttt{sortOrder}: \texttt{1}\\
 \texttt{isActive}: \texttt{true}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Crear las estaciones de preparación \textquotesingle PARRILLA\textquotesingle{} y \textquotesingle BARRA\textquotesingle{} verificando unicidad de código dentro del restaurante.\\
-2. Crear la categoría \textquotesingle Cortes Madurados\textquotesingle{} con sort\_order = 1 y estado activo.\\
-3. Reordenar visualmente las categorías y desactivar una categoría secundaria.\\
-4. Abrir la pantalla de toma de pedidos y comprobar que el orden coincida y la categoría inactiva no se muestre.\strut
+1. Navegar a /catalog y crear las estaciones de preparación "PARRILLA" y "BARRA" verificando unicidad de código dentro del restaurante.\\
+2. Crear la categoría "Cortes Madurados" con sort\_order = 1 y estado activo.\\
+3. Reordenar visualmente las categorías y desactivar una categoría secundaria desde /catalog.\\
+4. Abrir la vista /orders y comprobar que el orden coincida y la categoría inactiva no se muestre.\strut
 \end{minipage} \\
-Resultado esperado & Las estaciones y categorías se persisten correctamente, respetan el orden visual configurado (sort\_order) y las categorías desactivadas quedan ocultas inmediatamente en el POS. \\
+Resultado esperado & Las estaciones y categorías se persisten correctamente, respetan el orden visual configurado (sort\_order) y las categorías desactivadas quedan ocultas inmediatamente en /orders. \\
 Resultado obtenido & Las estaciones \textquotesingle PARRILLA\textquotesingle{} y \textquotesingle BARRA\textquotesingle{} y la categoría \textquotesingle Cortes Madurados\textquotesingle{} (sort\_order = 1) se crean y ordenan correctamente; al desactivar una categoría secundaria desaparece de inmediato de la vista POS de toma de pedidos. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -1068,23 +1077,23 @@ ID del caso & CP-CAT-004 \\
 Nombre & Cambio rápido de disponibilidad de producto (Agotado / Disponible) en turno activo y reflejo inmediato en toma de pedidos \\
 Historia de usuario & HU-014 --- Cambio rápido de disponibilidad de producto (86ing) en turno activo (Requisitos: \texttt{REQ-{}\allowbreak{}CAT-{}\allowbreak{}03}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Producto \textquotesingle Lomo al Trapo\textquotesingle{} en estado AVAILABLE dentro de una categoría activa\\
-• Sesión de Gerente y sesión de Mesero abiertas simultáneamente en el mismo restaurante\strut
+• Sesión de Gerente (\href{mailto:gerente.forja@gastroforge.dev}{\nolinkurl{gerente.forja@gastroforge.dev}} / Password123!) y sesión de Mesero (\href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} / Password123!) disponibles\\
+• Producto sembrado "Bife de Chorizo 350g" en estado AVAILABLE dentro de "La Forja Grill \& Bar"\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{productName}: \texttt{\textquotedbl{}Lomo al Trapo\textquotedbl{}}\\
+\texttt{productName}: \texttt{\textquotedbl{}Bife de Chorizo 3\allowbreak{}50g\textquotedbl{}}\\
 \texttt{initialState}: \texttt{\textquotedbl{}AVAILABLE\textquotedbl{}}\\
 \texttt{targetState}: \texttt{\textquotedbl{}UNAVAILABLE\textquotedbl{}}\\
 \texttt{restoredState}: \texttt{\textquotedbl{}AVAILABLE\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Desde la vista de Gerente, conmutar el interruptor de disponibilidad rápida de \textquotesingle Lomo al Trapo\textquotesingle{} al estado Agotado (UNAVAILABLE).\\
-2. Desde la tablet del Mesero, intentar agregar \textquotesingle Lomo al Trapo\textquotesingle{} a una nueva comanda de salón.\\
-3. Verificar que el ítem aparezca marcado como \textquotesingle Agotado\textquotesingle{} y deshabilitado para selección.\\
-4. Restaurar el estado a Disponible (AVAILABLE) y comprobar que vuelve a permitir su captura.\strut
+1. Desde la sesión de Gerente en /catalog, cambiar la disponibilidad de "Bife de Chorizo 350g" a Agotado (UNAVAILABLE).\\
+2. Desde la tablet del Mesero en /orders, abrir una comanda e intentar agregar "Bife de Chorizo 350g".\\
+3. Verificar que el ítem aparezca marcado como no disponible / deshabilitado para selección.\\
+4. Restaurar el estado a Disponible (AVAILABLE) en /catalog y comprobar en /orders que vuelve a permitir su captura.\strut
 \end{minipage} \\
 Resultado esperado & La transición AVAILABLE -\textgreater{} UNAVAILABLE bloquea de inmediato la captura del producto en nuevas tandas sin afectar órdenes previas, y la transición UNAVAILABLE -\textgreater{} AVAILABLE restablece su venta. \\
-Resultado obtenido & Al cambiar el estado de \textquotesingle Lomo al Trapo\textquotesingle{} a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura. \\
+Resultado obtenido & Al cambiar el estado de \textquotesingle Bife de Chorizo 350g\textquotesingle{} a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
 Tipo de prueba & \ensuremath{\boxtimes} Funcional \ensuremath{\square} Regresión \ensuremath{\square} Integración \ensuremath{\square} Otro \\
@@ -1131,7 +1140,8 @@ Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{areaName}: \texttt{\textquotedbl{}Salón Principal\textquotedbl{}}\\
-\texttt{tableCode}: \texttt{\textquotedbl{}M-{}\allowbreak{}01\textquotedbl{}}\\
+\texttt{tableCode}: \texttt{\textquotedbl{}M1\textquotedbl{}}\\
+\texttt{normalizedFrom}: \texttt{\textquotedbl{}m1\textquotedbl{}}\\
 \texttt{capacityBoundaries\allowbreak{}}: \texttt{[\allowbreak{}0,\allowbreak{} 1,\allowbreak{} 12,\allowbreak{} 20,\allowbreak{} 21]\allowbreak{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
@@ -1183,20 +1193,20 @@ ID del caso & CP-TAB-002 \\
 Nombre & Inspección táctil del mapa de salón en 1024x768 (tarjetas \textgreater= 104px, contraste semántico FREE vs OCCUPIED) \\
 Historia de usuario & HU-017, HU-033 --- Mapa operativo táctil de mesas en tablet 1024x768 y semántica visual FREE vs OCCUPIED (Requisitos: \texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}02}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Viewport de tablet configurado en 1024x768 px\\
-• Salón con al menos 6 mesas activas: 4 libres (FREE) y 2 con cuenta abierta (OCCUPIED)\strut
+• Sesión iniciada en http://localhost:5173 con \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} / Password123! en viewport 1024x768\\
+• Seed cargado: Mesa M1 con orden abierta (Ocupada) y mesas M2..M4, T1..T2 libres (Disponible)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{viewport}: \texttt{\textquotedbl{}1024x768\textquotedbl{}}\\
 \texttt{minCardHeightPx}: \texttt{104}\\
-\texttt{states}: \texttt{[\allowbreak{}FREE,\allowbreak{} OCCUPIED]\allowbreak{}}\strut
+\texttt{states}: \texttt{[\allowbreak{}Disponible,\allowbreak{} Ocupada,\allowbreak{} Por pagar]\allowbreak{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Acceder a la vista del mapa de mesas (/tables) con usuario rol MESERO en resolución 1024x768.\\
+1. Acceder a la vista del mapa de mesas (/tables) con \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} en resolución 1024x768.\\
 2. Medir mediante DevTools las dimensiones de las tarjetas de mesa confirmando altura mínima \textgreater= 104px y ausencia de scroll horizontal.\\
-3. Verificar que las mesas FREE y OCCUPIED se diferencien simultáneamente por color semántico, etiqueta textual (\textquotesingle Libre\textquotesingle{} / \textquotesingle Ocupada\textquotesingle) e ícono de estado.\strut
+3. Verificar que las mesas Disponibles (ej. M2) y Ocupadas (ej. M1) se diferencien simultáneamente por color semántico, etiqueta textual ("Disponible" / "Ocupada") e ícono de estado.\strut
 \end{minipage} \\
-Resultado esperado & La cuadrícula del salón renderiza tarjetas táctiles \textgreater= 104px sin desbordamiento horizontal y distingue claramente los estados FREE y OCCUPIED mediante triple codificación visual. \\
+Resultado esperado & La cuadrícula del salón en /tables renderiza tarjetas táctiles \textgreater= 104px sin desbordamiento horizontal y distingue claramente los estados Disponible y Ocupada mediante triple codificación visual. \\
 Resultado obtenido & En viewport 1024x768 la vista /tables renderiza tarjetas táctiles con altura medida de 108px (\textgreater= 104px requeridos), sin scroll horizontal y diferenciando mesas libres y ocupadas por color semántico, etiqueta textual e ícono. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -1239,8 +1249,8 @@ Nombre & Derivación dinámica del estado de ocupación de mesas (FREE -\textgre
 Historia de usuario & HU-017 --- Derivación dinámica del estado de ocupación de mesas a partir de órdenes activas (Requisitos: \texttt{REQ-{}\allowbreak{}TAB-{}\allowbreak{}02}) \\
 Precondiciones & • Mesa \textquotesingle M-05\textquotesingle{} activa en el área \textquotesingle Terraza\textquotesingle{} sin órdenes abiertas asociadas \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{tableCode}: \texttt{\textquotedbl{}M-{}\allowbreak{}05\textquotedbl{}}\\
-\texttt{stateSequence}: \texttt{[\allowbreak{}FREE,\allowbreak{} OCCUPIED,\allowbreak{} FREE]\allowbreak{}}\strut
+\texttt{tableCodes}: \texttt{[\allowbreak{}M1,\allowbreak{} M2]\allowbreak{}}\\
+\texttt{stateSequence}: \texttt{[\allowbreak{}disponible,\allowbreak{} ocupada,\allowbreak{} por-{}\allowbreak{}pagar]\allowbreak{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
 1. Consultar GET /api/v1/tables/overview y verificar que la mesa \textquotesingle M-05\textquotesingle{} reporte estado derivado FREE.\\
@@ -1248,7 +1258,7 @@ Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
 3. Comprobar que el estado transiciona automáticamente a OCCUPIED incluyendo el identificador y total acumulado de la orden activa.\\
 4. Cerrar/pagar completamente la orden activa y consultar nuevamente el overview verificando el retorno automático al estado FREE.\strut
 \end{minipage} \\
-Resultado esperado & El estado de la mesa transiciona exactamente FREE -\textgreater{} OCCUPIED -\textgreater{} FREE en función de la orden activa en base de datos, evitando estados huérfanos o desincronizados. \\
+Resultado esperado & La vista de salón deriva dinámicamente los estados disponible, ocupada y por-pagar a partir de las órdenes activas y sus ítems, manteniendo aislamiento estricto por RLS entre restaurantes. \\
 Resultado obtenido & GET /api/v1/tables/overview reporta la mesa \textquotesingle M-05\textquotesingle{} como FREE inicialmente, cambia automáticamente a OCCUPIED al abrir una orden DINE\_IN activa y retorna a FREE tras liquidar y cerrar la orden. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -1291,24 +1301,25 @@ ID del caso & CP-ORD-001 \\
 Nombre & Guion M-01 de usabilidad táctil en salón (Tablet 1024x768): apertura de orden en mesa, selección de 4 ítems con modificadores y verificación de objetivos táctiles (44x44 px observados vs 48x48 px especificados en TESTING-PLAN.md -\textgreater{} DEF-006) \\
 Historia de usuario & HU-018, HU-020, HU-033 --- Guion M-01 de usabilidad táctil en salón (1024x768) y verificación de objetivos táctiles (Requisitos: \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}01}, \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}02}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Emulación de dispositivo iPad / Tablet en viewport 1024x768 px\\
-• Mesero autenticado y mesa \textquotesingle M-02\textquotesingle{} en estado FREE\strut
+• Sesión iniciada con \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} / Password123! en viewport tablet 1024x768\\
+• Mesa M2 en estado Disponible en /tables (M1 viene ocupada por defecto en seed.ts)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{viewport}: \texttt{\textquotedbl{}1024x768\textquotedbl{}}\\
-\texttt{tableCode}: \texttt{\textquotedbl{}M-{}\allowbreak{}02\textquotedbl{}}\\
+\texttt{tableCode}: \texttt{\textquotedbl{}M2\textquotedbl{}}\\
+\texttt{items}: \texttt{[\allowbreak{}Hamburguesa Forja \allowbreak{}Especial (\allowbreak{}Término Medio)\allowbreak{},\allowbreak{} Bife de Chorizo 3\allowbreak{}50g (\allowbreak{}Tres Cuartos)\allowbreak{},\allowbreak{} Papas Rústicas Tr\allowbreak{}ufadas,\allowbreak{} Cerveza Artesanal\allowbreak{} IPA 330ml]\allowbreak{}}\\
 \texttt{itemsCount}: \texttt{4}\\
 \texttt{expectedMinTouchTa\allowbreak{}rgetPx}: \texttt{48}\\
 \texttt{observedStepperTou\allowbreak{}chTargetPx}: \texttt{44}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Tocar la tarjeta de la mesa \textquotesingle M-02\textquotesingle{} para abrir una nueva cuenta DINE\_IN.\\
-2. Seleccionar 4 productos de distintas categorías y configurar sus modificadores obligatorios y opcionales.\\
-3. Utilizar los botones de incremento/decremento (+/-) de cantidad en el carrito de la comanda.\\
-4. Medir en el DOM el bounding box de los botones secundarios (+/-) y chips de filtro contrastándolo contra el umbral de 48x48 px exigido en TESTING-PLAN.md.\strut
+1. En /tables, tocar la tarjeta de la mesa libre "M2" para abrir una nueva cuenta DINE\_IN.\\
+2. Seleccionar 4 productos reales del menú (Hamburguesa Forja Especial, Bife de Chorizo 350g, Papas Rústicas Trufadas y Cerveza Artesanal IPA 330ml) configurando sus modificadores obligatorios.\\
+3. Utilizar los botones de incremento/decremento de cantidad e inspeccionar su caja táctil en DevTools (44x44 px observados vs 48x48 px especificados en TESTING-PLAN.md).\\
+4. Enviar la tanda a cocina y medir el tiempo total de interacción (\textless{} 15 segundos).\strut
 \end{minipage} \\
-Resultado esperado & El flujo funcional completa la apertura y despacho de los 4 ítems en menos de 45 segundos, pero la inspección ergonómica detecta botones secundarios con h-11 (44x44 px) por debajo del umbral de 48x48 px (documentado como defecto cosmético DEF-006). \\
-Resultado obtenido & El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M-02, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (\textless{} 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006). \\
+Resultado esperado & La comanda en mesa M2 se captura y despacha en menos de 15 segundos sin errores de pulsación; la auditoría visual registra la discrepancia menor de objetivo táctil 44x44 px vs 48x48 px (DEF-006). \\
+Resultado obtenido & El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M2, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (\textless{} 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006). \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
 Tipo de prueba & \ensuremath{\square} Funcional \ensuremath{\square} Regresión \ensuremath{\square} Integración \ensuremath{\boxtimes} Otro (Usabilidad) \\
@@ -1354,7 +1365,7 @@ Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{orderTypes}: \texttt{[\allowbreak{}DINE\_\allowbreak{}IN,\allowbreak{} TAKEOUT]\allowbreak{}}\\
-\texttt{tableCode}: \texttt{\textquotedbl{}M-{}\allowbreak{}03\textquotedbl{}}\\
+\texttt{tableCode}: \texttt{\textquotedbl{}M1\textquotedbl{}}\\
 \texttt{dinersCount}: \texttt{4}\\
 \texttt{customerName}: \texttt{\textquotedbl{}Cliente Mostrador\allowbreak{}\textquotedbl{}}\strut
 \end{minipage} \\
@@ -1462,22 +1473,23 @@ ID del caso & CP-ORD-004 \\
 Nombre & Cancelación manual de ítem en estado PREPARING solicitando autorización/PIN de Gerente y motivo obligatorio de auditoría \\
 Historia de usuario & HU-022 --- Cancelación manual de ítem en preparación con autorización de Gerente y motivo de auditoría (Requisitos: \texttt{REQ-{}\allowbreak{}ORD-{}\allowbreak{}03}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Orden activa con un ítem cuyo estado en cocina ya avanzó a PREPARING\\
-• Mesero operando la comanda en salón y Gerente disponible para autorizar\strut
+• Sesión iniciada con \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}} / Password123! en /orders\\
+• Orden abierta en mesa M1 (sembrada en seed.ts) con ítem "Hamburguesa Forja Especial" en estado PREPARING\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{itemStatus}: \texttt{\textquotedbl{}PREPARING\textquotedbl{}}\\
-\texttt{requestingRole}: \texttt{\textquotedbl{}MESERO\textquotedbl{}}\\
-\texttt{authorizingRole}: \texttt{\textquotedbl{}GERENTE\textquotedbl{}}\\
-\texttt{cancellationReason\allowbreak{}}: \texttt{\textquotedbl{}Cliente cambió de\allowbreak{} opinión por alerg\allowbreak{}ia alimentaria\textquotedbl{}}\strut
+\texttt{tableCode}: \texttt{\textquotedbl{}M1\textquotedbl{}}\\
+\texttt{itemState}: \texttt{\textquotedbl{}PREPARING\textquotedbl{}}\\
+\texttt{supervisorEmail}: \texttt{\textquotedbl{}gerente.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{supervisorPasscode\allowbreak{}}: \texttt{\textquotedbl{}Password123!\textquotedbl{}}\\
+\texttt{cancellationReason\allowbreak{}}: \texttt{\textquotedbl{}Error de digitaci\allowbreak{}ón en término de c\allowbreak{}occión solicitado \allowbreak{}por el cliente\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Como Mesero, seleccionar la opción \textquotesingle Cancelar ítem\textquotesingle{} sobre el producto en estado PREPARING.\\
-2. Verificar que el sistema bloquee la anulación directa por falta de privilegios y solicite autorización de Gerente/Admin junto con un motivo obligatorio.\\
-3. Intentar confirmar con el campo de motivo vacío verificando validación de formulario.\\
-4. Ingresar credenciales/autorización de Gerente y el motivo de auditoría, confirmando la anulación.\strut
+1. En /orders como \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}}, abrir la orden de la mesa M1 y tocar "Cancelar" en el ítem en estado PREPARING.\\
+2. Ingresar el "Motivo de cancelación" (mínimo 5 caracteres).\\
+3. En los campos de autorización de supervisor que aparecen inline, ingresar "Correo de Gerente / Admin" = \href{mailto:gerente.forja@gastroforge.dev}{\nolinkurl{gerente.forja@gastroforge.dev}} y "Contraseña / PIN de supervisor" = Password123!.\\
+4. Confirmar la cancelación y verificar que el ítem quede tachado (CANCELLED) y el total de la orden se recalcule.\strut
 \end{minipage} \\
-Resultado esperado & El ítem pasa a estado CANCELLED, se descuenta su valor del saldo de la orden, se notifica al KDS y queda registrado el evento en audit\_log con el autorizador y el motivo. \\
+Resultado esperado & El ítem en estado PREPARING exige credenciales válidas de supervisor (GERENTE/ADMIN) y motivo obligatorio, queda cancelado y el total de la orden se recalcula correctamente. \\
 Resultado obtenido & El Mesero no puede anular directamente un ítem en estado PREPARING; al suministrar autorización de Gerente y el motivo obligatorio (\textquotesingle Cliente cambió de opinión por alergia alimentaria\textquotesingle), el ítem pasa a CANCELLED, se descuenta del total y se audita en audit\_log. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -1629,22 +1641,23 @@ ID del caso & CP-KIT-001 \\
 Nombre & Visualización de cola KDS en tablet (1024x768) filtrada por estación (PARRILLA) y validación de alertas cromáticas de urgencia por tiempo de espera \\
 Historia de usuario & HU-023, HU-033 --- Visualización de cola KDS en tablet (1024x768) e indicadores semafóricos de urgencia (Requisitos: \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}01}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Cocinero autenticado asignado a la estación \textquotesingle PARRILLA\textquotesingle{} en tablet 1024x768\\
-• Tres comandas activas con tiempos transcurridos en las 3 particiones de equivalencia: \textless{} 10 min (A tiempo), 10-15 min (Alerta ámbar) y \textgreater{} 15 min (Demorado rojo)\strut
+• Sesión iniciada con \href{mailto:cocina.forja@gastroforge.dev}{\nolinkurl{cocina.forja@gastroforge.dev}} / Password123! en viewport 1024x768\\
+• Estación "Parrilla y Calientes" con ítems activos en cola (sembrados en M1 o recién despachados)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{stationCode}: \texttt{\textquotedbl{}PARRILLA\textquotedbl{}}\\
+\texttt{email}: \texttt{\textquotedbl{}cocina.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{route}: \texttt{\textquotedbl{}/\allowbreak{}kitchen\textquotedbl{}}\\
 \texttt{viewport}: \texttt{\textquotedbl{}1024x768\textquotedbl{}}\\
-\texttt{elapsedMinutesPart\allowbreak{}itions}: \texttt{[\allowbreak{}4,\allowbreak{} 12,\allowbreak{} 18]\allowbreak{}}\strut
+\texttt{stationFilter}: \texttt{\textquotedbl{}Parrilla y Calien\allowbreak{}tes\textquotedbl{}}\\
+\texttt{urgencyThresholdsM\allowbreak{}inutes}: \texttt{[\allowbreak{}object Object]\allowbreak{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Abrir la pantalla KDS (/kitchen) en viewport 1024x768.\\
-2. Confirmar que únicamente se muestren los ítems enrutados a la estación \textquotesingle PARRILLA\textquotesingle{} y no los de \textquotesingle BARRA\textquotesingle.\\
-3. Verificar el ordenamiento FIFO (la comanda más antigua aparece primero en la cola).\\
-4. Comprobar que cada tarjeta exhiba el badge cromático y textual correspondiente a su partición de tiempo (A tiempo / Alerta / Demorado).\strut
+1. Abrir la vista /kitchen con \href{mailto:cocina.forja@gastroforge.dev}{\nolinkurl{cocina.forja@gastroforge.dev}} en resolución tablet 1024x768.\\
+2. Seleccionar el filtro de estación "Parrilla y Calientes" y verificar que no aparezcan ítems exclusivos de "Bar y Bebidas".\\
+3. Verificar el ordenamiento FIFO de las comandas y las alertas cromáticas según el tiempo de espera.\strut
 \end{minipage} \\
-Resultado esperado & El KDS muestra exclusivamente la cola FIFO de PARRILLA con tarjetas legibles a distancia de brazo y semáforo visual exacto según los umbrales de espera. \\
-Resultado obtenido & En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación \textquotesingle PARRILLA\textquotesingle{} en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo). \\
+Resultado esperado & El KDS en /kitchen muestra exclusivamente la cola FIFO de "Parrilla y Calientes" con tarjetas legibles y semáforo visual exacto según los umbrales de espera. \\
+Resultado obtenido & En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación \textquotesingle Parrilla y Calientes\textquotesingle{} en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo). \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
 Tipo de prueba & \ensuremath{\square} Funcional \ensuremath{\square} Regresión \ensuremath{\square} Integración \ensuremath{\boxtimes} Otro (Usabilidad) \\
@@ -1794,21 +1807,22 @@ ID del caso & CP-KIT-004 \\
 Nombre & Guion M-02 de reconexión reactiva de Server-Sent Events (SSE) ante corte temporal de red Wi-Fi (30 s) e invalidación automática de caché TanStack Query sin recarga manual (F5) \\
 Historia de usuario & HU-025 / ADR-0004 --- Guion M-02 de reconexión reactiva SSE ante corte de red e invalidación de caché (Requisitos: \texttt{REQ-{}\allowbreak{}KIT-{}\allowbreak{}03}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Pantalla KDS abierta y conectada al stream SSE (/api/v1/events/stream) mostrando indicador \textquotesingle En vivo\textquotesingle{}\\
-• Tablet de Mesero lista para despachar una nueva tanda\strut
+• Vista /kitchen abierta en una ventana con \href{mailto:cocina.forja@gastroforge.dev}{\nolinkurl{cocina.forja@gastroforge.dev}} y /orders en otra ventana con \href{mailto:mesero.forja@gastroforge.dev}{\nolinkurl{mesero.forja@gastroforge.dev}}\\
+• Indicador SSE conectado contra /api/v1/events/stream\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{networkOutageSecon\allowbreak{}ds}: \texttt{30}\\
 \texttt{sseEndpoint}: \texttt{\textquotedbl{}/\allowbreak{}api/\allowbreak{}v1/\allowbreak{}events/\allowbreak{}stream\textquotedbl{}}\\
+\texttt{reconnectingLabel}: \texttt{\textquotedbl{}Reconectando SSE\textquotedbl{}\allowbreak{}}\\
 \texttt{eventDispatchedDur\allowbreak{}ingOutage}: \texttt{\textquotedbl{}order.\allowbreak{}round.\allowbreak{}dispatched\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. En DevTools de la tablet KDS, activar el modo Offline (simulando caída de Wi-Fi en cocina) durante 30 segundos.\\
-2. Confirmar que el indicador de estado de conexión cambie a \textquotesingle Reconectando...\textquotesingle.\\
-3. Mientras el KDS está sin red, despachar una nueva tanda desde la tablet del Mesero (persistida en outbox\_events).\\
-4. Restaurar la conexión de red en la tablet KDS sin presionar F5 y observar la reconexión automática del EventSource.\strut
+1. En DevTools de la ventana KDS (/kitchen), activar el modo Offline durante 30 segundos.\\
+2. Confirmar que el indicador de estado de conexión cambie a "Reconectando SSE".\\
+3. Mientras el KDS está sin red, despachar una nueva tanda desde la ventana del Mesero (/orders).\\
+4. Restaurar la conexión de red (Online) en el KDS sin presionar F5 y observar la reconexión automática.\strut
 \end{minipage} \\
-Resultado esperado & Al recuperar la red, el cliente SSE se reconecta automáticamente, invalida las queries de TanStack Query y renderiza la nueva comanda despachada durante el corte sin requerir recarga manual. \\
+Resultado esperado & Al recuperar la red, el cliente SSE se reconecta automáticamente a /api/v1/events/stream, invalida las queries de TanStack Query y renderiza la nueva comanda sin recargar la página. \\
 Resultado obtenido & Durante el corte simulado de red Wi-Fi de 30 segundos en la tablet KDS, la tanda despachada se persiste en outbox\_event; al restaurar la red, el cliente SSE se reconecta automáticamente, invalida las queries de TanStack Query y muestra el nuevo pedido sin presionar F5. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -1902,22 +1916,24 @@ Descripción
 ID del caso & CP-CSH-002 \\
 Nombre & Apertura de turno de caja con fondo inicial y cierre de turno con arqueo ciego registrando diferencia sobrante/faltante y observación obligatoria \\
 Historia de usuario & HU-026 --- Apertura de turno de caja y cierre con arqueo ciego y conciliación de diferencias (Requisitos: \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}01}) \\
-Precondiciones & • Cajero autenticado con turno abierto (fondo inicial \$200.000) y ventas en efectivo acumuladas por \$150.000 (efectivo esperado = \$350.000) \\
+Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
+• Sesión iniciada con \href{mailto:cajero.forja@gastroforge.dev}{\nolinkurl{cajero.forja@gastroforge.dev}} / Password123! en /cashier\\
+• Sesión de caja abierta en "Caja Principal" (seed.ts inicia con una sesión OPEN con fondo de \$200,000 COP)\strut
+\end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{email}: \texttt{\textquotedbl{}cajero.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{route}: \texttt{\textquotedbl{}/\allowbreak{}cashier\textquotedbl{}}\\
 \texttt{openingAmount}: \texttt{200000}\\
-\texttt{cashSales}: \texttt{150000}\\
-\texttt{expectedCash}: \texttt{350000}\\
-\texttt{declaredCountedCas\allowbreak{}h}: \texttt{345000}\\
-\texttt{discrepancy}: \texttt{-{}\allowbreak{}5000}\\
-\texttt{closingNotes}: \texttt{\textquotedbl{}Faltante de \$5.\allowbreak{}000 en cambio de b\allowbreak{}illete de \$50.\allowbreak{}000\textquotedbl{}}\strut
+\texttt{declaredCountedCas\allowbreak{}h}: \texttt{195000}\\
+\texttt{closingNotes}: \texttt{\textquotedbl{}Faltante de \$5.\allowbreak{}000 en conteo físi\allowbreak{}co de cierre de tu\allowbreak{}rno\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Iniciar el flujo de \textquotesingle Cerrar Turno de Caja\textquotesingle{} verificando que la interfaz realice arqueo ciego (no muestra el efectivo esperado antes de declarar el conteo físico).\\
-2. Ingresar el monto físico contado de \$345.000 y una nota explicativa obligatoria.\\
-3. Confirmar el cierre del turno.\\
-4. Verificar el resumen de conciliación generado y comprobar que la sesión en estado CLOSED bloquee cualquier nuevo cobro.\strut
+1. En /cashier, dirigirse a la sección "Blind Cash Count (Arqueo a Ciegas)" verificando que no se revele el efectivo esperado antes de declarar el conteo físico.\\
+2. Ingresar el monto físico contado (ej. \$195,000) y la nota explicativa obligatoria.\\
+3. Confirmar el cierre del turno de caja.\\
+4. Verificar el resumen de conciliación generado y comprobar que en estado CLOSED no se permitan nuevos cobros hasta abrir un nuevo turno.\strut
 \end{minipage} \\
-Resultado esperado & El sistema calcula exactamente la diferencia (-\$5.000 faltante), persiste el cierre inmutable en estado CLOSED con su observación de auditoría e impide registrar pagos adicionales en ese turno. \\
+Resultado esperado & El sistema realiza el arqueo ciego, calcula la diferencia exacta, persiste el cierre en estado CLOSED con observación obligatoria y bloquea cobros adicionales hasta abrir una nueva sesión. \\
 Resultado obtenido & La interfaz ejecuta arqueo ciego sin revelar el saldo esperado (\$350.000); al declarar \$345.000 físicos e ingresar la observación obligatoria, calcula exactamente la diferencia (-\$5.000 faltante), transiciona a CLOSED inmutable y bloquea cobros posteriores. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -2072,21 +2088,22 @@ ID del caso & CP-CSH-005 \\
 Nombre & Presentación de errores RFC 7807 (err.detail en AlertBanner) en la interfaz de caja al intentar cobrar un monto mayor al saldo pendiente (verificación de DEF-003) \\
 Historia de usuario & HU-027, HU-034 --- Presentación de errores RFC 7807 (detail) en interfaz de caja ante cobro excesivo (Requisitos: \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}02}, \texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Sesión de caja abierta y orden activa con saldo pendiente exacto de \$45.000\\
-• Interfaz de cobro abierta en navegador con cliente HTTP conectado al backend\strut
+• Sesión iniciada con \href{mailto:cajero.forja@gastroforge.dev}{\nolinkurl{cajero.forja@gastroforge.dev}} / Password123! en /cashier\\
+• Sesión de caja OPEN y orden abierta con saldo pendiente (ej. orden sembrada de Mesa M1 con saldo \$114,000 COP)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{pendingBalance}: \texttt{45000}\\
-\texttt{attemptedPaymentAm\allowbreak{}ount}: \texttt{60000}\\
-\texttt{expectedHttpStatus\allowbreak{}}: \texttt{422}\\
-\texttt{expectedProblemDet\allowbreak{}ail}: \texttt{\textquotedbl{}El monto del pago\allowbreak{} (\allowbreak{}60000.\allowbreak{}00)\allowbreak{} supera el saldo p\allowbreak{}endiente de la ord\allowbreak{}en (\allowbreak{}45000.\allowbreak{}00)\allowbreak{}.\allowbreak{}\textquotedbl{}}\strut
+\texttt{orderTable}: \texttt{\textquotedbl{}M1\textquotedbl{}}\\
+\texttt{pendingBalance}: \texttt{114000}\\
+\texttt{attemptedPaymentAm\allowbreak{}ount}: \texttt{150000}\\
+\texttt{expectedHttpStatus\allowbreak{}}: \texttt{422}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. En el modal de cobro de la orden, seleccionar método \textquotesingle Tarjeta\textquotesingle{} e ingresar un monto de \$60.000 (superior al saldo pendiente de \$45.000).\\
-2. Enviar el formulario de pago.\\
-3. Observar el AlertBanner renderizado en la interfaz y verificar que extraiga el campo estándar err.detail del payload RFC 7807 en lugar de mostrar un mensaje genérico.\strut
+1. En /cashier, seleccionar la orden pendiente (ej. M1 por \$114,000 COP).\\
+2. Seleccionar método de pago e ingresar un monto de \$150,000 (superior al saldo pendiente).\\
+3. Enviar el formulario de cobro.\\
+4. Observar el AlertBanner renderizado en la interfaz y verificar que muestre el campo err.detail del payload RFC 7807 (confirmando resolución de DEF-003).\strut
 \end{minipage} \\
-Resultado esperado & El backend responde HTTP 422 con application/problem+json y el AlertBanner del frontend muestra explícitamente el detalle del problema RFC 7807 (confirmando la resolución de DEF-003). \\
+Resultado esperado & El backend responde HTTP 422 con application/problem+json y el AlertBanner del frontend muestra explícitamente el detalle del problema RFC 7807 en lugar de un mensaje genérico. \\
 Resultado obtenido & Al intentar cobrar \$60.000 sobre un saldo pendiente de \$45.000, el backend responde HTTP 422 (application/problem+json) y el componente AlertBanner renderiza explícitamente el campo err.detail del problema RFC 7807, confirmando la corrección de DEF-003. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -2182,22 +2199,22 @@ ID del caso & CP-CSH-007 \\
 Nombre & Ejecución manual de reverso compensatorio de pago y ajuste de saldo con autorización de Gerente y verificación de saldo recalculado \\
 Historia de usuario & HU-028 --- Ejecución manual de reverso compensatorio de pago y ajuste de saldo con autorización de Gerente (Requisitos: \texttt{REQ-{}\allowbreak{}CSH-{}\allowbreak{}03}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Sesión de caja abierta con un pago registrado por error en método \textquotesingle Efectivo\textquotesingle{} por \$65.000\\
-• Usuario con rol GERENTE autenticado\strut
+• Sesión iniciada con \href{mailto:gerente.forja@gastroforge.dev}{\nolinkurl{gerente.forja@gastroforge.dev}} / Password123! (rol GERENTE con permiso cash:reverse\_payment) en /cashier\\
+• Orden con pago COMPLETED registrado (ej. orden TAKEOUT sembrada de Carlos Gómez por \$76,000 COP o un pago recién cobrado)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
-\texttt{originalPaymentAmo\allowbreak{}unt}: \texttt{65000}\\
-\texttt{originalMethod}: \texttt{\textquotedbl{}CASH\textquotedbl{}}\\
+\texttt{email}: \texttt{\textquotedbl{}gerente.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{route}: \texttt{\textquotedbl{}/\allowbreak{}cashier\textquotedbl{}}\\
 \texttt{authorizingRole}: \texttt{\textquotedbl{}GERENTE\textquotedbl{}}\\
-\texttt{reversalReason}: \texttt{\textquotedbl{}Cobro imputado po\allowbreak{}r error en efectiv\allowbreak{}o cuando el client\allowbreak{}e pagó por transfe\allowbreak{}rencia\textquotedbl{}}\strut
+\texttt{reversalReason}: \texttt{\textquotedbl{}Cobro imputado po\allowbreak{}r error en método \allowbreak{}incorrecto durante\allowbreak{} la demostración\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Acceder al detalle de pagos de la orden desde el módulo de Caja con rol GERENTE.\\
-2. Seleccionar \textquotesingle Reversar pago\textquotesingle, ingresar el motivo obligatorio de auditoría y confirmar la operación.\\
-3. Verificar que el pago original permanezca en el historial y aparezca un nuevo asiento compensatorio de reverso.\\
-4. Comprobar que el saldo pendiente de la orden se restablezca a \$65.000 para permitir registrar el cobro correcto.\strut
+1. En /cashier como \href{mailto:gerente.forja@gastroforge.dev}{\nolinkurl{gerente.forja@gastroforge.dev}}, seleccionar una orden con pago en estado COMPLETED.\\
+2. Hacer clic en el botón "Reverse" junto al pago correspondiente.\\
+3. Ingresar el motivo en "Reversal Reason (min 10 chars)" y confirmar con "Confirm Reversal".\\
+4. Verificar que el pago original permanezca en el historial (marcado como REVERSED), aparezca un asiento compensatorio REVERSAL y el saldo pendiente de la orden se restablezca.\strut
 \end{minipage} \\
-Resultado esperado & El reverso se registra como un asiento compensatorio inmutable (sin borrar el pago original), recalcula el saldo pendiente de la orden a \$65.000 y guarda la auditoría del Gerente. \\
+Resultado esperado & El reverso se registra como un asiento compensatorio inmutable (sin borrar el pago original), recalcula el saldo pendiente de la orden y guarda la auditoría del Gerente. \\
 Resultado obtenido & El usuario con rol GERENTE ejecuta el reverso del pago de \$65.000 ingresando motivo obligatorio; el pago original se mantiene inmutable, se inserta el asiento compensatorio referenciando reverses\_payment\_id y el saldo pendiente vuelve a \$65.000. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\boxtimes} Alta \ensuremath{\square} Media \ensuremath{\square} Baja \\
@@ -2456,20 +2473,20 @@ ID del caso & CP-REP-002 \\
 Nombre & Verificación manual de vista previa e impresión térmica de 80mm (@media print) para recibo de orden y tirilla de cierre de caja sin desbordamiento horizontal \\
 Historia de usuario & HU-032 --- Reporte imprimible de recibo de orden y tirilla de cierre de caja en formato térmico 80mm (Requisitos: \texttt{REQ-{}\allowbreak{}REP-{}\allowbreak{}02}) \\
 Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
-• Turno de caja cerrado con datos de ventas, propinas, reversos y arqueo declarados\\
-• Navegador con emulación de medios CSS @media print y ancho de papel de 80mm (\textasciitilde302px)\strut
+• Sesión iniciada en /cashier con \href{mailto:cajero.forja@gastroforge.dev}{\nolinkurl{cajero.forja@gastroforge.dev}} o \href{mailto:gerente.forja@gastroforge.dev}{\nolinkurl{gerente.forja@gastroforge.dev}}\\
+• Al menos un pago COMPLETED (para recibo 80mm) o una sesión de caja CLOSED (para tirilla de cierre 80mm)\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{route}: \texttt{\textquotedbl{}/\allowbreak{}cashier\textquotedbl{}}\\
 \texttt{paperWidthMm}: \texttt{80}\\
-\texttt{mediaQuery}: \texttt{\textquotedbl{}print\textquotedbl{}}\\
-\texttt{sections}: \texttt{[\allowbreak{}Encabezado fiscal,\allowbreak{} Ventas por método\allowbreak{},\allowbreak{} Propinas,\allowbreak{} Arqueo esperado v\allowbreak{}s contado,\allowbreak{} Firmas]\allowbreak{}}\strut
+\texttt{mediaQuery}: \texttt{\textquotedbl{}print\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Abrir la vista del reporte de cierre de caja y activar el modo de vista previa de impresión (@media print).\\
-2. Verificar que la barra lateral de navegación y los botones de acción queden ocultos (display: none).\\
-3. Comprobar que el contenedor del ticket se ajuste a 80mm con tipografía monoespaciada legible, sin truncamiento de montos ni scroll horizontal.\strut
+1. En /cashier, abrir "View 80mm Receipt" en una orden pagada (o "Print 80mm Report" tras cerrar la sesión de caja).\\
+2. Hacer clic en "Print 80mm" / "Print 80mm Ticket" (o activar vista previa de impresión del navegador).\\
+3. Verificar que la barra lateral y botones queden ocultos (clases print:hidden) y que la tirilla de 80mm se muestre alineada sin desbordamiento horizontal.\strut
 \end{minipage} \\
-Resultado esperado & La tirilla térmica de 80mm muestra todos los rubros del arqueo y del recibo de pago perfectamente alineados y listos para impresora POS sin elementos de interfaz sobrantes. \\
+Resultado esperado & La tirilla térmica de 80mm muestra todos los rubros alineados para impresora POS sin elementos de navegación sobrantes ni desbordamiento horizontal. \\
 Resultado obtenido & En vista previa de impresión (@media print) con ancho de papel de 80mm (\textasciitilde302px), la navegación lateral y botones quedan ocultos (display: none) y tanto el recibo de orden como la tirilla de cierre de caja se ajustan sin truncamiento ni scroll horizontal. \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
@@ -2681,16 +2698,18 @@ Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
 • Navegadores Playwright Chromium y WebKit configurados en viewport 1024x768\strut
 \end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{email}: \texttt{\textquotedbl{}admin.\allowbreak{}forja@gastroforge.\allowbreak{}dev\textquotedbl{}}\\
+\texttt{password}: \texttt{\textquotedbl{}Password123!\textquotedbl{}}\\
 \texttt{viewport}: \texttt{\textquotedbl{}1024x768\textquotedbl{}}\\
 \texttt{browsers}: \texttt{[\allowbreak{}chromium,\allowbreak{} webkit]\allowbreak{}}\\
-\texttt{tableCode}: \texttt{\textquotedbl{}M-{}\allowbreak{}01\textquotedbl{}}\\
-\texttt{paymentMethod}: \texttt{\textquotedbl{}CASH\textquotedbl{}}\strut
+\texttt{orderType}: \texttt{\textquotedbl{}TAKEOUT\textquotedbl{}}\\
+\texttt{routes}: \texttt{[\allowbreak{}/\allowbreak{}login,\allowbreak{} /\allowbreak{}cashier,\allowbreak{} /\allowbreak{}orders,\allowbreak{} /\allowbreak{}kitchen,\allowbreak{} /\allowbreak{}reports]\allowbreak{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Iniciar sesión en tablet (1024x768), abrir turno de caja registradora y navegar al mapa de mesas verificando estado inicial FREE.\\
-2. Abrir una orden DINE\_IN en la mesa M-01, agregar ítems con modificadores y despachar la tanda a cocina.\\
-3. Abrir la vista KDS, verificar la recepción en tiempo real de la comanda y avanzar el ítem por los estados Pendiente -\textgreater{} En preparación -\textgreater{} Listo.\\
-4. Procesar el cobro total de la cuenta en Caja, verificar la generación del recibo térmico de 80mm y comprobar que la mesa M-01 retorne a estado FREE.\strut
+1. Iniciar sesión en /login con \href{mailto:admin.forja@gastroforge.dev}{\nolinkurl{admin.forja@gastroforge.dev}} / Password123! en viewport 1024x768 (Chromium y WebKit).\\
+2. Verificar sesión de caja abierta en /cashier y crear una orden TAKEOUT en /orders despachando su tanda.\\
+3. Navegar a /kitchen y avanzar el ítem en KDS hasta READY.\\
+4. Navegar a /cashier y /reports para verificar el flujo completo E2E sin errores de consola ni desbordamiento.\strut
 \end{minipage} \\
 Resultado esperado & El ciclo operativo punta a punta finaliza sin errores en Chromium y WebKit (1024x768), manteniendo consistencia transaccional entre Mesas, Órdenes, KDS y Caja. \\
 Resultado obtenido & La suite Playwright E2E (tablet-golden-path.e2e.spec.ts) completa sin errores el flujo login -\textgreater{} sesión de caja -\textgreater{} mapa de mesas -\textgreater{} apertura de pedido y envío de tanda -\textgreater{} avance KDS (Pendiente -\textgreater{} En preparación -\textgreater{} Listo) -\textgreater{} cobro y vista de reportes en Chromium y WebKit (1024x768). \\
@@ -2733,18 +2752,22 @@ Descripción
 ID del caso & CP-RLS-004 \\
 Nombre & Verificación manual de cabeceras de seguridad Zero-Trust: rechazo CORS para Origin: null u orígenes no autorizados, propagación de X-Request-Id y formato estándar RFC 7807 (application/problem+json) \\
 Historia de usuario & HU-034 / ADR-0006 --- Verificación de cabeceras Zero-Trust: CORS estricto, propagación de X-Request-Id y formato RFC 7807 (Requisitos: \texttt{REQ-{}\allowbreak{}RLS-{}\allowbreak{}02}) \\
-Precondiciones & • Servidor API ejecutándose con lista blanca explícita de orígenes CORS configurada \\
+Precondiciones & \begin{minipage}[t]{\linewidth}\raggedright
+• Servidor backend ejecutándose en http://localhost:3000 sobre el commit be9089e\\
+• Terminal con curl o PowerShell disponible (prueba manual a nivel HTTP/API)\strut
+\end{minipage} \\
 Datos de entrada & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{apiUrl}: \texttt{\textquotedbl{}http:\allowbreak{}/\allowbreak{}/\allowbreak{}localhost:\allowbreak{}3000/\allowbreak{}api/\allowbreak{}v1/\allowbreak{}tables\textquotedbl{}}\\
 \texttt{unauthorizedOrigin\allowbreak{}s}: \texttt{[\allowbreak{}null,\allowbreak{} https:\allowbreak{}/\allowbreak{}/\allowbreak{}evil-{}\allowbreak{}attacker.\allowbreak{}example.\allowbreak{}com]\allowbreak{}}\\
 \texttt{customRequestId}: \texttt{\textquotedbl{}req-{}\allowbreak{}qa-{}\allowbreak{}audit-{}\allowbreak{}0040\textquotedbl{}}\\
 \texttt{expectedContentTyp\allowbreak{}e}: \texttt{\textquotedbl{}application/\allowbreak{}problem+json\textquotedbl{}}\strut
 \end{minipage} \\
 Pasos de ejecución & \begin{minipage}[t]{\linewidth}\raggedright
-1. Enviar petición OPTIONS/POST al API con encabezado Origin: null y con Origin: \url{https://evil-attacker.example.com.\%3Cbr\%3E2}. Verificar que el servidor no emita Access-Control-Allow-Origin para los orígenes no autorizados.\\
-3. Enviar una petición a una ruta protegida sin token incluyendo el encabezado X-Request-Id: req-qa-audit-0040.\\
-4. Inspeccionar los encabezados y el cuerpo de la respuesta HTTP 401.\strut
+1. Desde terminal, enviar una petición OPTIONS/POST a http://localhost:3000/api/v1/auth/login con cabecera Origin: null y otra con Origin: \url{https://evil-attacker.example.com.\%3Cbr\%3E2}. Verificar en los encabezados de respuesta que el servidor NO emita Access-Control-Allow-Origin para los orígenes no autorizados.\\
+3. Enviar una petición GET a http://localhost:3000/api/v1/tables sin token Bearer incluyendo la cabecera X-Request-Id: req-qa-audit-0040.\\
+4. Inspeccionar el código HTTP 401, el Content-Type application/problem+json y la propagación de X-Request-Id en la respuesta.\strut
 \end{minipage} \\
-Resultado esperado & Los orígenes no autorizados (incluido Origin: null) son bloqueados por la política CORS; la respuesta de error conserva X-Request-Id: req-qa-audit-0040 y devuelve estructura RFC 7807 con Content-Type application/problem+json. \\
+Resultado esperado & Los orígenes no autorizados (incluido Origin: null) son bloqueados por CORS; la respuesta HTTP 401 conserva X-Request-Id: req-qa-audit-0040 y devuelve estructura RFC 7807 con Content-Type application/problem+json. \\
 Resultado obtenido & Las peticiones con Origin: null y Origin: \url{https://evil-attacker.example.com} no reciben cabecera Access-Control-Allow-Origin; la respuesta HTTP 401 conserva X-Request-Id: req-qa-audit-0040 y devuelve payload estándar RFC 7807 (application/problem+json). \\
 Estado & \ensuremath{\square} No ejecutado \ensuremath{\boxtimes} Pasó \ensuremath{\square} Falló \ensuremath{\square} Bloqueado \\
 Prioridad & \ensuremath{\square} Alta \ensuremath{\boxtimes} Media \ensuremath{\square} Baja \\
