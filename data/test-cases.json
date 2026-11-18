@@ -54,7 +54,7 @@
       "Rate limiter configurado en el endpoint POST /api/v1/auth/login (umbral de frontera: intentos 1..5 permitidos, intento 6 bloqueado)"
     ],
     "inputData": {
-      "email": "admin@gastroforge.io",
+      "email": "admin.forja@gastroforge.dev",
       "wrongPassword": "WrongPassword999!",
       "attemptBoundaries": [
         1,
@@ -398,7 +398,8 @@
     ],
     "inputData": {
       "areaName": "Salón Principal",
-      "tableCode": "M-01",
+      "tableCode": "M1",
+      "normalizedFrom": "m1",
       "capacityBoundaries": [
         0,
         1,
@@ -470,11 +471,14 @@
       "Mesa 'M-05' activa en el área 'Terraza' sin órdenes abiertas asociadas"
     ],
     "inputData": {
-      "tableCode": "M-05",
+      "tableCodes": [
+        "M1",
+        "M2"
+      ],
       "stateSequence": [
-        "FREE",
-        "OCCUPIED",
-        "FREE"
+        "disponible",
+        "ocupada",
+        "por-pagar"
       ]
     },
     "steps": [
@@ -483,7 +487,7 @@
       "Comprobar que el estado transiciona automáticamente a OCCUPIED incluyendo el identificador y total acumulado de la orden activa.",
       "Cerrar/pagar completamente la orden activa y consultar nuevamente el overview verificando el retorno automático al estado FREE."
     ],
-    "expectedResult": "El estado de la mesa transiciona exactamente FREE -> OCCUPIED -> FREE en función de la orden activa en base de datos, evitando estados huérfanos o desincronizados.",
+    "expectedResult": "La vista de salón deriva dinámicamente los estados disponible, ocupada y por-pagar a partir de las órdenes activas y sus ítems, manteniendo aislamiento estricto por RLS entre restaurantes.",
     "responsible": "Christian Urrego Issa (@Christu12)",
     "automatedSpecPath": "apps/api/test/tables-overview.int-spec.ts"
   },
@@ -551,7 +555,7 @@
         "DINE_IN",
         "TAKEOUT"
       ],
-      "tableCode": "M-03",
+      "tableCode": "M1",
       "dinersCount": 4,
       "customerName": "Cliente Mostrador"
     },
@@ -1397,19 +1401,27 @@
       "Navegadores Playwright Chromium y WebKit configurados en viewport 1024x768"
     ],
     "inputData": {
+      "email": "admin.forja@gastroforge.dev",
+      "password": "Password123!",
       "viewport": "1024x768",
       "browsers": [
         "chromium",
         "webkit"
       ],
-      "tableCode": "M-01",
-      "paymentMethod": "CASH"
+      "orderType": "TAKEOUT",
+      "routes": [
+        "/login",
+        "/cashier",
+        "/orders",
+        "/kitchen",
+        "/reports"
+      ]
     },
     "steps": [
-      "Iniciar sesión en tablet (1024x768), abrir turno de caja registradora y navegar al mapa de mesas verificando estado inicial FREE.",
-      "Abrir una orden DINE_IN en la mesa M-01, agregar ítems con modificadores y despachar la tanda a cocina.",
-      "Abrir la vista KDS, verificar la recepción en tiempo real de la comanda y avanzar el ítem por los estados Pendiente -> En preparación -> Listo.",
-      "Procesar el cobro total de la cuenta en Caja, verificar la generación del recibo térmico de 80mm y comprobar que la mesa M-01 retorne a estado FREE."
+      "Iniciar sesión en /login con admin.forja@gastroforge.dev / Password123! en viewport 1024x768 (Chromium y WebKit).",
+      "Verificar sesión de caja abierta en /cashier y crear una orden TAKEOUT en /orders despachando su tanda.",
+      "Navegar a /kitchen y avanzar el ítem en KDS hasta READY.",
+      "Navegar a /cashier y /reports para verificar el flujo completo E2E sin errores de consola ni desbordamiento."
     ],
     "expectedResult": "El ciclo operativo punta a punta finaliza sin errores en Chromium y WebKit (1024x768), manteniendo consistencia transaccional entre Mesas, Órdenes, KDS y Caja.",
     "responsible": "Christian Urrego Issa (@Christu12)",
