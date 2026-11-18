@@ -578,8 +578,12 @@ export const TestCasesView: React.FC<TestCasesViewProps> = ({
           role="dialog"
           aria-modal="true"
           aria-labelledby="drawer-case-title"
+          onClick={() => setSelectedCaseId(null)}
         >
-          <div className="bg-white w-full max-w-3xl h-full overflow-y-auto shadow-2xl border-l border-slate-300 flex flex-col justify-between">
+          <div
+            className="bg-white w-full max-w-3xl h-full overflow-y-auto shadow-2xl border-l border-slate-300 flex flex-col justify-between"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6 space-y-6">
               {/* Cabecera del Drawer */}
               <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
