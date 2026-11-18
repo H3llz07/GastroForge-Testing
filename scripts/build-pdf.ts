@@ -79,6 +79,7 @@ interface ApaCover {
   authors: string;
   affiliation: string;
   course: string;
+  professor: string;
   date: string;
 }
 
@@ -92,11 +93,13 @@ function parseApaCover(md: string): { cover: ApaCover; body: string } {
     .split('\n')
     .map((l) => l.trim())
     .filter((l) => l.length > 0 && !l.startsWith('<') && l !== '---');
-  const [titleLine, authors, affiliation, course, date] = lines;
+  const [titleLine, authors, affiliation, course, professorOrDate, maybeDate] = lines;
+  const professor = maybeDate ? professorOrDate : 'Yury Montoya Perez';
+  const date = maybeDate ?? professorOrDate;
   const title = titleLine.replace(/^\*\*|\*\*$/g, '').replace(/`/g, '');
   const repeatedTitle = parts[1].replace(/<div[^>]*>/g, '').replace(/^\s*---\s*$/gm, '').trim();
   const body = [repeatedTitle, ...parts.slice(2)].join('\n').replace(/<div[^>]*>/g, '');
-  return { cover: { title, authors, affiliation, course, date }, body };
+  return { cover: { title, authors, affiliation, course, professor, date }, body };
 }
 
 function preprocessTechnical(md: string): { title: string; body: string } {
@@ -153,9 +156,12 @@ function buildOne(doc: DocSpec, meta: Metadata, env: NodeJS.ProcessEnv, pandoc: 
       '--template', join(LATEX_DIR, 'apa7-report.tex'),
       '-M', 'pdfmode=apa',
       '-M', `title=${cover.title}`,
+      '-M', `project=${meta.project}`,
+      '-M', `commit=${meta.frozenCommit}`,
       '-M', `authors=${cover.authors}`,
       '-M', `affiliation=${cover.affiliation}`,
       '-M', `course=${cover.course}`,
+      '-M', `professor=${cover.professor}`,
       '-M', `date=${cover.date}`,
       prepared,
     ];

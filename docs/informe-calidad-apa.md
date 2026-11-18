@@ -10,7 +10,9 @@ Facultad de Ingeniería, Institución Universitaria Pascual Bravo
 
 Ingeniería de Software / Aseguramiento de Calidad y Pruebas de Software
 
-16 de noviembre de 2026
+Yury Montoya Perez
+
+17 de noviembre de 2026
 
 </div>
 

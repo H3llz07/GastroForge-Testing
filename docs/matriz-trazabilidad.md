@@ -2,7 +2,7 @@
 
 **Proyecto:** GastroForge — Sistema ERP Multi-Restaurante Tablet-First  
 **Commit SUT Evaluado:** `be9089e` (feat(web): add playwright tablet e2e suite and manual testing evidences (#71))  
-**Fecha de Compilación:** 16/11/2026  
+**Fecha de Compilación:** 17/11/2026  
 **Responsables QA:** Jhonatan A. Méndez R. (@JhonatanM2005), Julián Santiago Pico Pinzón (@H3llz07) & Christian Urrego Issa (@Christu12)
 
 ---

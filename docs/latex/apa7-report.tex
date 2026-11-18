@@ -8,6 +8,8 @@
 \usepackage[spanish,es-noshorthands]{babel}
 \usepackage{csquotes}
 \usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\definecolor{gfaccent}{HTML}{1F3A5F}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc}
 \usepackage{etoolbox}
@@ -31,10 +33,28 @@
 \authorsaffiliations{{$affiliation$}}
 \course{$course$}
 \duedate{$date$}
-\professor{\mbox{}}
+\professor{$professor$}
 
 \begin{document}
-\maketitle
+\begin{center}
+\vspace*{1.4cm}
+{\Large\bfseries\color{gfaccent} $title$\par}
+\vspace{0.4cm}
+{\normalsize\textit{$project$ --- Commit congelado \texttt{$commit$}}\par}
+\vspace{0.7cm}
+{\color{gfaccent}\rule{0.45\linewidth}{0.6pt}\par}
+\vspace{1.1cm}
+{\normalsize\bfseries $authors$\par}
+\vspace{0.6cm}
+{\normalsize $affiliation$\par}
+\vspace{0.35cm}
+{\normalsize $course$\par}
+\vspace{0.35cm}
+{\normalsize Docente: $professor$\par}
+\vspace{0.35cm}
+{\normalsize $date$\par}
+\end{center}
+\newpage
 
 $body$
 

@@ -1,8 +1,8 @@
 {
   "project": "GastroForge — Sistema ERP Multi-Restaurante Tablet-First",
   "version": "1.1",
-  "date": "16/11/2026",
-  "updatedAt": "2026-11-16T22:35:00-05:00",
+  "date": "17/11/2026",
+  "updatedAt": "2026-11-17T20:35:00-05:00",
   "sutRepo": "https://github.com/JhonatanM2005/GastroForge",
   "qaRepo": "https://github.com/H3llz07/GastroForge-Testing",
   "frozenCommit": "be9089e",
@@ -22,7 +22,7 @@
     },
     {
       "version": "1.1",
-      "date": "16/11/2026",
+      "date": "17/11/2026",
       "description": "Incorporación de Christian Urrego Issa (@Christu12) como co-autor, QA Analyst / Automatizador y redistribución equilibrada de casos de prueba y ejecuciones",
       "author": "Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa",
       "approvedBy": "Julián Santiago Pico Pinzón & Jhonatan A. Méndez R."

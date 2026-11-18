@@ -3,7 +3,7 @@
 **Proyecto:** GastroForge — Sistema ERP Multi-Restaurante Tablet-First  
 **Commit SUT Evaluado:** `be9089e` (feat(web): add playwright tablet e2e suite and manual testing evidences (#71))  
 **Repositorio QA:** [`H3llz07/GastroForge-Testing`](https://github.com/H3llz07/GastroForge-Testing)  
-**Fecha de Corte:** 16/11/2026
+**Fecha de Corte:** 17/11/2026
 
 ---
 

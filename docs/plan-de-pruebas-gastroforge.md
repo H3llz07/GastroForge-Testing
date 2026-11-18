@@ -6,7 +6,7 @@
 |---|---|
 | **Proyecto** | GastroForge — Sistema ERP Multi-Restaurante Tablet-First |
 | **Versión** | 1.1 |
-| **Fecha** | 16/11/2026 |
+| **Fecha** | 17/11/2026 |
 | **Commit SUT Evaluado** | `be9089e` (feat(web): add playwright tablet e2e suite and manual testing evidences (#71)) — [`JhonatanM2005/GastroForge`](https://github.com/JhonatanM2005/GastroForge) |
 | **Institución** | Institución Universitaria Pascual Bravo |
 | **Elaborado por** | Jhonatan A. Méndez R. (@JhonatanM2005), Julián Santiago Pico Pinzón (@H3llz07) & Christian Urrego Issa (@Christu12) |
@@ -23,7 +23,7 @@
 | Versión | Fecha | Descripción del Cambio | Autor | Aprobado por |
 |---|---|---|---|---|
 | 1.0 | 16/11/2026 | Versión inicial aprobada del plan de pruebas sobre el commit congelado be9089e de GastroForge | Jhonatan A. Méndez R. & Julián Santiago Pico Pinzón | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. |
-| 1.1 | 16/11/2026 | Incorporación de Christian Urrego Issa (@Christu12) como co-autor, QA Analyst / Automatizador y redistribución equilibrada de casos de prueba y ejecuciones | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. |
+| 1.1 | 17/11/2026 | Incorporación de Christian Urrego Issa (@Christu12) como co-autor, QA Analyst / Automatizador y redistribución equilibrada de casos de prueba y ejecuciones | Jhonatan A. Méndez R., Julián Santiago Pico Pinzón & Christian Urrego Issa | Julián Santiago Pico Pinzón & Jhonatan A. Méndez R. |
 
 ---
 
@@ -1320,10 +1320,10 @@ Aquí se detallan todos los artefactos de prueba generados y verificados durante
 
 | Nombre | Rol | Firma | Fecha |
 |---|---|---|---|
-| Jhonatan A. Méndez R. (@JhonatanM2005) | QA Lead — Bloque A (Auth, Catálogo, Mesas, Órdenes, KDS) | *Firmado digitalmente (@JhonatanM2005)* | 16/11/2026 |
-| Julián Santiago Pico Pinzón (@H3llz07) | QA Lead — Bloque B (Caja, Pagos, Inventario, Reportes, RLS) | *Firmado digitalmente (@H3llz07)* | 16/11/2026 |
-| Christian Urrego Issa (@Christu12) | QA Analyst & Automatizador (Manuales L6, E2E L5, L2–L4) | *Firmado digitalmente (@Christu12)* | 16/11/2026 |
-| Comité Evaluador — I.U. Pascual Bravo | Product Owner Académico / Aprobador de Calidad | *Aprobado en sustentación académica* | 16/11/2026 |
+| Jhonatan A. Méndez R. (@JhonatanM2005) | QA Lead — Bloque A (Auth, Catálogo, Mesas, Órdenes, KDS) | *Firmado digitalmente (@JhonatanM2005)* | 17/11/2026 |
+| Julián Santiago Pico Pinzón (@H3llz07) | QA Lead — Bloque B (Caja, Pagos, Inventario, Reportes, RLS) | *Firmado digitalmente (@H3llz07)* | 17/11/2026 |
+| Christian Urrego Issa (@Christu12) | QA Analyst & Automatizador (Manuales L6, E2E L5, L2–L4) | *Firmado digitalmente (@Christu12)* | 17/11/2026 |
+| Comité Evaluador — I.U. Pascual Bravo | Product Owner Académico / Aprobador de Calidad | *Aprobado en sustentación académica* | 17/11/2026 |
 
 ---
 
