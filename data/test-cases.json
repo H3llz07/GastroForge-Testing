@@ -14,23 +14,24 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Servidor backend y aplicación web ejecutándose sobre el commit be9089e",
+      "Servidor backend (http://localhost:3000) y aplicación web (http://localhost:5173) ejecutándose sobre el commit be9089e con seed.ts cargado",
       "Viewport configurado en resolución tablet horizontal (1024x768 px)",
-      "Usuario activo registrado con membresía activa en el restaurante 'La Brasa Dorada' con rol MESERO"
+      "Usuario activo mesero.forja@gastroforge.dev registrado con membresía activa en el restaurante \"La Forja Grill & Bar\" con rol MESERO"
     ],
     "inputData": {
-      "email": "mesero@labrasa.co",
+      "email": "mesero.forja@gastroforge.dev",
       "password": "Password123!",
+      "restaurant": "La Forja Grill & Bar",
       "viewport": "1024x768",
       "expectedRole": "MESERO"
     },
     "steps": [
-      "Abrir la ruta /login en el navegador con viewport 1024x768.",
-      "Ingresar el correo electrónico válido y la contraseña correspondiente al rol MESERO.",
-      "Tocar el botón 'Iniciar sesión' (objetivo táctil >= 48x48 px).",
-      "Verificar el almacenamiento en memoria del Access Token, la emisión de la cookie HttpOnly de Refresh Token y la redirección automática a la vista operativa del rol."
+      "Abrir la ruta /login en el navegador con viewport 1024x768 y abrir DevTools (pestañas Network y Application).",
+      "Ingresar el correo mesero.forja@gastroforge.dev y la contraseña Password123!.",
+      "Tocar el botón \"Ingresar al sistema\".",
+      "Verificar que Application -> Local Storage NO contenga tokens (el Access Token vive en memoria JS en session-store.ts), que Network -> POST /api/v1/auth/login retorne accessToken con HTTP 200, que Application -> Cookies contenga la cookie HttpOnly de Refresh Token y que la app redirija a /dashboard (con acceso a /tables)."
     ],
-    "expectedResult": "El sistema autentica al usuario (HTTP 200), establece la sesión multi-tenant del restaurante activo y redirige automáticamente al mapa de salón (/tables) mostrando el encabezado con el nombre del restaurante y rol Mesero.",
+    "expectedResult": "El sistema autentica al usuario (HTTP 200), mantiene el Access Token exclusivamente en memoria JS (enviado como Bearer en peticiones siguientes), emite la cookie HttpOnly de Refresh Token y redirige a /dashboard mostrando \"La Forja Grill & Bar\" y rol MESERO.",
     "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
   },
   {
@@ -123,23 +124,25 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Usuario autenticado con membresía activa en dos restaurantes (Tenant A: 'La Brasa Dorada' y Tenant B: 'Pizzería Napoli')",
-      "Ambos restaurantes configurados con paleta de marca primaria en el panel de administración"
+      "Servidor backend y aplicación web ejecutándose sobre el commit be9089e con seed.ts cargado",
+      "Usuario multi.owner@gastroforge.dev con membresía ADMIN en \"La Forja Grill & Bar\" y GERENTE en \"Trattoria del Puerto\""
     ],
     "inputData": {
-      "tenantA": "La Brasa Dorada",
-      "tenantB": "Pizzería Napoli",
+      "email": "multi.owner@gastroforge.dev",
+      "password": "Password123!",
+      "tenantA": "La Forja Grill & Bar",
+      "tenantB": "Trattoria del Puerto",
       "primaryColorHex": "#9A3412",
       "foregroundHex": "#FFFFFF",
       "minWcagContrastRatio": 4.5
     },
     "steps": [
-      "Abrir el selector de restaurante activo en la barra superior de la aplicación.",
-      "Cambiar del restaurante 'La Brasa Dorada' (rol ADMIN) a 'Pizzería Napoli' (rol GERENTE).",
-      "Confirmar la reemisión del token de contexto con el nuevo restaurant_id y la recarga de datos aislados del nuevo tenant.",
+      "Iniciar sesión en /login con multi.owner@gastroforge.dev / Password123!.",
+      "Abrir el selector de restaurante activo en la barra superior de la aplicación y cambiar de \"La Forja Grill & Bar\" (rol ADMIN) a \"Trattoria del Puerto\" (rol GERENTE).",
+      "Confirmar en Network la llamada a POST /api/v1/auth/switch-restaurant con el nuevo token de contexto y la recarga de datos aislados del nuevo tenant.",
       "Inspeccionar el contraste cromático del encabezado y botones primarios verificando que cumpla ratio >= 4.5:1 (WCAG 2.1 AA)."
     ],
-    "expectedResult": "El contexto de sesión cambia al segundo restaurante sin requerir nuevo login, se aplican los permisos del rol correspondiente en ese tenant y el contraste de color verificado supera 4.5:1.",
+    "expectedResult": "El contexto de sesión cambia a \"Trattoria del Puerto\" sin requerir nuevo login, se aplican los permisos de GERENTE en ese tenant y el contraste de color verificado supera 4.5:1.",
     "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
   },
   {
@@ -157,21 +160,25 @@
     "pyramidLevel": "L6",
     "technique": "Transición de estados",
     "preconditions": [
-      "Administrador autenticado en el panel de gestión de personal del restaurante",
-      "Usuario objetivo ('cajero@labrasa.co') con una sesión activa abierta en otro navegador/dispositivo"
+      "Servidor backend ejecutándose en http://localhost:3000 sobre el commit be9089e con seed.ts cargado",
+      "Nota: En be9089e el restablecimiento administrativo de contraseña no tiene pantalla en apps/web; se ejecuta manualmente vía API (Swagger /api/docs o curl)",
+      "Usuario objetivo cajero.forja@gastroforge.dev (memberId: ea111111-0000-0000-0000-000000000005) y administrador admin.forja@gastroforge.dev"
     ],
     "inputData": {
-      "targetUserEmail": "cajero@labrasa.co",
+      "adminEmail": "admin.forja@gastroforge.dev",
+      "adminPassword": "Password123!",
+      "targetUserEmail": "cajero.forja@gastroforge.dev",
+      "targetMemberId": "ea111111-0000-0000-0000-000000000005",
       "tokenTtlMinutes": 15,
       "newPassword": "NuevaPasswordSegura2026!"
     },
     "steps": [
-      "Como Administrador, generar un token temporal de restablecimiento de contraseña para 'cajero@labrasa.co'.",
-      "Consumir el token dentro de la ventana de 15 minutos estableciendo la nueva contraseña.",
-      "Verificar que la sesión previamente abierta del cajero sea invalidada al instante (token_version incrementado).",
-      "Intentar reutilizar el mismo token de restablecimiento por segunda vez."
+      "Autenticarse como admin.forja@gastroforge.dev vía POST /api/v1/auth/login para obtener su Bearer accessToken.",
+      "Emitir un token temporal de un solo uso invocando POST /api/v1/members/ea111111-0000-0000-0000-000000000005/reset-password con el Bearer del Admin.",
+      "Consumir el token en POST /api/v1/auth/reset-password enviando { token, newPassword } dentro de la ventana de 15 minutos y verificar que la sesión previa del cajero quede invalidada.",
+      "Reenviar la misma petición POST /api/v1/auth/reset-password con el token ya consumido."
     ],
-    "expectedResult": "La contraseña se actualiza exitosamente en el primer uso, todas las sesiones previas quedan revocadas de inmediato y el segundo intento con el mismo token es rechazado con HTTP 400/401 por tratarse de un token consumido.",
+    "expectedResult": "La contraseña se actualiza exitosamente en el primer uso, las sesiones previas quedan revocadas (token_version incrementado) y el segundo intento con el mismo token es rechazado con HTTP 401.",
     "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
   },
   {
@@ -235,10 +242,12 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Usuario autenticado con rol ADMIN en el restaurante activo",
-      "Acceso al módulo administrativo de Catálogo (/admin/catalog)"
+      "Sesión iniciada en http://localhost:5173 con admin.forja@gastroforge.dev / Password123! (rol ADMIN en La Forja Grill & Bar)",
+      "El seed inicial ya incluye \"Parrilla y Calientes\" y \"Bar y Bebidas\"; se crearán estaciones y categorías adicionales desde /catalog"
     ],
     "inputData": {
+      "email": "admin.forja@gastroforge.dev",
+      "route": "/catalog",
       "stations": [
         "PARRILLA",
         "BARRA"
@@ -248,12 +257,12 @@
       "isActive": true
     },
     "steps": [
-      "Crear las estaciones de preparación 'PARRILLA' y 'BARRA' verificando unicidad de código dentro del restaurante.",
-      "Crear la categoría 'Cortes Madurados' con sort_order = 1 y estado activo.",
-      "Reordenar visualmente las categorías y desactivar una categoría secundaria.",
-      "Abrir la pantalla de toma de pedidos y comprobar que el orden coincida y la categoría inactiva no se muestre."
+      "Navegar a /catalog y crear las estaciones de preparación \"PARRILLA\" y \"BARRA\" verificando unicidad de código dentro del restaurante.",
+      "Crear la categoría \"Cortes Madurados\" con sort_order = 1 y estado activo.",
+      "Reordenar visualmente las categorías y desactivar una categoría secundaria desde /catalog.",
+      "Abrir la vista /orders y comprobar que el orden coincida y la categoría inactiva no se muestre."
     ],
-    "expectedResult": "Las estaciones y categorías se persisten correctamente, respetan el orden visual configurado (sort_order) y las categorías desactivadas quedan ocultas inmediatamente en el POS.",
+    "expectedResult": "Las estaciones y categorías se persisten correctamente, respetan el orden visual configurado (sort_order) y las categorías desactivadas quedan ocultas inmediatamente en /orders.",
     "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
@@ -351,20 +360,20 @@
     "pyramidLevel": "L6",
     "technique": "Transición de estados",
     "preconditions": [
-      "Producto 'Lomo al Trapo' en estado AVAILABLE dentro de una categoría activa",
-      "Sesión de Gerente y sesión de Mesero abiertas simultáneamente en el mismo restaurante"
+      "Sesión de Gerente (gerente.forja@gastroforge.dev / Password123!) y sesión de Mesero (mesero.forja@gastroforge.dev / Password123!) disponibles",
+      "Producto sembrado \"Bife de Chorizo 350g\" en estado AVAILABLE dentro de \"La Forja Grill & Bar\""
     ],
     "inputData": {
-      "productName": "Lomo al Trapo",
+      "productName": "Bife de Chorizo 350g",
       "initialState": "AVAILABLE",
       "targetState": "UNAVAILABLE",
       "restoredState": "AVAILABLE"
     },
     "steps": [
-      "Desde la vista de Gerente, conmutar el interruptor de disponibilidad rápida de 'Lomo al Trapo' al estado Agotado (UNAVAILABLE).",
-      "Desde la tablet del Mesero, intentar agregar 'Lomo al Trapo' a una nueva comanda de salón.",
-      "Verificar que el ítem aparezca marcado como 'Agotado' y deshabilitado para selección.",
-      "Restaurar el estado a Disponible (AVAILABLE) y comprobar que vuelve a permitir su captura."
+      "Desde la sesión de Gerente en /catalog, cambiar la disponibilidad de \"Bife de Chorizo 350g\" a Agotado (UNAVAILABLE).",
+      "Desde la tablet del Mesero en /orders, abrir una comanda e intentar agregar \"Bife de Chorizo 350g\".",
+      "Verificar que el ítem aparezca marcado como no disponible / deshabilitado para selección.",
+      "Restaurar el estado a Disponible (AVAILABLE) en /catalog y comprobar en /orders que vuelve a permitir su captura."
     ],
     "expectedResult": "La transición AVAILABLE -> UNAVAILABLE bloquea de inmediato la captura del producto en nuevas tandas sin afectar órdenes previas, y la transición UNAVAILABLE -> AVAILABLE restablece su venta.",
     "responsible": "Christian Urrego Issa (@Christu12)"
@@ -423,23 +432,24 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Viewport de tablet configurado en 1024x768 px",
-      "Salón con al menos 6 mesas activas: 4 libres (FREE) y 2 con cuenta abierta (OCCUPIED)"
+      "Sesión iniciada en http://localhost:5173 con mesero.forja@gastroforge.dev / Password123! en viewport 1024x768",
+      "Seed cargado: Mesa M1 con orden abierta (Ocupada) y mesas M2..M4, T1..T2 libres (Disponible)"
     ],
     "inputData": {
       "viewport": "1024x768",
       "minCardHeightPx": 104,
       "states": [
-        "FREE",
-        "OCCUPIED"
+        "Disponible",
+        "Ocupada",
+        "Por pagar"
       ]
     },
     "steps": [
-      "Acceder a la vista del mapa de mesas (/tables) con usuario rol MESERO en resolución 1024x768.",
+      "Acceder a la vista del mapa de mesas (/tables) con mesero.forja@gastroforge.dev en resolución 1024x768.",
       "Medir mediante DevTools las dimensiones de las tarjetas de mesa confirmando altura mínima >= 104px y ausencia de scroll horizontal.",
-      "Verificar que las mesas FREE y OCCUPIED se diferencien simultáneamente por color semántico, etiqueta textual ('Libre' / 'Ocupada') e ícono de estado."
+      "Verificar que las mesas Disponibles (ej. M2) y Ocupadas (ej. M1) se diferencien simultáneamente por color semántico, etiqueta textual (\"Disponible\" / \"Ocupada\") e ícono de estado."
     ],
-    "expectedResult": "La cuadrícula del salón renderiza tarjetas táctiles >= 104px sin desbordamiento horizontal y distingue claramente los estados FREE y OCCUPIED mediante triple codificación visual.",
+    "expectedResult": "La cuadrícula del salón en /tables renderiza tarjetas táctiles >= 104px sin desbordamiento horizontal y distingue claramente los estados Disponible y Ocupada mediante triple codificación visual.",
     "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
@@ -493,23 +503,29 @@
     "pyramidLevel": "L6",
     "technique": "BVA",
     "preconditions": [
-      "Emulación de dispositivo iPad / Tablet en viewport 1024x768 px",
-      "Mesero autenticado y mesa 'M-02' en estado FREE"
+      "Sesión iniciada con mesero.forja@gastroforge.dev / Password123! en viewport tablet 1024x768",
+      "Mesa M2 en estado Disponible en /tables (M1 viene ocupada por defecto en seed.ts)"
     ],
     "inputData": {
       "viewport": "1024x768",
-      "tableCode": "M-02",
+      "tableCode": "M2",
+      "items": [
+        "Hamburguesa Forja Especial (Término Medio)",
+        "Bife de Chorizo 350g (Tres Cuartos)",
+        "Papas Rústicas Trufadas",
+        "Cerveza Artesanal IPA 330ml"
+      ],
       "itemsCount": 4,
       "expectedMinTouchTargetPx": 48,
       "observedStepperTouchTargetPx": 44
     },
     "steps": [
-      "Tocar la tarjeta de la mesa 'M-02' para abrir una nueva cuenta DINE_IN.",
-      "Seleccionar 4 productos de distintas categorías y configurar sus modificadores obligatorios y opcionales.",
-      "Utilizar los botones de incremento/decremento (+/-) de cantidad en el carrito de la comanda.",
-      "Medir en el DOM el bounding box de los botones secundarios (+/-) y chips de filtro contrastándolo contra el umbral de 48x48 px exigido en TESTING-PLAN.md."
+      "En /tables, tocar la tarjeta de la mesa libre \"M2\" para abrir una nueva cuenta DINE_IN.",
+      "Seleccionar 4 productos reales del menú (Hamburguesa Forja Especial, Bife de Chorizo 350g, Papas Rústicas Trufadas y Cerveza Artesanal IPA 330ml) configurando sus modificadores obligatorios.",
+      "Utilizar los botones de incremento/decremento de cantidad e inspeccionar su caja táctil en DevTools (44x44 px observados vs 48x48 px especificados en TESTING-PLAN.md).",
+      "Enviar la tanda a cocina y medir el tiempo total de interacción (< 15 segundos)."
     ],
-    "expectedResult": "El flujo funcional completa la apertura y despacho de los 4 ítems en menos de 45 segundos, pero la inspección ergonómica detecta botones secundarios con h-11 (44x44 px) por debajo del umbral de 48x48 px (documentado como defecto cosmético DEF-006).",
+    "expectedResult": "La comanda en mesa M2 se captura y despacha en menos de 15 segundos sin errores de pulsación; la auditoría visual registra la discrepancia menor de objetivo táctil 44x44 px vs 48x48 px (DEF-006).",
     "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
   },
   {
@@ -600,22 +616,23 @@
     "pyramidLevel": "L6",
     "technique": "Tabla de decisión",
     "preconditions": [
-      "Orden activa con un ítem cuyo estado en cocina ya avanzó a PREPARING",
-      "Mesero operando la comanda en salón y Gerente disponible para autorizar"
+      "Sesión iniciada con mesero.forja@gastroforge.dev / Password123! en /orders",
+      "Orden abierta en mesa M1 (sembrada en seed.ts) con ítem \"Hamburguesa Forja Especial\" en estado PREPARING"
     ],
     "inputData": {
-      "itemStatus": "PREPARING",
-      "requestingRole": "MESERO",
-      "authorizingRole": "GERENTE",
-      "cancellationReason": "Cliente cambió de opinión por alergia alimentaria"
+      "tableCode": "M1",
+      "itemState": "PREPARING",
+      "supervisorEmail": "gerente.forja@gastroforge.dev",
+      "supervisorPasscode": "Password123!",
+      "cancellationReason": "Error de digitación en término de cocción solicitado por el cliente"
     },
     "steps": [
-      "Como Mesero, seleccionar la opción 'Cancelar ítem' sobre el producto en estado PREPARING.",
-      "Verificar que el sistema bloquee la anulación directa por falta de privilegios y solicite autorización de Gerente/Admin junto con un motivo obligatorio.",
-      "Intentar confirmar con el campo de motivo vacío verificando validación de formulario.",
-      "Ingresar credenciales/autorización de Gerente y el motivo de auditoría, confirmando la anulación."
+      "En /orders como mesero.forja@gastroforge.dev, abrir la orden de la mesa M1 y tocar \"Cancelar\" en el ítem en estado PREPARING.",
+      "Ingresar el \"Motivo de cancelación\" (mínimo 5 caracteres).",
+      "En los campos de autorización de supervisor que aparecen inline, ingresar \"Correo de Gerente / Admin\" = gerente.forja@gastroforge.dev y \"Contraseña / PIN de supervisor\" = Password123!.",
+      "Confirmar la cancelación y verificar que el ítem quede tachado (CANCELLED) y el total de la orden se recalcule."
     ],
-    "expectedResult": "El ítem pasa a estado CANCELLED, se descuenta su valor del saldo de la orden, se notifica al KDS y queda registrado el evento en audit_log con el autorizador y el motivo.",
+    "expectedResult": "El ítem en estado PREPARING exige credenciales válidas de supervisor (GERENTE/ADMIN) y motivo obligatorio, queda cancelado y el total de la orden se recalcula correctamente.",
     "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
   },
   {
@@ -706,25 +723,26 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Cocinero autenticado asignado a la estación 'PARRILLA' en tablet 1024x768",
-      "Tres comandas activas con tiempos transcurridos en las 3 particiones de equivalencia: < 10 min (A tiempo), 10-15 min (Alerta ámbar) y > 15 min (Demorado rojo)"
+      "Sesión iniciada con cocina.forja@gastroforge.dev / Password123! en viewport 1024x768",
+      "Estación \"Parrilla y Calientes\" con ítems activos en cola (sembrados en M1 o recién despachados)"
     ],
     "inputData": {
-      "stationCode": "PARRILLA",
+      "email": "cocina.forja@gastroforge.dev",
+      "route": "/kitchen",
       "viewport": "1024x768",
-      "elapsedMinutesPartitions": [
-        4,
-        12,
-        18
-      ]
+      "stationFilter": "Parrilla y Calientes",
+      "urgencyThresholdsMinutes": {
+        "normalMax": 10,
+        "amberMax": 20,
+        "criticalMin": 20
+      }
     },
     "steps": [
-      "Abrir la pantalla KDS (/kitchen) en viewport 1024x768.",
-      "Confirmar que únicamente se muestren los ítems enrutados a la estación 'PARRILLA' y no los de 'BARRA'.",
-      "Verificar el ordenamiento FIFO (la comanda más antigua aparece primero en la cola).",
-      "Comprobar que cada tarjeta exhiba el badge cromático y textual correspondiente a su partición de tiempo (A tiempo / Alerta / Demorado)."
+      "Abrir la vista /kitchen con cocina.forja@gastroforge.dev en resolución tablet 1024x768.",
+      "Seleccionar el filtro de estación \"Parrilla y Calientes\" y verificar que no aparezcan ítems exclusivos de \"Bar y Bebidas\".",
+      "Verificar el ordenamiento FIFO de las comandas y las alertas cromáticas según el tiempo de espera."
     ],
-    "expectedResult": "El KDS muestra exclusivamente la cola FIFO de PARRILLA con tarjetas legibles a distancia de brazo y semáforo visual exacto según los umbrales de espera.",
+    "expectedResult": "El KDS en /kitchen muestra exclusivamente la cola FIFO de \"Parrilla y Calientes\" con tarjetas legibles y semáforo visual exacto según los umbrales de espera.",
     "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
@@ -813,21 +831,22 @@
     "pyramidLevel": "L6",
     "technique": "Transición de estados",
     "preconditions": [
-      "Pantalla KDS abierta y conectada al stream SSE (/api/v1/events/stream) mostrando indicador 'En vivo'",
-      "Tablet de Mesero lista para despachar una nueva tanda"
+      "Vista /kitchen abierta en una ventana con cocina.forja@gastroforge.dev y /orders en otra ventana con mesero.forja@gastroforge.dev",
+      "Indicador SSE conectado contra /api/v1/events/stream"
     ],
     "inputData": {
       "networkOutageSeconds": 30,
       "sseEndpoint": "/api/v1/events/stream",
+      "reconnectingLabel": "Reconectando SSE",
       "eventDispatchedDuringOutage": "order.round.dispatched"
     },
     "steps": [
-      "En DevTools de la tablet KDS, activar el modo Offline (simulando caída de Wi-Fi en cocina) durante 30 segundos.",
-      "Confirmar que el indicador de estado de conexión cambie a 'Reconectando...'.",
-      "Mientras el KDS está sin red, despachar una nueva tanda desde la tablet del Mesero (persistida en outbox_events).",
-      "Restaurar la conexión de red en la tablet KDS sin presionar F5 y observar la reconexión automática del EventSource."
+      "En DevTools de la ventana KDS (/kitchen), activar el modo Offline durante 30 segundos.",
+      "Confirmar que el indicador de estado de conexión cambie a \"Reconectando SSE\".",
+      "Mientras el KDS está sin red, despachar una nueva tanda desde la ventana del Mesero (/orders).",
+      "Restaurar la conexión de red (Online) en el KDS sin presionar F5 y observar la reconexión automática."
     ],
-    "expectedResult": "Al recuperar la red, el cliente SSE se reconecta automáticamente, invalida las queries de TanStack Query y renderiza la nueva comanda despachada durante el corte sin requerir recarga manual.",
+    "expectedResult": "Al recuperar la red, el cliente SSE se reconecta automáticamente a /api/v1/events/stream, invalida las queries de TanStack Query y renderiza la nueva comanda sin recargar la página.",
     "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
   },
   {
@@ -876,23 +895,23 @@
     "pyramidLevel": "L6",
     "technique": "BVA",
     "preconditions": [
-      "Cajero autenticado con turno abierto (fondo inicial $200.000) y ventas en efectivo acumuladas por $150.000 (efectivo esperado = $350.000)"
+      "Sesión iniciada con cajero.forja@gastroforge.dev / Password123! en /cashier",
+      "Sesión de caja abierta en \"Caja Principal\" (seed.ts inicia con una sesión OPEN con fondo de $200,000 COP)"
     ],
     "inputData": {
+      "email": "cajero.forja@gastroforge.dev",
+      "route": "/cashier",
       "openingAmount": 200000,
-      "cashSales": 150000,
-      "expectedCash": 350000,
-      "declaredCountedCash": 345000,
-      "discrepancy": -5000,
-      "closingNotes": "Faltante de $5.000 en cambio de billete de $50.000"
+      "declaredCountedCash": 195000,
+      "closingNotes": "Faltante de $5.000 en conteo físico de cierre de turno"
     },
     "steps": [
-      "Iniciar el flujo de 'Cerrar Turno de Caja' verificando que la interfaz realice arqueo ciego (no muestra el efectivo esperado antes de declarar el conteo físico).",
-      "Ingresar el monto físico contado de $345.000 y una nota explicativa obligatoria.",
-      "Confirmar el cierre del turno.",
-      "Verificar el resumen de conciliación generado y comprobar que la sesión en estado CLOSED bloquee cualquier nuevo cobro."
+      "En /cashier, dirigirse a la sección \"Blind Cash Count (Arqueo a Ciegas)\" verificando que no se revele el efectivo esperado antes de declarar el conteo físico.",
+      "Ingresar el monto físico contado (ej. $195,000) y la nota explicativa obligatoria.",
+      "Confirmar el cierre del turno de caja.",
+      "Verificar el resumen de conciliación generado y comprobar que en estado CLOSED no se permitan nuevos cobros hasta abrir un nuevo turno."
     ],
-    "expectedResult": "El sistema calcula exactamente la diferencia (-$5.000 faltante), persiste el cierre inmutable en estado CLOSED con su observación de auditoría e impide registrar pagos adicionales en ese turno.",
+    "expectedResult": "El sistema realiza el arqueo ciego, calcula la diferencia exacta, persiste el cierre en estado CLOSED con observación obligatoria y bloquea cobros adicionales hasta abrir una nueva sesión.",
     "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
   },
   {
@@ -992,21 +1011,22 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Sesión de caja abierta y orden activa con saldo pendiente exacto de $45.000",
-      "Interfaz de cobro abierta en navegador con cliente HTTP conectado al backend"
+      "Sesión iniciada con cajero.forja@gastroforge.dev / Password123! en /cashier",
+      "Sesión de caja OPEN y orden abierta con saldo pendiente (ej. orden sembrada de Mesa M1 con saldo $114,000 COP)"
     ],
     "inputData": {
-      "pendingBalance": 45000,
-      "attemptedPaymentAmount": 60000,
-      "expectedHttpStatus": 422,
-      "expectedProblemDetail": "El monto del pago (60000.00) supera el saldo pendiente de la orden (45000.00)."
+      "orderTable": "M1",
+      "pendingBalance": 114000,
+      "attemptedPaymentAmount": 150000,
+      "expectedHttpStatus": 422
     },
     "steps": [
-      "En el modal de cobro de la orden, seleccionar método 'Tarjeta' e ingresar un monto de $60.000 (superior al saldo pendiente de $45.000).",
-      "Enviar el formulario de pago.",
-      "Observar el AlertBanner renderizado en la interfaz y verificar que extraiga el campo estándar err.detail del payload RFC 7807 en lugar de mostrar un mensaje genérico."
+      "En /cashier, seleccionar la orden pendiente (ej. M1 por $114,000 COP).",
+      "Seleccionar método de pago e ingresar un monto de $150,000 (superior al saldo pendiente).",
+      "Enviar el formulario de cobro.",
+      "Observar el AlertBanner renderizado en la interfaz y verificar que muestre el campo err.detail del payload RFC 7807 (confirmando resolución de DEF-003)."
     ],
-    "expectedResult": "El backend responde HTTP 422 con application/problem+json y el AlertBanner del frontend muestra explícitamente el detalle del problema RFC 7807 (confirmando la resolución de DEF-003).",
+    "expectedResult": "El backend responde HTTP 422 con application/problem+json y el AlertBanner del frontend muestra explícitamente el detalle del problema RFC 7807 en lugar de un mensaje genérico.",
     "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
   },
   {
@@ -1056,22 +1076,22 @@
     "pyramidLevel": "L6",
     "technique": "Tabla de decisión",
     "preconditions": [
-      "Sesión de caja abierta con un pago registrado por error en método 'Efectivo' por $65.000",
-      "Usuario con rol GERENTE autenticado"
+      "Sesión iniciada con gerente.forja@gastroforge.dev / Password123! (rol GERENTE con permiso cash:reverse_payment) en /cashier",
+      "Orden con pago COMPLETED registrado (ej. orden TAKEOUT sembrada de Carlos Gómez por $76,000 COP o un pago recién cobrado)"
     ],
     "inputData": {
-      "originalPaymentAmount": 65000,
-      "originalMethod": "CASH",
+      "email": "gerente.forja@gastroforge.dev",
+      "route": "/cashier",
       "authorizingRole": "GERENTE",
-      "reversalReason": "Cobro imputado por error en efectivo cuando el cliente pagó por transferencia"
+      "reversalReason": "Cobro imputado por error en método incorrecto durante la demostración"
     },
     "steps": [
-      "Acceder al detalle de pagos de la orden desde el módulo de Caja con rol GERENTE.",
-      "Seleccionar 'Reversar pago', ingresar el motivo obligatorio de auditoría y confirmar la operación.",
-      "Verificar que el pago original permanezca en el historial y aparezca un nuevo asiento compensatorio de reverso.",
-      "Comprobar que el saldo pendiente de la orden se restablezca a $65.000 para permitir registrar el cobro correcto."
+      "En /cashier como gerente.forja@gastroforge.dev, seleccionar una orden con pago en estado COMPLETED.",
+      "Hacer clic en el botón \"Reverse\" junto al pago correspondiente.",
+      "Ingresar el motivo en \"Reversal Reason (min 10 chars)\" y confirmar con \"Confirm Reversal\".",
+      "Verificar que el pago original permanezca en el historial (marcado como REVERSED), aparezca un asiento compensatorio REVERSAL y el saldo pendiente de la orden se restablezca."
     ],
-    "expectedResult": "El reverso se registra como un asiento compensatorio inmutable (sin borrar el pago original), recalcula el saldo pendiente de la orden a $65.000 y guarda la auditoría del Gerente.",
+    "expectedResult": "El reverso se registra como un asiento compensatorio inmutable (sin borrar el pago original), recalcula el saldo pendiente de la orden y guarda la auditoría del Gerente.",
     "responsible": "Julián Santiago Pico Pinzón (@H3llz07)"
   },
   {
@@ -1228,26 +1248,20 @@
     "pyramidLevel": "L6",
     "technique": "EP",
     "preconditions": [
-      "Turno de caja cerrado con datos de ventas, propinas, reversos y arqueo declarados",
-      "Navegador con emulación de medios CSS @media print y ancho de papel de 80mm (~302px)"
+      "Sesión iniciada en /cashier con cajero.forja@gastroforge.dev o gerente.forja@gastroforge.dev",
+      "Al menos un pago COMPLETED (para recibo 80mm) o una sesión de caja CLOSED (para tirilla de cierre 80mm)"
     ],
     "inputData": {
+      "route": "/cashier",
       "paperWidthMm": 80,
-      "mediaQuery": "print",
-      "sections": [
-        "Encabezado fiscal",
-        "Ventas por método",
-        "Propinas",
-        "Arqueo esperado vs contado",
-        "Firmas"
-      ]
+      "mediaQuery": "print"
     },
     "steps": [
-      "Abrir la vista del reporte de cierre de caja y activar el modo de vista previa de impresión (@media print).",
-      "Verificar que la barra lateral de navegación y los botones de acción queden ocultos (display: none).",
-      "Comprobar que el contenedor del ticket se ajuste a 80mm con tipografía monoespaciada legible, sin truncamiento de montos ni scroll horizontal."
+      "En /cashier, abrir \"View 80mm Receipt\" en una orden pagada (o \"Print 80mm Report\" tras cerrar la sesión de caja).",
+      "Hacer clic en \"Print 80mm\" / \"Print 80mm Ticket\" (o activar vista previa de impresión del navegador).",
+      "Verificar que la barra lateral y botones queden ocultos (clases print:hidden) y que la tirilla de 80mm se muestre alineada sin desbordamiento horizontal."
     ],
-    "expectedResult": "La tirilla térmica de 80mm muestra todos los rubros del arqueo y del recibo de pago perfectamente alineados y listos para impresora POS sin elementos de interfaz sobrantes.",
+    "expectedResult": "La tirilla térmica de 80mm muestra todos los rubros alineados para impresora POS sin elementos de navegación sobrantes ni desbordamiento horizontal.",
     "responsible": "Christian Urrego Issa (@Christu12)"
   },
   {
@@ -1416,9 +1430,11 @@
     "pyramidLevel": "L6",
     "technique": "Tabla de decisión",
     "preconditions": [
-      "Servidor API ejecutándose con lista blanca explícita de orígenes CORS configurada"
+      "Servidor backend ejecutándose en http://localhost:3000 sobre el commit be9089e",
+      "Terminal con curl o PowerShell disponible (prueba manual a nivel HTTP/API)"
     ],
     "inputData": {
+      "apiUrl": "http://localhost:3000/api/v1/tables",
       "unauthorizedOrigins": [
         "null",
         "https://evil-attacker.example.com"
@@ -1427,12 +1443,12 @@
       "expectedContentType": "application/problem+json"
     },
     "steps": [
-      "Enviar petición OPTIONS/POST al API con encabezado Origin: null y con Origin: https://evil-attacker.example.com.",
-      "Verificar que el servidor no emita Access-Control-Allow-Origin para los orígenes no autorizados.",
-      "Enviar una petición a una ruta protegida sin token incluyendo el encabezado X-Request-Id: req-qa-audit-0040.",
-      "Inspeccionar los encabezados y el cuerpo de la respuesta HTTP 401."
+      "Desde terminal, enviar una petición OPTIONS/POST a http://localhost:3000/api/v1/auth/login con cabecera Origin: null y otra con Origin: https://evil-attacker.example.com.",
+      "Verificar en los encabezados de respuesta que el servidor NO emita Access-Control-Allow-Origin para los orígenes no autorizados.",
+      "Enviar una petición GET a http://localhost:3000/api/v1/tables sin token Bearer incluyendo la cabecera X-Request-Id: req-qa-audit-0040.",
+      "Inspeccionar el código HTTP 401, el Content-Type application/problem+json y la propagación de X-Request-Id en la respuesta."
     ],
-    "expectedResult": "Los orígenes no autorizados (incluido Origin: null) son bloqueados por la política CORS; la respuesta de error conserva X-Request-Id: req-qa-audit-0040 y devuelve estructura RFC 7807 con Content-Type application/problem+json.",
+    "expectedResult": "Los orígenes no autorizados (incluido Origin: null) son bloqueados por CORS; la respuesta HTTP 401 conserva X-Request-Id: req-qa-audit-0040 y devuelve estructura RFC 7807 con Content-Type application/problem+json.",
     "responsible": "Jhonatan A. Méndez R. (@JhonatanM2005)"
   }
 ]

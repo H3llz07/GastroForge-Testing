@@ -247,7 +247,7 @@
     "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T01:58:00-05:00",
     "status": "PASSED",
-    "actualResult": "Al cambiar el estado de 'Lomo al Trapo' a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura.",
+    "actualResult": "Al cambiar el estado de 'Bife de Chorizo 350g' a UNAVAILABLE desde la sesión de Gerente, el producto aparece inmediatamente como Agotado y deshabilitado en la tablet del Mesero sin afectar tandas previas; al restaurarlo a AVAILABLE vuelve a permitir su captura.",
     "defectIds": [],
     "evidenceRefs": [
       {
@@ -352,7 +352,7 @@
     "executor": "Julián Santiago Pico Pinzón (@H3llz07)",
     "executedAt": "2026-11-16T02:22:00-05:00",
     "status": "PASSED",
-    "actualResult": "El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M-02, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (< 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006).",
+    "actualResult": "El Guion M-01 en tablet 1024x768 completa la apertura de la mesa M2, selección de 4 ítems con modificadores y despacho de comanda en 13.4 segundos (< 15 s) sin errores de pulsación; la inspección DOM registra objetivos táctiles de 44x44 px (PRD.md) frente a los 48x48 px citados en TESTING-PLAN.md (DEF-006).",
     "defectIds": [
       "DEF-006"
     ],
@@ -510,7 +510,7 @@
     "executor": "Christian Urrego Issa (@Christu12)",
     "executedAt": "2026-11-16T02:58:00-05:00",
     "status": "PASSED",
-    "actualResult": "En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación 'PARRILLA' en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo).",
+    "actualResult": "En tablet 1024x768 la vista /kitchen filtra exclusivamente los ítems de la estación 'Parrilla y Calientes' en orden FIFO y aplica correctamente la codificación semafórica de urgencia por tiempo transcurrido (Normal, Moderado ámbar y Urgente rojo).",
     "defectIds": [],
     "evidenceRefs": [
       {
